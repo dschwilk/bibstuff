@@ -36,12 +36,12 @@ style_logger = logging.getLogger('bibstuff_logger')
 #shared_logger = logging.getLogger('bibstuff_logger')
 
 # imports from bibstuff
-#TODO: change to relative imports (requires Python 2.5)
+
 # :IMPORTANT: every style must import shared!
-import shared
+from . import shared
 # most styles with start with the default templates:
 #  in default_templates.py
-import default_templates
+from . import default_templates
 ########################################################
 
 

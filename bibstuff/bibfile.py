@@ -36,15 +36,15 @@ __strict__ = False # should we be strict with bibtex format?
 # import from standard library
 import re
 import sys
+import logging
+bibfile_logger = logging.getLogger('bibstuff_logger')
 
 # import dependencies
 from simpleparse.dispatchprocessor import dispatch, DispatchProcessor, getString, lines
 
 #bibstuff imports
-from bibstuff import bibgrammar
-from bibstuff.bibstyles.shared import reformat_para
-import logging
-bibfile_logger = logging.getLogger('bibstuff_logger')
+from . import bibgrammar
+from .bibstyles.shared import reformat_para
 #####################################################################
 
 ###############  GLOBAL VARIABLES  ##################################

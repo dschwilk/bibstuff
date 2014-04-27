@@ -50,7 +50,7 @@ import simpleparse
 from simpleparse.dispatchprocessor import dispatch, DispatchProcessor, getString, lines
 from string import maketrans
 # BibStuff imports
-from bibstuff import bibstyles, bibfile, bibgrammar
+from . import bibstyles, bibfile, bibgrammar
 ######################################################
 
 
