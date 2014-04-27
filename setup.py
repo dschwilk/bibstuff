@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 # bibstuff setup script
-# Date: 2009-02-13
+# Date: 2014-04-27
 
 from os.path import join as pjoin
 import glob
 
 from distutils.core import setup
 setup(name="bibstuff",
-      version="1.3.1",
+      version= __import__('bibstuff').__version__,
       description="Bibtex database utilities",
       author="Dylan W. Schwilk and Alan G. Isaac and others",
       author_email="dylan@schwilk.org",
