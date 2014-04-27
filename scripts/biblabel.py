@@ -14,7 +14,7 @@ Schwilk+Isaac:2002 and Isaac+Schwilk+etal:2006.
 :license: MIT (see `license.txt`_)
 :date: $Date: 2006/08/29 15:48:05 $
 
-.. _license.txt: ./license.txt
+.. _`license.txt`: ../license.txt
 '''
 __docformat__ = "restructuredtext en"
 __authors__  =    ['Dylan Schwilk','Alan G. Isaac']

@@ -21,7 +21,7 @@ The numbers reflect the order cited (the 'citation_rank').
 :license: MIT (see `license.txt`_)
 :date: 2006-08-01
 
-.. _license.txt: ./license.txt
+.. _`license.txt`: ../../license.txt
 """
 __docformat__ = "restructuredtext en"
 __author__  =   "Alan G. Isaac"

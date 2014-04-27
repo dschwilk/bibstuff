@@ -31,7 +31,7 @@ formatting functions (e.g., via bibstyles/shared.NamesFormatter).
 :todo: The grammar does not support quoted strings, only braces strings. Could
        be added fairly simply
 
-.. _license.txt: ./license.txt
+.. _`license.txt`: ../license.txt
 """
 __docformat__ = "restructuredtext en"
 __authors__  =    ["Dylan W. Schwilk", "Alan G. Isaac"]

@@ -50,7 +50,7 @@ How it works:
 
 .. _EBNF: http://www.garshol.priv.no/download/text/bnf.html
 .. _SimpleParse: http://simpleparse.sourceforge.net/
-.. _license.txt: ./license.txt
+.. _`license.txt`: ../license.txt
 """
 from __future__ import with_statement
 __docformat__ = "restructuredtext en"

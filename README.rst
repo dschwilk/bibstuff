@@ -1,12 +1,9 @@
 ================================
-     README: BibStuff (TM)
+     README: BibStuff
 ================================
 
-:authors: Dylan W. Schwilk and Alan G. Isaac
-:web site: http://www.pricklysoft.org
-:source code: http://code.google.com/p/bibstuff/
-:date: 2009-02-13
-:version: 1.0
+:authors: See `AUTHORS.rst`_
+:source code: https://github.com/dschwilk/bibstuff
 
 BibStuff License
 ================
@@ -84,7 +81,6 @@ Package: bibstuff
 
 Package: bibstuff/bibstyles
 
-
 Testing
 =======
 
@@ -97,6 +93,8 @@ Related Projects
 For more information on BibTeX, see the excellent discussion in
 chapter 13 section 4 of `The LaTeX Companion`_.
 
-..	_license.txt: ./license.txt
+.. _`AUTHORS.rst`: ./AUTHORS.rst
 
-..	_`The LaTeX Companion`: http://www.awprofessional.com/bookstore/product.asp?isbn=0201362996&rl=1
+.. _`license.txt`: ./license.txt
+
+.. _`The LaTeX Companion`: http://www.awprofessional.com/bookstore/product.asp?isbn=0201362996&rl=1

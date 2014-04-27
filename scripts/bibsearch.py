@@ -30,7 +30,7 @@ Example::
 :TODO: add HTML output option
 :TODO: add output options (e.g., to file)
 
-.. _license.txt: ./license.txt
+.. _`license.txt`: ./license.txt
 """
 __docformat__ = "restructuredtext en"
 __authors__  =    ["Dylan W. Schwilk", "Alan G. Isaac"]

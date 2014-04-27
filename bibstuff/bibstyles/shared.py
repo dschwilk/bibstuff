@@ -10,7 +10,7 @@ especially for bib4txt.py.
 :since: 2006-08-01
 :date: 2008-10-14
 
-.. _license.txt: ../license.txt
+.. _`license.txt`: ../../license.txt
 """
 __docformat__ = "restructuredtext en"
 __version__ = "1.3"

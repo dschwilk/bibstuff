@@ -13,7 +13,7 @@ long versions with abbreviations in bib file.
 :date: 2006-09-15
 :TODO: Move this to a scripts directory or the examples directory?
 
-.. _license.txt: ./license.txt
+.. _`license.txt`: ../license.txt
 """
 
 __docformat__ = "restructuredtext en"

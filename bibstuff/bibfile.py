@@ -18,9 +18,9 @@ To fill a BibFile instance, bfi, call bibgrammar.Parse(src, bfi).
 :requires: Python 2.4+
 :TODO: make this framework more general, perhaps along the lines of the btparse_ library in btOOL_.
 
-.. _btOOL: http://www.gerg.ca/software/btOOL/doc/btparse.html
-.. _btparse: http://www.gerg.ca/software/btOOL/doc/btparse.html
-.. _license.txt: ./license.txt
+.. _`btOOL`: http://www.gerg.ca/software/btOOL/doc/btparse.html
+.. _`btparse`: http://www.gerg.ca/software/btOOL/doc/btparse.html
+.. _`license.txt`: ./license.txt
 """
 __docformat__ = "restructuredtext en"
 __authors__  = ["Dylan W. Schwilk", "Alan G. Isaac"]

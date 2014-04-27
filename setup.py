@@ -12,7 +12,7 @@ setup(name="bibstuff",
       description="Bibtex database utilities",
       author="Dylan W. Schwilk and Alan G. Isaac and others",
       author_email="dylan@schwilk.org",
-      url = "http://www.pricklysoft.org/software/bibstuff.html",
+      url = "https://github.com/dschwilk/bibstuff",
       license = "MIT",
       packages = ["bibstuff",
                   "bibstuff.bibstyles"

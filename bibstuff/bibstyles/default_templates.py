@@ -39,7 +39,7 @@ misc = '%(year)s.  %(title)s.',
 :license: MIT (see `license.txt`_)
 :since: 2006-08-19
 
-.. _license.txt: ./license.txt
+.. _`license.txt`: ../../license.txt
 """
 __docformat__ = "restructuredtext en"
 import re

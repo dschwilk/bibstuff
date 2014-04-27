@@ -16,11 +16,11 @@
 :Address: 1 Line
           Line 2
           Line 3
-:Contact: http://code.google.com/p/bibstuff/
-:date: 2008-05-21
+:Contact: https://github.com/dschwilk/bibstuff
+:date: 2014-04-26
 :status: for illustration only
 :version: 1.1
-:copyright: 2008
+:copyright: 2008-2014
 
 
 Introduction
@@ -29,7 +29,7 @@ Introduction
 This introduction will simply demonstrate some citations which can be found in
 the ``example.bib`` database. To expand these citations or produce a
 bibliography list, use ``bib4txt.py``. The output should look like
-``testout.txt``.
+``testout.rst``.
 
 We have noticed that some people running this example encounter a simpleparse
 error with python 2.5. For example, Ubuntu users should download the SourceForge
@@ -51,13 +51,13 @@ reStructuredText readers.
 That should be enough for a test, but here are a couple more:
 [martin-2008-jds]_, [doe-2525-tq]_.
 
-Use an `include directive`_ if you want to include the ``testout.txt`` bibliography.
+Use an `include directive`_ if you want to include the ``testout.rst`` bibliography.
 
 References
 ==========
 
 
-.. include:: testout.txt
+.. include:: testout.rst
 
 .. Links
 

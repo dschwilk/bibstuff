@@ -7,6 +7,7 @@ for use in parsing with simpleparse.
 :copyright: 2006 by Alan G Isaac
 :license: MIT (see `license.txt`_)
 :date: 2006-08-19
+.. _`licence.txt`: ../license.txt
 """
 
 # AI's modifications for reST

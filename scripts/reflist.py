@@ -15,7 +15,7 @@ when submitting to a journal.)
 :license: MIT (see `license.txt`_)
 :date: $Date: 2007-09-03 $
 
-.. _license.txt: ./license.txt
+.. _`license.txt`: ../license.txt
 """
 __docformat__ = "restructuredtext en"
 __authors__  =    ["Dylan W. Schwilk", "Alan G. Isaac"]

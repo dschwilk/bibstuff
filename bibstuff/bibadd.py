@@ -28,7 +28,7 @@ Schwilk+Isaac:2002 and Isaac+Schwilk+etal:2006.
 :TODO: add crossreferencing as option for inbook and incollection
 :TODO: change default format to legal HTML names
 
-.. _license.txt: ./license.txt
+.. _license.txt: ../license.txt
 '''
 __docformat__ = "restructuredtext en"
 __authors__  =    ['Alan G. Isaac']

@@ -3,22 +3,19 @@
 ================================
 
 :authors: Dylan W. Schwilk and Alan G. Isaac
-:web site: http://www.pricklysoft.org
-:source code: http://code.google.com/p/bibstuff/
-:date: 2009-02-13
-:version: 1.0
+:source code: https://github.com/dschwilk/bibstuff
 
 Some odds and ends files and scripts
 ====================================
 
-rst_input.txt
+rst_input.rst
 	An example reStructuredText document using bibstuff style
 	citations for processing with bib4txt.py.
 
-testout.txt
+testout.rst
 	Example output bibliography from running bib4txt.py on
-	rst_input.txt. 
-	`> python bib4txt.py -i examples/rst_input.txt -no examples/new-testout.txt examples/example.bib`
+	rst_input.rst. 
+	`> python bib4txt.py -i examples/rst_input.rst -no examples/new-testout.rst examples/example.bib`
 
 jmaker.py
 	A little script to translate the list of journal abbreviations
