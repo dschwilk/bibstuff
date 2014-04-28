@@ -1,0 +1,5 @@
+# ignore sphinx output
+_*
+# ignore sphinx-apidoc output (all rst except index)
+*.rst
+!index.rst
