@@ -1,7 +1,9 @@
 #! /usr/bin/env python
 # -*- coding: latin-1 -*-
 # File: bibadd.py
-'''
+''':mod:`bibstuff.bibadd` --- Add entries to .bib File
+===================================================
+
 Add entry/entries to .bib file.
 Default format produces citekeys like:
 Schwilk+Isaac:2002 and Isaac+Schwilk+etal:2006.

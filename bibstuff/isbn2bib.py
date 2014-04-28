@@ -1,7 +1,9 @@
 #! /usr/bin/env python
 # -*- coding: latin-1 -*-
 # File: isbn2bib.py
-"""
+""":mod:`bibstuff.isbn2bib.py` --- Obtain bib entries via ISBN
+===========================================================
+
 :requires: pyaws v.0.3+ (installation is easy; see below)
 :requires: free Amazon web services key http://www.amazon.com/gp/browse.html?node=3435361
 :license: MIT
