@@ -7,6 +7,7 @@ SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = _build
 SOURCEDIR     = ../bibstuff
+GH_PAGES_SOURCES = Makefile conf.py index.rst ../bibstuff
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -19,6 +20,7 @@ help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo "  rst		to make reStructured text files (sphinx-apidoc)"
 	@echo "  html       to make standalone HTML files"
+	@echo "  gh-pages   to create html files in gh-pages branch and push to GitHub"
 	@echo "  dirhtml    to make HTML files named index.html in directories"
 	@echo "  singlehtml to make a single large HTML file"
 	@echo "  pickle     to make pickle files"
@@ -48,6 +50,19 @@ html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+gh-pages:
+	git checkout gh-pages
+	rm -rf $(BUILDIR) _static _templates
+	git checkout master $(GH_PAGES_SOURCES)
+	git reset HEAD
+	make html
+	mv -fv $(BUILDDIR)/html/* ../
+	rm -rf $(GH_PAGES_SOURCES) $(BUILDIR)
+	git add -A :/
+	git commit -m "Generated gh-pages for `git log master -1 --pretty=short --abbrev-commit`" && git push origin gh-pages ; git checkout master
+	@echo
+	@echo "Build finished. The HTML pages built in gh-pages branch."
 
 dirhtml:
 	make rst
