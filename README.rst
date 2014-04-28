@@ -84,8 +84,9 @@ Package: bibstuff/bibstyles
 Testing
 =======
 
-No tests available yet
+Tests are located in /tests and use the unittest module. To run all tests:
 
+  ``python -m unittest discover``
 
 Related Projects
 ================
