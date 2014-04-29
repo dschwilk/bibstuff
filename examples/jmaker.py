@@ -10,11 +10,11 @@ import sys, string
 input = sys.stdin.readlines()
 
 for line in input:
-    names = line.split(', (')
-    journal = names[0].strip()
-    try :
-        info = names[1].split(')')
-        abbrev = info[0].strip()
-    except :
-        abbrev = journal
-    print "%s = %s" % (abbrev, journal)
+	names = line.split(', (')
+	journal = names[0].strip()
+	try :
+		info = names[1].split(')')
+		abbrev = info[0].strip()
+	except :
+		abbrev = journal
+	print "%s = %s" % (abbrev, journal)

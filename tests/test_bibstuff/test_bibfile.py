@@ -53,21 +53,21 @@ Dylan Schwilk},
 }"""
 
 class TestBibFile(unittest.TestCase):
-    """Tests for `bibfile.py`"""
+	"""Tests for `bibfile.py`"""
 
-    def test_simple_read(self):
-        """Check for read success on a simple .bib file"""
+	def test_simple_read(self):
+		"""Check for read success on a simple .bib file"""
 	bfile = bibfile.BibFile()
-        bibgrammar.Parse(bib1, bfile)
-        self.assertTrue(len(bfile.entries) == 5)
+		bibgrammar.Parse(bib1, bfile)
+		self.assertTrue(len(bfile.entries) == 5)
 
-    def test_search_bibentry(self):
-        """Check search"""
+	def test_search_bibentry(self):
+		"""Check search"""
 	bfile = bibfile.BibFile()
-        bibgrammar.Parse(bib1, bfile)
-        ck = bfile.search_entries("Schwilk")[1]["citekey"]
-        self.assertTrue(ck == "schwilk+isaac:2010")
+		bibgrammar.Parse(bib1, bfile)
+		ck = bfile.search_entries("Schwilk")[1]["citekey"]
+		self.assertTrue(ck == "schwilk+isaac:2010")
 
 
 if __name__ == '__main__':
-    unittest.main() 
+	unittest.main() 
