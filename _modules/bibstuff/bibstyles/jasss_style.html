@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>bibstuff.bibstyles.jasss_style &mdash; bibstuff 1.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="bibstuff 1.3.1 documentation" href="../../../index.html" />
+    <link rel="up" title="bibstuff.bibstyles" href="../bibstyles.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../bibstyles.html" accesskey="U">bibstuff.bibstyles</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for bibstuff.bibstyles.jasss_style</h1><div class="highlight"><pre>
+<span class="c">#File: jass_style.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Style for the Journal of Artificial Societies and Social Simulation</span>
+<span class="sd">The JASSS page for authors__ claims they use the `Oxford style`__,</span>
+<span class="sd">but these are clearly different.</span>
+
+<span class="sd">__http://jasss.soc.surrey.ac.uk/admin/submit.html</span>
+<span class="sd">__http://www.usq.edu.au/library/help/ehelp/ref_guides/oxford.htm</span>
+
+<span class="sd">Examples (from the journal website) inconsistent in use of commas, quotes, ...</span>
+
+<span class="sd">	HASTIE, R (1986) &quot;Experimental evidence on group accuracy&quot;.</span>
+<span class="sd">	In Jablin F M, Putnam L L, Roberts K H and Porter L W (Eds.)</span>
+<span class="sd">	Handbook of Organizational Communication: An Interdisciplinary Perspective, Beverly Hills, CA: Sage.</span>
+
+<span class="sd">	KALAKOTA R and Whinston A B (1996)</span>
+<span class="sd">	Frontiers of Electronic Commerce. Reading, MA: Addison-Wesley Publishing Company, Inc..</span>
+
+<span class="sd">	KARPINSKI R (1997) Extranets emerge as next challenge for marketers. Netmarketing, April 1997. pp. 1-4.</span>
+
+<span class="sd">	LEE H L and Billington C (1992) Managing Supply Chain Inventory: Pitfalls and Opportunities.</span>
+<span class="sd">	Sloan Management Review, Spring 1992. pp. 65-73.</span>
+
+<span class="sd">	RICHIARDI, M, Leombruni, R, Sonnessa, M and Saam, N (2006).</span>
+<span class="sd">	&#39;A Common Protocol for Agent-Based Social Simulation&#39;.</span>
+<span class="sd">	Journal of Artificial Societies and Social Simulation 9(1) http://jasss.soc.surrey.ac.uk/9/1/15.html. </span>
+
+<span class="sd">:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</span>
+<span class="sd">:author: Alan G Isaac</span>
+<span class="sd">:license: MIT (see `license.txt`_)</span>
+<span class="sd">:date: 2006-08-01</span>
+
+<span class="sd">.. _`license.txt`: ../../license.txt</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
+<span class="n">__author__</span>  <span class="o">=</span>   <span class="s">&quot;Alan G. Isaac&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;0.7&quot;</span>
+<span class="n">__needs__</span> <span class="o">=</span> <span class="s">&#39;2.4&#39;</span>
+
+<span class="c"># import everything from a useful style</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">default</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">shared</span>
+<span class="c">#####################################################################</span>
+<span class="c">############  Override the style choices  ###########################</span>
+<span class="c">#####################################################################</span>
+
+
+<span class="c">######## ADJUST CITATION TEMPLATE FOR NEW STYLE  ###########</span>
+<span class="c">######## note: see help for bibstyles.shared.NameFormatter for name details</span>
+<span class="n">CITATION_TEMPLATE</span> <span class="o">=</span> <span class="n">default</span><span class="o">.</span><span class="n">CITATION_TEMPLATE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">CITATION_TEMPLATE</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+<span class="n">indent_left</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="n">name_first</span> <span class="o">=</span> <span class="s">&#39;V |L |f&#39;</span><span class="p">,</span>
+<span class="n">name_other</span> <span class="o">=</span> <span class="s">&#39;v |l |f&#39;</span><span class="p">,</span>
+<span class="n">initials</span> <span class="o">=</span> <span class="s">&#39;f&#39;</span><span class="p">,</span>
+<span class="n">max_citation_names</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="n">name_name_sep</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;, &#39;</span><span class="p">,</span><span class="s">&#39; and &#39;</span><span class="p">),</span>
+<span class="n">names_details_sep</span> <span class="o">=</span> <span class="s">&#39; &#39;</span><span class="p">,</span>
+<span class="n">article</span>  <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%(year)s</span><span class="s">) &quot;</span><span class="si">%(title)s</span><span class="s">&quot;. *</span><span class="si">%(journal)s</span><span class="s">* </span><span class="si">%(volume)s</span><span class="s">, </span><span class="si">%(month)s</span><span class="s"> </span><span class="si">%(year)s</span><span class="s">. pp. </span><span class="si">%(pages)s</span><span class="s">. </span><span class="si">%(url)s</span><span class="s">&#39;</span><span class="p">,</span>
+<span class="n">inproceedings</span>  <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%(year)s</span><span class="s">) &quot;</span><span class="si">%(title)s</span><span class="s">&quot;. In </span><span class="si">%(editor)s</span><span class="s"> (Eds.) *</span><span class="si">%(booktitle)s</span><span class="s">*, </span><span class="si">%(address)s</span><span class="s">: </span><span class="si">%(publishers)s</span><span class="s">&#39;</span><span class="p">,</span>
+<span class="n">incollection</span>  <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%(year)s</span><span class="s">) &quot;</span><span class="si">%(title)s</span><span class="s">&quot;. In </span><span class="si">%(editor)s</span><span class="s"> (Eds.) *</span><span class="si">%(booktitle)s</span><span class="s">*, </span><span class="si">%(address)s</span><span class="s">: </span><span class="si">%(publishers)s</span><span class="s">&#39;</span><span class="p">,</span>
+<span class="n">book</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%(year)s</span><span class="s">) *</span><span class="si">%(title)s</span><span class="s">*. </span><span class="si">%(address)s</span><span class="s">: </span><span class="si">%(publisher)s</span><span class="s">.&#39;</span><span class="p">,</span>
+<span class="n">techreport</span>  <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%(year)s</span><span class="s">) &quot;</span><span class="si">%(title)s</span><span class="s">&quot;. </span><span class="si">%(institution)s</span><span class="s"> </span><span class="si">%(type)s</span><span class="s"> </span><span class="si">%(number)s</span><span class="s">. </span><span class="si">%(url)s</span><span class="s">&#39;</span><span class="p">,</span>
+<span class="p">))</span>
+
+
+<span class="c"># Redefine the CitationManager class, even if &quot;unchanged&quot;.</span>
+<span class="c"># (This is necessary if you want to change any of the global formatting functions,</span>
+<span class="c">#  and usually you change &#39;format_inline_cite&#39;)</span>
+<div class="viewcode-block" id="CitationManager"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.jasss_style.CitationManager">[docs]</a><span class="k">class</span> <span class="nc">CitationManager</span><span class="p">(</span><span class="n">shared</span><span class="o">.</span><span class="n">CitationManager</span><span class="p">):</span>
+	<span class="n">default_citation_manager</span> <span class="o">=</span> <span class="n">CITATION_TEMPLATE</span>
+<div class="viewcode-block" id="CitationManager.format_inline_cite"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.jasss_style.CitationManager.format_inline_cite">[docs]</a>	<span class="k">def</span> <span class="nf">format_inline_cite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cite_key_list</span><span class="p">):</span>
+		<span class="k">pass</span>
+	<span class="c">################### CITATION FORMATTING ########################</span></div>
+<div class="viewcode-block" id="CitationManager.get_citation_label"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.jasss_style.CitationManager.get_citation_label">[docs]</a>	<span class="k">def</span> <span class="nf">get_citation_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">entry</span><span class="p">,</span><span class="n">citation_template</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s">&#39;.. [&#39;</span><span class="o">+</span><span class="n">entry</span><span class="o">.</span><span class="n">citekey</span><span class="o">+</span><span class="s">&#39;]</span><span class="se">\n</span><span class="s">&#39;</span>  <span class="c">#:TODO: ? allow use of key in place of citekey ?</span>
+
+	<span class="c">#sort_key for sorting list of references</span>
+	<span class="c"># (choice of field_list is a formatting decision)</span></div>
+<div class="viewcode-block" id="CitationManager.sortkey"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.jasss_style.CitationManager.sortkey">[docs]</a>	<span class="k">def</span> <span class="nf">sortkey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bibentry</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_sort_key</span><span class="p">(</span><span class="n">bibentry</span><span class="p">,[</span><span class="s">&#39;Author&#39;</span><span class="p">,</span><span class="s">&#39;Year&#39;</span><span class="p">])</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../bibstyles.html" >bibstuff.bibstyles</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Dylan W. Schwilk and Alan G. Isaac.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+bibstuff package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    bibstuff.bibstyles
+
+Submodules
+----------
+
+bibstuff.bibadd module
+----------------------
+
+.. automodule:: bibstuff.bibadd
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bibstuff.bibfile module
+-----------------------
+
+.. automodule:: bibstuff.bibfile
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bibstuff.bibgrammar module
+--------------------------
+
+.. automodule:: bibstuff.bibgrammar
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bibstuff.bibname module
+-----------------------
+
+.. automodule:: bibstuff.bibname
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bibstuff.ebnf_sp module
+-----------------------
+
+.. automodule:: bibstuff.ebnf_sp
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bibstuff.isbn2bib module
+------------------------
+
+.. automodule:: bibstuff.isbn2bib
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: bibstuff
+    :members:
+    :undoc-members:
+    :show-inheritance:

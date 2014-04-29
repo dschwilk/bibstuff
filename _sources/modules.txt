@@ -1,0 +1,7 @@
+bibstuff
+========
+
+.. toctree::
+   :maxdepth: 4
+
+   bibstuff

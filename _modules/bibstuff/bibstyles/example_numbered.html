@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>bibstuff.bibstyles.example_numbered &mdash; bibstuff 1.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="bibstuff 1.3.1 documentation" href="../../../index.html" />
+    <link rel="up" title="bibstuff.bibstyles" href="../bibstyles.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../bibstyles.html" accesskey="U">bibstuff.bibstyles</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for bibstuff.bibstyles.example_numbered</h1><div class="highlight"><pre>
+<span class="c">#File: example_numbered.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Provides an examle of how to easily modify an existing style:</span>
+<span class="sd">Just import everything from that style, and then override</span>
+<span class="sd">what you wish to change.  In this case, we import from</span>
+<span class="sd">default.py, the default style.</span>
+
+<span class="sd">This style changes to numbered citation references and citations.</span>
+<span class="sd">Citation references are numbered like this: (1,2).</span>
+<span class="sd">Citations are numbered like this:</span>
+
+<span class="sd">	1. First Citation Definition</span>
+<span class="sd">	2. Second Citation Definition</span>
+
+<span class="sd">The numbers reflect the order cited (the &#39;citation_rank&#39;).</span>
+
+
+<span class="sd">:author: Alan G Isaac</span>
+<span class="sd">:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</span>
+<span class="sd">:copyright: 2006 by Alan G Isaac</span>
+<span class="sd">:license: MIT (see `license.txt`_)</span>
+<span class="sd">:date: 2006-08-01</span>
+
+<span class="sd">.. _`license.txt`: ../../license.txt</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
+<span class="n">__author__</span>  <span class="o">=</span>   <span class="s">&quot;Alan G. Isaac&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;0.5&quot;</span>
+<span class="n">__needs__</span> <span class="o">=</span> <span class="s">&#39;2.4&#39;</span>
+
+<span class="c"># import everything from a useful style</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">default</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">shared</span>
+
+<span class="c">#####################################################################</span>
+<span class="c">############  Override the style choices  ###########################</span>
+<span class="c">#####################################################################</span>
+
+
+<span class="c">######## ADJUST CITATION TEMPLATE FOR NEW STYLE  ###########</span>
+<span class="c">######## note: see help for bibstyles.shared.NameFormatter for name details</span>
+<span class="n">CITATION_TEMPLATE</span> <span class="o">=</span> <span class="n">default</span><span class="o">.</span><span class="n">CITATION_TEMPLATE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">CITATION_TEMPLATE</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+<span class="n">indent_left</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="n">name_first</span> <span class="o">=</span> <span class="s">&#39;f{. }. |v |l|, j&#39;</span><span class="p">,</span>
+<span class="n">name_other</span> <span class="o">=</span> <span class="s">&#39;f{. }. |v |l|, j&#39;</span><span class="p">,</span>
+<span class="n">initials</span> <span class="o">=</span> <span class="s">&#39;f&#39;</span><span class="p">,</span>
+<span class="n">name_name_sep</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;, &#39;</span><span class="p">,</span><span class="s">&#39; and &#39;</span><span class="p">),</span>
+<span class="p">))</span>
+
+<span class="c"># Redefine the CitationManager class, even if &quot;unchanged&quot;.</span>
+<span class="c"># (This is necessary if you want to change any of the global formatting functions,</span>
+<span class="c">#  and usually you change &#39;format_inline_cite&#39;)</span>
+<div class="viewcode-block" id="CitationManager"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.example_numbered.CitationManager">[docs]</a><span class="k">class</span> <span class="nc">CitationManager</span><span class="p">(</span><span class="n">shared</span><span class="o">.</span><span class="n">CitationManager</span><span class="p">):</span>
+	<span class="n">default_citation_template</span> <span class="o">=</span> <span class="n">CITATION_TEMPLATE</span>
+	<span class="c">################### CITEREF FORMATTING #########################</span>
+<div class="viewcode-block" id="CitationManager.format_inline_cite"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.example_numbered.CitationManager.format_inline_cite">[docs]</a>	<span class="k">def</span> <span class="nf">format_inline_cite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cite_key_list</span><span class="p">):</span>
+		<span class="n">entry_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_entries</span><span class="p">(</span><span class="n">cite_key_list</span><span class="p">,</span><span class="n">discard</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+		<span class="n">all_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citeref_processor</span><span class="o">.</span><span class="n">all_citekeys</span>
+		<span class="k">return</span> <span class="n">format_inline_cite</span><span class="p">(</span><span class="n">entry_list</span><span class="p">,</span><span class="n">cite_key_list</span><span class="p">,</span><span class="n">all_keys</span><span class="p">)</span>
+
+	<span class="c">################### CITATION FORMATTING ########################</span></div>
+<div class="viewcode-block" id="CitationManager.get_citation_label"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.example_numbered.CitationManager.get_citation_label">[docs]</a>	<span class="k">def</span> <span class="nf">get_citation_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="k">return</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%d</span><span class="s">.&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">get_citation_rank</span><span class="p">(</span><span class="n">entry</span><span class="p">))</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CitationManager.sortkey"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.example_numbered.CitationManager.sortkey">[docs]</a>	<span class="k">def</span> <span class="nf">sortkey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bibentry</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_citation_rank</span><span class="p">(</span><span class="n">bibentry</span><span class="p">)</span>
+
+
+</div></div>
+<div class="viewcode-block" id="format_inline_cite"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.example_numbered.format_inline_cite">[docs]</a><span class="k">def</span> <span class="nf">format_inline_cite</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">all_keys</span><span class="p">)</span> <span class="p">:</span>
+	<span class="n">formatted_list</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">)):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+			<span class="n">formatted_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="c">#keys appear for missing entries</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">formatted_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">all_keys</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+	<span class="k">return</span> <span class="s">&#39;(&#39;</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">formatted_list</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;)&#39;</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../bibstyles.html" >bibstuff.bibstyles</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Dylan W. Schwilk and Alan G. Isaac.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>bibstuff.bibgrammar &mdash; bibstuff 1.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="bibstuff 1.3.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for bibstuff.bibgrammar</h1><div class="highlight"><pre>
+<span class="c">#! /usr/bin/env python</span>
+<span class="c"># File: bibgrammar.py</span>
+
+<span class="sd">&quot;&quot;&quot;:mod:`bibstuff.bibgrammar` --- BibTeX Parser</span>
+<span class="sd">============================================</span>
+
+<span class="sd">Provides an EBNF description of the bibtex bibliography format. The grammar</span>
+<span class="sd">draws largely from the grammar description in Nelson Beebe&#39;s `Lex/Yacc parser`_</span>
+<span class="sd">and also from Greg Ward&#39;s `btOOL`_ documentation.</span>
+
+<span class="sd">:author: Dylan Schwilk</span>
+<span class="sd">:contact: http://www.schwilk.org</span>
+<span class="sd">:author: Alan G Isaac</span>
+<span class="sd">:contact: http://www.american.edu/cas/econ/faculty/faculty.htm#isaac</span>
+<span class="sd">:license: MIT (see `license.txt`_)</span>
+<span class="sd">:date: 2008-06-28</span>
+
+
+<span class="sd">.. _`license.txt`: ../license.txt</span>
+<span class="sd">.. _`Lex/Yacc parser`: http://www.math.utah.edu/~beebe/</span>
+<span class="sd">.. _`btOOL`: http://www.tug.org/tex-archive/biblio/bibtex/utils/btOOL/</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
+<span class="n">__needs__</span> <span class="o">=</span> <span class="s">&#39;2.4&#39;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;1.7&quot;</span>
+<span class="n">__author__</span>  <span class="o">=</span>    <span class="p">[</span><span class="s">&quot;Dylan W. Schwilk&quot;</span><span class="p">,</span> <span class="s">&quot;Alan G Isaac&quot;</span><span class="p">]</span>
+
+
+<span class="c">###################  IMPORTS  ##################################################</span>
+<span class="c">#import from standard library</span>
+<span class="c"># (some if  run as main; see below)</span>
+
+<span class="c">#import dependencies</span>
+<span class="kn">from</span> <span class="nn">simpleparse.parser</span> <span class="kn">import</span> <span class="n">Parser</span>
+<span class="kn">from</span> <span class="nn">simpleparse.common</span> <span class="kn">import</span> <span class="n">numbers</span><span class="p">,</span> <span class="n">strings</span><span class="p">,</span> <span class="n">chartypes</span>
+
+<span class="c">#local imports</span>
+<span class="c">################################################################################</span>
+
+
+<span class="c"># EBNF description of a bibtex file</span>
+
+<span class="c"># 2008-06-27: There may be a bug in simpleparse that sometimes causes certain entries to</span>
+<span class="c"># not be recognized. The problem, however, can disapear if the order of entries</span>
+<span class="c"># in a bibfile is changed! I do not believe it is a problem with the grammar</span>
+<span class="c"># but is a bug in simpleparse itself.</span>
+
+<span class="c">#modification 2009-01-01</span>
+<span class="c">#  change `key` to `citekey`</span>
+<span class="c">#  add `alpha_name`</span>
+<span class="c">#  change `macro` def (use case insenstive string)</span>
+<span class="c">#  change `macro_contents` def (field instead of fields)</span>
+<span class="c">#  change `fields` def (since comma is allowed after last field)</span>
+<span class="c">#modification 2009-02-11</span>
+<span class="c">#  change braces_string and esp. quotes_string def bec old def *very* slow</span>
+<span class="c">#  also, gives better match to format described at</span>
+<span class="c">#  http://artis.imag.fr/~Xavier.Decoret/resources/xdkbibtex/bibtex_summary.html</span>
+
+<span class="n">dec</span> <span class="o">=</span> <span class="s">r&quot;&quot;&quot;</span>
+<span class="s">bibfile              := entry_or_junk+</span>
+<span class="s">&gt;entry_or_junk&lt;      := (tb, object) / (tb, junk)</span>
+<span class="s">&gt;object&lt;             := entry / macro / preamble / comment_entry</span>
+<span class="s">entry                := &#39;@&#39;, entry_type, tb,  ( &#39;{&#39; , tb, contents, tb, &#39;}&#39; ) / ( &#39;(&#39; , tb, contents, tb, &#39;)&#39; )</span>
+<span class="s">macro                := c&#39;@string&#39;, tb,  ( &#39;{&#39; , tb, macro_contents, tb, &#39;}&#39; ) / ( &#39;(&#39; , tb, macro_contents, tb, &#39;)&#39; )</span>
+<span class="s">preamble             := &#39;@&#39;, entry_type, tb,  ( &#39;{&#39; , tb, preamble_contents, tb, &#39;}&#39; ) / ( &#39;(&#39; , tb, preamble_contents, tb, &#39;)&#39; )</span>
+<span class="s">comment_entry        := &#39;@&#39;, entry_type, tb, string</span>
+<span class="s">&gt;contents&lt;           := citekey , tb, &#39;,&#39; , tb, fields</span>
+<span class="s">&gt;macro_contents&lt;     := field</span>
+<span class="s">&gt;preamble_contents&lt;  := value</span>
+<span class="s">entry_type           := alpha_name</span>
+<span class="s">citekey              := number / name</span>
+<span class="s">fields               := (field_comma / field)+</span>
+<span class="s">&gt;field_comma&lt;        := field , tb, &#39;,&#39;, tb</span>
+<span class="s">field                := name, tb, &#39;=&#39; , tb, value</span>
+<span class="s">value                := simple_value  / (simple_value, (tb,&#39;#&#39;, tb, simple_value)+)</span>
+<span class="s">&gt;simple_value&lt;       :=  string / number / name</span>
+<span class="s">alpha_name           := [a-zA-Z]+</span>
+<span class="s">name                 := []-[a-z_A-Z!$&amp;+./:;&lt;&gt;?^`|&#39;] , []-[a-z_A-Z0-9!$&amp;+./:;&lt;&gt;?^`|&#39;]*</span>
+<span class="s">number               :=  [0-9]+ / ([[0-9]+, tb, [-]+, tb, [0-9]+)</span>
+<span class="s">string               :=  (&#39;\&quot;&#39; , quotes_string?, &#39;\&quot;&#39;) / (&#39;{&#39; , braces_string?, &#39;}&#39;)</span>
+<span class="s">&lt;braces_string&gt;      := (-[{}@]+ / string)+</span>
+<span class="s">&lt;quotes_string&gt;      := (-[\&quot;{}]+ / (&#39;{&#39;, braces_string,&#39;}&#39;))+</span>
+<span class="s">&lt;junk&gt;               := -[ \t\r\n]+</span>
+<span class="s">&lt;tb&gt;                 := (comment / ws)*</span>
+<span class="s">&lt;ws&gt;                 := [ \t\n\r]</span>
+<span class="s">&lt;comment&gt;            := &#39;%&#39; , -[\n]*, &#39;\n&#39;</span>
+<span class="s">&quot;&quot;&quot;</span>
+
+
+<span class="c">## instantiate SimpleParse parsers</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="s">&#39;bibfile&#39;</span><span class="p">)</span>
+<span class="n">entry_parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="s">&#39;entry&#39;</span><span class="p">)</span>
+
+<span class="c">## offer a default parse function</span>
+<div class="viewcode-block" id="Parse"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibgrammar.Parse">[docs]</a><span class="k">def</span> <span class="nf">Parse</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">processor</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39;Parse the bibtex string *src*, process with *processor*.&#39;&#39;&#39;</span>
+	<span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">src</span><span class="p">,</span>  <span class="n">processor</span><span class="o">=</span><span class="n">processor</span><span class="p">)</span>
+
+<span class="c">## self-test</span></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span><span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+	<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">pprint</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="p">:</span>
+		<span class="n">src</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+		<span class="n">taglist</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+		<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">taglist</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Dylan W. Schwilk and Alan G. Isaac.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

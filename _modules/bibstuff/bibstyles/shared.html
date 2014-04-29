@@ -1,0 +1,748 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>bibstuff.bibstyles.shared &mdash; bibstuff 1.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="bibstuff 1.3.1 documentation" href="../../../index.html" />
+    <link rel="up" title="bibstuff.bibstyles" href="../bibstyles.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../bibstyles.html" accesskey="U">bibstuff.bibstyles</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for bibstuff.bibstyles.shared</h1><div class="highlight"><pre>
+<span class="c">#File: shared.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities and formatting classes for BibStuff,</span>
+<span class="sd">especially for bib4txt.py.</span>
+
+<span class="sd">:author: Alan G Isaac</span>
+<span class="sd">:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</span>
+<span class="sd">:copyright: 2008 by Alan G. Isaac</span>
+<span class="sd">:license: MIT (see `license.txt`_)</span>
+<span class="sd">:since: 2006-08-01</span>
+<span class="sd">:date: 2008-10-14</span>
+
+<span class="sd">.. _`license.txt`: ../../license.txt</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;1.3&quot;</span>
+
+<span class="c">###################  IMPORTS  ##################################################</span>
+<span class="c">#import from standard library</span>
+<span class="kn">import</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">re</span>
+<span class="c">#import dependencies</span>
+<span class="kn">import</span> <span class="nn">simpleparse</span>
+<span class="c"># We need to import this specifically because simpleparse does not import it by</span>
+<span class="c"># default</span>
+<span class="kn">import</span> <span class="nn">simpleparse.dispatchprocessor</span>
+<span class="c">#create globals</span>
+<span class="n">shared_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;bibstuff_logger&#39;</span><span class="p">)</span>
+<span class="c">################################################################################</span>
+
+<span class="kn">from</span> <span class="nn">.default_templates</span> <span class="kn">import</span> <span class="n">DEFAULT_CITATION_TEMPLATE</span>
+
+<span class="c">#allow for a single citation reference to have keys for multiple citations</span>
+<span class="c">#ordinarily, you do not override this</span>
+<span class="n">CITE_SEP</span> <span class="o">=</span> <span class="s">&#39;,&#39;</span>
+
+<div class="viewcode-block" id="append_sep"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.append_sep">[docs]</a><span class="k">def</span> <span class="nf">append_sep</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">sep</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;return s+sep after removing duplicate punctuation at the join</span>
+<span class="sd">	`s`: string</span>
+<span class="sd">	`sep`: string</span>
+<span class="sd">	TODO? restrict characters removed</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">sep</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+		<span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+	<span class="k">return</span> <span class="n">s</span><span class="o">+</span><span class="n">sep</span>
+</div>
+<div class="viewcode-block" id="reformat_para"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.reformat_para">[docs]</a><span class="k">def</span> <span class="nf">reformat_para</span><span class="p">(</span><span class="n">para</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span> <span class="n">just</span><span class="o">=</span><span class="s">&#39;LEFT&#39;</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;Simple paragraph reformatter.  Allows specification</span>
+<span class="sd">	of left and right margins, and of justification style</span>
+<span class="sd">	(using constants defined in module).</span>
+<span class="sd">	:note: Adopted by Schwilk from David Mertz&#39;s example in TPiP</span>
+<span class="sd">	:see:  Mertz, David,  *Text Processing in Python* (TPiP)</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">LEFT</span><span class="p">,</span> <span class="n">RIGHT</span><span class="p">,</span> <span class="n">CENTER</span> <span class="o">=</span> <span class="s">&#39;LEFT&#39;</span><span class="p">,</span> <span class="s">&#39;RIGHT&#39;</span><span class="p">,</span> <span class="s">&#39;CENTER&#39;</span>
+	<span class="n">words</span> <span class="o">=</span> <span class="n">para</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+	<span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">line</span>  <span class="o">=</span> <span class="s">&#39;&#39;</span>
+	<span class="n">word</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">end_words</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">while</span> <span class="ow">not</span> <span class="n">end_words</span><span class="p">:</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="n">word</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">right</span><span class="o">-</span><span class="n">left</span><span class="p">:</span> <span class="c"># Handle very long words</span>
+			<span class="n">line</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="n">word</span><span class="p">]</span>
+			<span class="n">word</span> <span class="o">+=</span><span class="mi">1</span>
+			<span class="k">if</span> <span class="n">word</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">):</span>
+				<span class="n">end_words</span> <span class="o">=</span> <span class="mi">1</span>
+		<span class="k">else</span><span class="p">:</span>							 <span class="c"># Compose line of words</span>
+			<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="n">word</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="o">-</span><span class="n">left</span><span class="p">:</span>
+				<span class="n">line</span> <span class="o">+=</span> <span class="n">words</span><span class="p">[</span><span class="n">word</span><span class="p">]</span><span class="o">+</span><span class="s">&#39; &#39;</span>
+				<span class="n">word</span> <span class="o">+=</span> <span class="mi">1</span>
+				<span class="k">if</span> <span class="n">word</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">):</span>
+					<span class="n">end_words</span> <span class="o">=</span> <span class="mi">1</span>
+					<span class="k">break</span>
+		<span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+	<span class="k">if</span> <span class="n">just</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="n">CENTER</span><span class="p">:</span>
+		<span class="n">r</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span>
+		<span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39; &#39;</span><span class="o">*</span><span class="n">left</span><span class="o">+</span><span class="n">ln</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
+	<span class="k">elif</span> <span class="n">just</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
+		<span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">line</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
+	<span class="k">else</span><span class="p">:</span> <span class="c"># left justify</span>
+		<span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39; &#39;</span><span class="o">*</span><span class="n">left</span><span class="o">+</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="NamesFormatter"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.NamesFormatter">[docs]</a><span class="k">class</span> <span class="nc">NamesFormatter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;Provides a formatter for BibName instances.</span>
+<span class="sd">	Instances are initialized with formatting information.</span>
+<span class="sd">	Use the `format_names` method to produce</span>
+<span class="sd">	a formatted string representing a BibName instance.</span>
+
+<span class="sd">	Sample usage::</span>
+
+<span class="sd">		#create an author entry</span>
+<span class="sd">		n = bibname.BibName(&#39;One, Test and Test Two&#39;,&#39;author&#39;) </span>
+<span class="sd">		#create a formatter</span>
+<span class="sd">		nf = bibstyles.shared.NamesFormatter(template_list=[&#39;f| v| l| j&#39;]*2,initials=False)</span>
+<span class="sd">		#print the formatted names</span>
+<span class="sd">		print nf.format_names(n)</span>
+
+<span class="sd">	:see: documentation for the `NameFormatter` class</span>
+<span class="sd">	:note: 2006-08-03 add initials keyword to ``__init__``</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">citation_template</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">template_list</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">initials</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Create name formatters for each template.&quot;&quot;&quot;</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;NamesFormatter.__init__ args: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="n">citation_template</span><span class="p">,</span><span class="n">template_list</span><span class="p">,</span><span class="n">initials</span><span class="p">)))</span>
+		<span class="k">assert</span> <span class="p">(</span><span class="n">template_list</span> <span class="ow">or</span> <span class="n">citation_template</span><span class="p">),</span> <span class="s">&quot;Must provide formatting templates.&quot;</span>
+		<span class="k">if</span> <span class="n">citation_template</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span> <span class="o">=</span> <span class="n">citation_template</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">template_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;name_first&#39;</span><span class="p">],</span> <span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;name_other&#39;</span><span class="p">]]</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">initials</span> <span class="o">=</span> <span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;initials&#39;</span><span class="p">]</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">etal</span> <span class="o">=</span> <span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;etal&#39;</span><span class="p">]</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">max_citation_names</span> <span class="o">=</span> <span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;max_citation_names&#39;</span><span class="p">]</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">name_name_sep</span> <span class="o">=</span> <span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;name_name_sep&#39;</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span> <span class="c">#set defaults</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">template_list</span> <span class="o">=</span> <span class="n">template_list</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">initials</span> <span class="o">=</span> <span class="n">initials</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">etal</span> <span class="o">=</span> <span class="s">&quot;et al.&quot;</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">max_citation_names</span> <span class="o">=</span> <span class="mi">99</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">name_name_sep</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;, &#39;</span><span class="p">,</span> <span class="s">&#39;, and &#39;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">formatters</span> <span class="o">=</span> <span class="p">[</span> <span class="n">NameFormatter</span><span class="p">(</span><span class="n">template</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">initials</span><span class="p">)</span> <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_list</span> <span class="p">]</span>
+
+	<span class="c">#get all names, formatted as a string</span>
+<div class="viewcode-block" id="NamesFormatter.format_names"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.NamesFormatter.format_names">[docs]</a>	<span class="k">def</span> <span class="nf">format_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return string,</span>
+<span class="sd">		which represents the BibName instance `names`</span>
+<span class="sd">		formatted as determined by the `NamesFormatter` attributes.</span>
+
+<span class="sd">		`NAME FORMATTING TEMPLATES`_ are explained in some detail</span>
+<span class="sd">		in the doc string for the NameFormatter class.  Briefly:</span>
+
+<span class="sd">		Template sections are separated by ``|``.</span>
+<span class="sd">		Name parts are referred to by first letter: (v)on, (l)last, (j)r or (f)irst.</span>
+<span class="sd">		These letters may be followed by token separator enclosed in curly braces.</span>
+<span class="sd">		Any other characters are included as is.</span>
+
+<span class="sd">		:type `names`: BibName object</span>
+<span class="sd">		:note: 2006-07-25 radically refactored from bibname.py&#39;s FormatName() function</span>
+
+<span class="sd">		.. _`NAME FORMATTING TEMPLATES`: bibstyles/shared.py</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;NamesFormatter.format: Type of names data is &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">names</span><span class="p">)))</span>
+		<span class="c">#get the list of name_dicts from the BibName instance</span>
+		<span class="c">#   each name_dict in the list has the keys: first , von, last, jr</span>
+		<span class="n">names_dicts</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">get_names_dicts</span><span class="p">()</span>
+		<span class="n">num_names</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">names_dicts</span><span class="p">)</span>
+
+		<span class="c">#now make a list of formatted names</span>
+		<span class="c">#the first name formatted with the first formatter no matter what</span>
+		<span class="n">formatted_name_list</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">format_name</span><span class="p">(</span><span class="n">names_dicts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">]</span>
+		<span class="c">#any additional names are formatted with the second formatter (unless too many -&gt; etal)</span>
+		<span class="k">if</span> <span class="n">num_names</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">num_names</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_citation_names</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">name_dict</span> <span class="ow">in</span> <span class="n">names_dicts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>  <span class="c">#for each name ...</span>
+				<span class="n">formatted_name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">format_name</span><span class="p">(</span><span class="n">name_dict</span><span class="p">)</span> <span class="p">)</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;NamesFormatter.format_names: formatted_name_list: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">formatted_name_list</span><span class="p">))</span>
+
+		<span class="c">#formatted_name_list = [&#39; &#39;.join(names_dicts[0][&#39;last&#39;])]</span>
+
+		<span class="c">#now concatenate the formatted names into the desired result</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">formatted_name_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="c">#first concatenate all but the last</span>
+		<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">formatted_name_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">append_sep</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">name_name_sep</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">formatted_name_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="c">#finally, add on the last (with the different name_name_sep)</span>
+		<span class="k">if</span> <span class="n">formatted_name_list</span><span class="p">:</span>
+			<span class="n">final_name</span> <span class="o">=</span> <span class="n">formatted_name_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">final_name</span> <span class="o">!=</span> <span class="s">&quot;others&quot;</span><span class="p">:</span>
+				<span class="n">result</span> <span class="o">=</span> <span class="n">append_sep</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">name_name_sep</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">final_name</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">result</span> <span class="o">=</span> <span class="n">append_sep</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">etal</span><span class="p">)</span>
+		<span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">formatted_name_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>  <span class="c">#obviously</span>
+		<span class="k">if</span> <span class="n">num_names</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_citation_names</span><span class="p">:</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">append_sep</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">etal</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">result</span>
+
+</div></div>
+<div class="viewcode-block" id="NameFormatter"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.NameFormatter">[docs]</a><span class="k">class</span> <span class="nc">NameFormatter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;Create a NameFormatter object based on a template string.</span>
+<span class="sd">	</span>
+<span class="sd">	NAME FORMATTING TEMPLATES</span>
+<span class="sd">	-------------------------</span>
+
+<span class="sd">	The name template takes some explanation.</span>
+
+<span class="sd">	Name parts are referred to by part-designator, which is just the part&#39;s first letter:</span>
+<span class="sd">	(v)on, (l)last, (j)r or (f)irst.</span>
+<span class="sd">	The designator may be capitalized for force upper-casing the entire part.</span>
+
+<span class="sd">	Each name part may have one associated section in a name formatting template.</span>
+<span class="sd">	Sections are separated by &#39;|&#39; and *must* include a part-designator (one of &#39;FVLJfvlj&#39;).</span>
+<span class="sd">	The presumption is that part-designators will be the only alphabetic characters in a name template.</span>
+
+<span class="sd">	A section will generate output iff the name part for that section exists.</span>
+<span class="sd">	Each section may have a partsep</span>
+<span class="sd">	(in curly braces, immediately following the part-designator)</span>
+<span class="sd">	and other characters</span>
+<span class="sd">	(which may not be any of &#39;fvljFVLJ&#39;).</span>
+<span class="sd">	The partsep indicates what should separate multiple tokens of the same part</span>
+<span class="sd">	(e.g., two part last names, or &#39;van der&#39; for the (v)on part).</span>
+<span class="sd">	A part separator will replace the default space to separate multiple tokens in a part.</span>
+<span class="sd">	Any other characters are included as is.</span>
+
+<span class="sd">	For example::</span>
+
+<span class="sd">		   &quot;v{~}~|l,| j,| f{. }.&quot; with initials=&#39;f&#39; produces:</span>
+<span class="sd">		   &quot;McFeely, J. W.&quot; or &quot;van~der~Stadt, Jr, C. M.&quot;</span>
+
+<span class="sd">	:note: has a property -&gt; must be new style class, inherit carefully</span>
+<span class="sd">	:note: 20080331 allow capital part-designators (FVLJ) to force capitalization</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">initials</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;NameFormatter.__init__ args: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="n">template</span><span class="p">,</span><span class="n">initials</span><span class="p">)))</span>
+		<span class="c">#set a default partsep</span>
+		<span class="c">#:note: not planning to parameterize this default (e.g., in the citation template)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">default_partsep</span> <span class="o">=</span> <span class="s">&#39; &#39;</span>
+		<span class="c">#self.partdict = {}  #this will be set by set_template</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">initials</span> <span class="o">=</span> <span class="n">initials</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">set_template</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+
+	<span class="c">#get one name, formatted</span>
+<div class="viewcode-block" id="NameFormatter.format_name"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.NameFormatter.format_name">[docs]</a>	<span class="k">def</span> <span class="nf">format_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name_data</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return one name (stored in `name_data`) as a formatted string.</span>
+
+<span class="sd">		Formats `name_data` according to the `NameFormatter` template.</span>
+
+<span class="sd">		:param `name_data`: list of name_parts or name as string</span>
+<span class="sd">		:type `name_data`: list or string</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;NameFormatter.format_name:</span><span class="se">\n</span><span class="s">Type of name_data is: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">name_data</span><span class="p">)))</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">name_data</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span><span class="nb">tuple</span><span class="p">)</span> <span class="p">):</span>
+			<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Assume list is a name_parts list.&quot;</span><span class="p">)</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_parts2formatted</span><span class="p">(</span><span class="n">name_data</span><span class="p">)</span>  <span class="c">#TODO: currently commented out for testing dicts</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+			<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Assume dict is a name_dict.&quot;</span><span class="p">)</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_dict2formatted</span><span class="p">(</span><span class="n">name_data</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name_data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">name_data</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unrecognized name_data type.&quot;</span><span class="p">)</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;NameFormatter.format_name result: &#39;&quot;</span><span class="o">+</span><span class="n">result</span><span class="o">+</span><span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">result</span>
+</div>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	def name_parts2formatted(self,name_parts):</span>
+<span class="sd">		&quot;&quot;&quot;Returns one fully formatted name, based on a name_parts tuple.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+<span class="sd">		shared_logger.debug(&quot;name_parts2formatted: name_parts is &quot;+str(name_parts))</span>
+<span class="sd">		partdict = self.partdict</span>
+<span class="sd">		shared_logger.debug(&quot;name_parts2formatted: partdict is &quot;+str(partdict))</span>
+<span class="sd">		result = &#39;&#39;</span>
+<span class="sd">		#name_parts have a fixed order, and each part is a list (e.g., of one person&#39;s last names)</span>
+<span class="sd">		map_names_parts = dict(f=0, v=1, l=2, j=3)</span>
+<span class="sd">		if self.initials:</span>
+<span class="sd">			f,v,l,j = name_parts</span>
+<span class="sd">			name_parts = ([s[0] for s in f],v,l,j)</span>
+<span class="sd">		for partcode in partdict[&#39;parts_order&#39;]:</span>
+<span class="sd">			partsep = partdict[partcode][&#39;partsep&#39;]</span>
+<span class="sd">			part = partsep.join(name_parts[map_names_parts[partcode]])</span>
+<span class="sd">			if part:</span>
+<span class="sd">				result += partdict[partcode][&#39;pre&#39;] + part + partdict[partcode][&#39;post&#39;]</span>
+<span class="sd">			shared_logger.debug(&quot;%s: %s&quot;%(partcode,result))</span>
+<span class="sd">		return result</span>
+<span class="sd">	&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="NameFormatter.name_dict2formatted"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.NameFormatter.name_dict2formatted">[docs]</a>	<span class="k">def</span> <span class="nf">name_dict2formatted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name_dict</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Returns one fully formatted name, based on a name_dict.</span>
+<span class="sd">		the name_dict should have the keys: first , von, last, jr</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">assert</span> <span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_dict</span><span class="p">[</span><span class="s">&#39;last&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span>
+		<span class="k">if</span> <span class="n">name_dict</span><span class="p">[</span><span class="s">&#39;last&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;others&quot;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="s">&quot;others&quot;</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;name_dict2formatted: name_dict is &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">name_dict</span><span class="p">))</span>
+		<span class="c">#get the partdict (that was produced from the name template)</span>
+		<span class="c">#  recall that the partdict has keys: pre, post, partsep, parts_order</span>
+		<span class="c">#  the parts_order value is a string with characters from &quot;FVLJfvlj&quot;</span>
+		<span class="n">partdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">partdict</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;name_dict2formatted: partdict is &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">partdict</span><span class="p">))</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+		<span class="c">#name_dict has keys, and each value is a list (e.g., of one person&#39;s last names)</span>
+		<span class="n">map_names_parts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s">&#39;first&#39;</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="s">&#39;von&#39;</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="s">&#39;last&#39;</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="s">&#39;jr&#39;</span><span class="p">)</span>
+		<span class="c">#change names to initials where requested</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">initials</span><span class="p">:</span>
+			<span class="n">name_dict</span> <span class="o">=</span> <span class="n">name_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+			<span class="k">for</span> <span class="n">partcode</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">initials</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+				<span class="n">part_key</span> <span class="o">=</span> <span class="n">map_names_parts</span><span class="p">[</span><span class="n">partcode</span><span class="p">]</span>
+				<span class="n">name_dict</span><span class="p">[</span><span class="n">part_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">name_dict</span><span class="p">[</span><span class="n">part_key</span><span class="p">]]</span>
+		<span class="k">for</span> <span class="n">partcode</span> <span class="ow">in</span> <span class="n">partdict</span><span class="p">[</span><span class="s">&#39;parts_order&#39;</span><span class="p">]:</span>  <span class="c">#keep the parts in the template determined order</span>
+			<span class="n">partsep</span> <span class="o">=</span> <span class="n">partdict</span><span class="p">[</span><span class="n">partcode</span><span class="p">][</span><span class="s">&#39;partsep&#39;</span><span class="p">]</span>
+			<span class="n">part</span> <span class="o">=</span> <span class="n">partsep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name_dict</span><span class="p">[</span><span class="n">map_names_parts</span><span class="p">[</span><span class="n">partcode</span><span class="o">.</span><span class="n">lower</span><span class="p">()]])</span>
+			<span class="k">if</span> <span class="n">part</span><span class="p">:</span>
+				<span class="c">#force upper case if parcode is uppercase</span>
+				<span class="k">if</span> <span class="n">partcode</span><span class="o">.</span><span class="n">isupper</span><span class="p">():</span>
+					<span class="n">part</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+				<span class="n">result</span> <span class="o">+=</span> <span class="n">partdict</span><span class="p">[</span><span class="n">partcode</span><span class="p">][</span><span class="s">&#39;pre&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">part</span> <span class="o">+</span> <span class="n">partdict</span><span class="p">[</span><span class="n">partcode</span><span class="p">][</span><span class="s">&#39;post&#39;</span><span class="p">]</span>
+			<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="s">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">partcode</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">result</span>
+</div>
+<div class="viewcode-block" id="NameFormatter.get_template"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.NameFormatter.get_template">[docs]</a>	<span class="k">def</span> <span class="nf">get_template</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_template</span></div>
+<div class="viewcode-block" id="NameFormatter.set_template"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.NameFormatter.set_template">[docs]</a>	<span class="k">def</span> <span class="nf">set_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">template</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return None.</span>
+
+<span class="sd">		sets the name formatting template *and* sets the associated partdict used for actual formatting </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;NameFormatter.set_template args: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="p">))</span>
+		<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">template</span><span class="p">,</span><span class="nb">str</span><span class="p">),</span> <span class="s">&quot;Provide a name-template string to make a NameFormatter object.&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_template</span> <span class="o">=</span> <span class="n">template</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">partdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template2dict</span><span class="p">(</span><span class="n">template</span><span class="p">)</span></div>
+	<span class="n">template</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_template</span><span class="p">,</span><span class="n">set_template</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="s">&quot;template property&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NameFormatter.template2dict"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.NameFormatter.template2dict">[docs]</a>	<span class="k">def</span> <span class="nf">template2dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">template</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		parse the name formatting template into a partdict to be used for the actual formatting</span>
+
+<span class="sd">		:note: parsing a name template into a partdict is trivial, so just do it here</span>
+<span class="sd">		:note: allow capital part id (to force capitalization)</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c">#to keep track of the order of the parts...</span>
+		<span class="n">parts_order</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+		<span class="c">#split a name template into parts (each part shd have part-designator)</span>
+		<span class="n">template_parts</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)</span>
+		<span class="n">partdict</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">template_parts</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">partid</span> <span class="ow">in</span> <span class="s">&#39;FVLJfvlj&#39;</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">partid</span> <span class="ow">in</span> <span class="n">part</span><span class="p">:</span>
+					<span class="n">parts_order</span> <span class="o">+=</span> <span class="n">partid</span>
+					<span class="n">pre</span><span class="p">,</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">partid</span><span class="p">)</span>
+					<span class="k">if</span> <span class="n">temp</span> <span class="ow">and</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;{&#39;</span><span class="p">:</span>   <span class="c">#found a partsep</span>
+						<span class="n">partsep</span><span class="p">,</span><span class="n">post</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;}&#39;</span><span class="p">)</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="n">post</span> <span class="o">=</span> <span class="n">temp</span>
+						<span class="n">partsep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_partsep</span>
+					<span class="n">partdict</span><span class="p">[</span><span class="n">partid</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">pre</span><span class="o">=</span><span class="n">pre</span><span class="p">,</span><span class="n">post</span><span class="o">=</span><span class="n">post</span><span class="p">,</span><span class="n">partsep</span><span class="o">=</span><span class="n">partsep</span><span class="p">)</span>
+					<span class="k">break</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;template2dict: name formatting template parsed to:</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">partdict</span><span class="p">))</span>
+		<span class="n">partdict</span><span class="p">[</span><span class="s">&#39;parts_order&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parts_order</span>
+		<span class="k">return</span> <span class="n">partdict</span>
+
+</div></div>
+<div class="viewcode-block" id="CitationManager"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager">[docs]</a><span class="k">class</span> <span class="nc">CitationManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	:TODO: possibly useful for bibsearch.py</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">default_citation_template</span> <span class="o">=</span> <span class="n">DEFAULT_CITATION_TEMPLATE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">biblist</span><span class="p">,</span> <span class="n">citekeys</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">citation_template</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sortkey</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">biblist</span> <span class="o">=</span> <span class="n">biblist</span>
+		<span class="c">#:alert: set_citekeys -&gt; self._entries created!</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">set_citekeys</span><span class="p">(</span><span class="n">citekeys</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">citation_template</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">citation_template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_citation_template</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span> <span class="o">=</span> <span class="n">citation_template</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entry_formatter</span> <span class="o">=</span> <span class="n">EntryFormatter</span><span class="p">(</span><span class="n">citation_template</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">sortkey</span><span class="p">:</span> <span class="c">#TODO: ?? remove this possibility ??</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sortkey</span> <span class="o">=</span> <span class="n">sortkey</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">citeref_processor</span> <span class="o">=</span> <span class="bp">None</span>
+
+	<span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span> <span class="ow">and</span> <span class="s">&quot;citation_sep&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span><span class="p">:</span>
+			<span class="n">citation_sep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;citation_sep&#39;</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">citation_sep</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span>
+		<span class="k">return</span> <span class="n">citation_sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>  <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">]</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="CitationManager.set_citeref_processor"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.set_citeref_processor">[docs]</a>	<span class="k">def</span> <span class="nf">set_citeref_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processor</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">citeref_processor</span> <span class="o">=</span> <span class="n">processor</span></div>
+<div class="viewcode-block" id="CitationManager.format_inline_cite"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.format_inline_cite">[docs]</a>	<span class="k">def</span> <span class="nf">format_inline_cite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cite_key_list</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Returns a formatted inline citation reference.</span>
+<span class="sd">		Usually used by a CiteRefProcessor object during processing. </span>
+<span class="sd">		Usually styles need to override this method.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c">#substitute formatted citation reference into document text</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_manager</span><span class="o">.</span><span class="n">format_inline_cite</span><span class="p">(</span><span class="n">entry_list</span><span class="p">,</span><span class="n">cite_key_list</span><span class="p">)</span> <span class="p">)</span>
+		<span class="k">return</span> <span class="s">&#39;**[&#39;</span> <span class="o">+</span> <span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cite_key_list</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;]_&#39;</span>
+
+</div>
+<div class="viewcode-block" id="CitationManager.get_citekeys"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.get_citekeys">[docs]</a>	<span class="k">def</span> <span class="nf">get_citekeys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_citekeys</span></div>
+<div class="viewcode-block" id="CitationManager.set_citekeys"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.set_citekeys">[docs]</a>	<span class="k">def</span> <span class="nf">set_citekeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">citekeys</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;set self._citekeys to keys **and** make associated entries</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;shared.CitationManager.set_citekeys </span><span class="si">%s</span><span class="s">.&quot;</span><span class="o">%</span><span class="n">citekeys</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_citekeys</span> <span class="o">=</span> <span class="n">citekeys</span>
+		<span class="k">if</span> <span class="n">citekeys</span><span class="p">:</span>
+			<span class="c">#discard keys that do not have an entry</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_entries</span><span class="p">(</span><span class="n">citekeys</span><span class="p">,</span> <span class="n">discard</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_entries</span> <span class="o">=</span> <span class="p">[]</span></div>
+	<span class="n">citekeys</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_citekeys</span><span class="p">,</span> <span class="n">set_citekeys</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&quot;citekeys property&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CitationManager.find_entries"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.find_entries">[docs]</a>	<span class="k">def</span> <span class="nf">find_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">citekeys</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">discard</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;return all entries if citekeys==None else matching entries</span>
+<span class="sd">		discard=True -&gt; discard keys that do not have a bib entry</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">citekeys</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">citekeys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citekeys</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="c">#TODO: check for reuse of citekeys in different BibFile objects</span>
+		<span class="k">for</span> <span class="n">bib</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">biblist</span><span class="p">:</span>
+			<span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">bib</span><span class="o">.</span><span class="n">get_entrylist</span><span class="p">(</span><span class="n">citekeys</span><span class="p">,</span><span class="n">discard</span><span class="o">=</span><span class="n">discard</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">result</span></div>
+<div class="viewcode-block" id="CitationManager.get_entries"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.get_entries">[docs]</a>	<span class="k">def</span> <span class="nf">get_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">citekeys</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">citekeys</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">[:]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_entries</span><span class="p">(</span><span class="n">citekeys</span><span class="p">)</span>
+	<span class="c">#note: citation_rank uses unit-based indexing!! (so styles don&#39;t have to offset it)</span></div>
+<div class="viewcode-block" id="CitationManager.get_citation_rank"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.get_citation_rank">[docs]</a>	<span class="k">def</span> <span class="nf">get_citation_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">citekeys</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">citekeys</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">citekeys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_citekeys</span>
+		<span class="k">if</span> <span class="n">citekeys</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>  <span class="c">#chk</span>
+			<span class="n">citekeys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citeref_processor</span><span class="o">.</span><span class="n">all_citekeys</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_citekeys</span> <span class="o">=</span> <span class="n">citekeys</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;shared.CitationManager.get_citation_rank citekeys </span><span class="si">%s</span><span class="s">.&quot;</span><span class="o">%</span><span class="n">citekeys</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">citekey</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">citekeys</span><span class="p">:</span>
+			<span class="n">rank</span> <span class="o">=</span> <span class="bp">None</span>
+			<span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;Entry citekey not in citekeys; citation_rank set to None.&#39;</span>
+			<span class="n">shared_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span> <span class="c"># found the citekey in the cite-key list</span>
+			<span class="n">rank</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_citekeys</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">citekey</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">rank</span>
+</div>
+<div class="viewcode-block" id="CitationManager.make_sort_key"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.make_sort_key">[docs]</a>	<span class="k">def</span> <span class="nf">make_sort_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bibentry</span><span class="p">,</span> <span class="n">field_list</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;create a string for sorting.</span>
+<span class="sd">		Function returns tuple: (sort_string, bibentry key)</span>
+
+<span class="sd">		:note: this is essentially what was Bibstyle&#39;s makeSortKey method</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Entering make_sort_key.&quot;</span><span class="p">)</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">field_list</span><span class="p">:</span>
+			<span class="c"># some special cases</span>
+			<span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;author&#39;</span><span class="p">,</span><span class="s">&#39;editor&#39;</span><span class="p">,</span><span class="s">&#39;names&#39;</span><span class="p">]:</span>
+				<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bibentry</span><span class="o">.</span><span class="n">get_names</span><span class="p">()</span><span class="o">.</span><span class="n">get_last_names</span><span class="p">())</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+			<span class="k">elif</span> <span class="n">field</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;year&quot;</span><span class="p">:</span>
+				<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bibentry</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">])</span>
+			<span class="k">else</span> <span class="p">:</span>
+				<span class="n">w</span> <span class="o">=</span> <span class="n">bibentry</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+				<span class="k">if</span> <span class="n">w</span> <span class="p">:</span>
+					<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Exiting make_sort_key.&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">result</span>
+</div>
+<div class="viewcode-block" id="CitationManager.sortkey"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.sortkey">[docs]</a>	<span class="k">def</span> <span class="nf">sortkey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		:note: the sort key is a style consideration and so must be provided by the style;</span>
+<span class="sd">			therefore, you must usually OVERRIDE this default sort key</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">get_names</span><span class="p">()</span><span class="o">.</span><span class="n">get_last_names</span><span class="p">()</span>
+		<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">])</span>
+		<span class="k">return</span> <span class="n">result</span></div>
+<div class="viewcode-block" id="CitationManager.sort"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.sort">[docs]</a>	<span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sortkey</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span> <span class="c">#TODO: not currently using this!</span>
+		<span class="k">if</span> <span class="n">sortkey</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sortkey</span> <span class="o">=</span> <span class="n">sortkey</span>  <span class="c"># NB!</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sortkey</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">sortkey</span><span class="p">)</span> <span class="c">#2.4 dependency (implements stable Schwartzian transform or better)</span>
+			<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Entries are sorted.&quot;</span><span class="p">)</span>
+
+	<span class="c">#citation_label handling can make be style dependent</span>
+	<span class="c"># e.g., for numbered citations, see example_numbered.py</span></div>
+<div class="viewcode-block" id="CitationManager.get_citation_label"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.get_citation_label">[docs]</a>	<span class="k">def</span> <span class="nf">get_citation_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">entry</span><span class="p">,</span><span class="n">citation_template</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s">&#39;&#39;</span>
+</div>
+<div class="viewcode-block" id="CitationManager.make_citations"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.make_citations">[docs]</a>	<span class="k">def</span> <span class="nf">make_citations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entries</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">citation_template</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;return formatted citations based on list of entries</span>
+
+<span class="sd">		:note: called by ../bib4txt.py in make_text_output</span>
+<span class="sd">		:note: citation order based on order of entries (so must sort ahead of time)</span>
+<span class="sd">		:note: related functionality was in the old CitationFormatter&#39;s FormatReferences() method</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;shared.CitationManager.make_citations: args are:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="n">entries</span><span class="p">,</span><span class="n">citation_template</span><span class="p">)))</span>
+		<span class="k">if</span> <span class="n">entries</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">:</span> <span class="c">#get entries matching cite keys found by citeref_processor</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_entries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">citeref_processor</span><span class="o">.</span><span class="n">all_citekeys</span><span class="p">)</span>
+			<span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span>
+			<span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;make_citations: entries are: </span><span class="si">%s</span><span class="s">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">)</span>
+			<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+		<span class="n">entries</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sortkey</span><span class="p">)</span>  <span class="c">#TODO!!! use more sensible approach (also: 2.4 dependency)</span>
+		<span class="k">if</span> <span class="n">citation_template</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">citation_template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span>
+		<span class="n">citation_sep</span> <span class="o">=</span> <span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;citation_sep&#39;</span><span class="p">]</span>
+		<span class="c">#:note: in 2.4 join will accept generators; why is the list necessary?</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">citation_sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">format_citation</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>  <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span> <span class="p">)</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Exiting make_citations.&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">result</span>
+</div>
+<div class="viewcode-block" id="CitationManager.format_citation"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CitationManager.format_citation">[docs]</a>	<span class="k">def</span> <span class="nf">format_citation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">):</span>
+		<span class="n">citation_template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span>
+		<span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry_formatter</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">formatter</span><span class="o">.</span><span class="n">format_entry</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+		<span class="n">citation_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_citation_label</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">citation_template</span><span class="p">)</span>
+		<span class="c">#result = citation_label + reformat_para( append_sep(names,sep)+details, left=citation_template[&#39;indent_left&#39;] )</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">citation_label</span> <span class="o">+</span> <span class="n">reformat_para</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;indent_left&#39;</span><span class="p">]</span> <span class="p">)</span>
+		<span class="k">return</span> <span class="n">result</span>
+
+
+
+
+
+</div></div>
+<div class="viewcode-block" id="CiteRefProcessor"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CiteRefProcessor">[docs]</a><span class="k">class</span> <span class="nc">CiteRefProcessor</span><span class="p">(</span> <span class="n">simpleparse</span><span class="o">.</span><span class="n">dispatchprocessor</span><span class="o">.</span><span class="n">DispatchProcessor</span> <span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;Formats inline citations and substitutes them into text.</span>
+<span class="sd">	Stores all cite keys in `all_citekeys` (a list, to record citation order).</span>
+<span class="sd">	Can store `result` as original text with substituted citation references.</span>
+
+<span class="sd">	:note: based on the defunct &#39;addrefs.py&#39; CitationFormatter class</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">citation_manager</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		param `parsed_bibfile`: a dispatch processor holding parsed .bib file</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c">#associate with citation manager</span>
+		<span class="n">citation_manager</span><span class="o">.</span><span class="n">set_citeref_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">citation_manager</span> <span class="o">=</span> <span class="n">citation_manager</span>
+		<span class="c">#self.bib = parsed_bibfile</span>
+		<span class="c"># result holds the entire processed file, reformatted for inline citation</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">all_citekeys</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c">#order matters! unique citekeys added as encountered: see `cite`</span>
+
+	<span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+	<span class="c">#set up debug message logging</span>
+<div class="viewcode-block" id="CiteRefProcessor.log_msg"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CiteRefProcessor.log_msg">[docs]</a>	<span class="k">def</span> <span class="nf">log_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">):</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+	<span class="c">#PRODUCTION FUNCTIONS</span>
+	<span class="c"># define method for EACH production (see the help for DispatchProcessor)</span>
+</div>
+<div class="viewcode-block" id="CiteRefProcessor.cite"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CiteRefProcessor.cite">[docs]</a>	<span class="k">def</span> <span class="nf">cite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">,</span><span class="n">subtags</span><span class="p">),</span> <span class="nb">buffer</span> <span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return everything.</span>
+
+<span class="sd">		Alternative default def:</span>
+<span class="sd">		self.result.append( buffer[start:stop])</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">log_msg</span><span class="p">(</span><span class="s">&quot;The following is parsed as cite:</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">])</span>
+		<span class="s">&quot;Process cites and format in text citation according to current style&quot;</span>
+		<span class="c"># list because allow for a single citation reference to have keys for multiple citations</span>
+		<span class="n">cite_key_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">stop</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">CITE_SEP</span><span class="p">)]</span>
+		<span class="c">#include current cite keys in set of all cite keys</span>
+		<span class="c">#  keep track of order of citation (used by some styles)</span>
+		<span class="k">for</span> <span class="n">cite_key</span> <span class="ow">in</span> <span class="n">cite_key_list</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">cite_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_citekeys</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">all_citekeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cite_key</span><span class="p">)</span>
+		<span class="c">#make (ordered) list of entries for the current cite key(s)</span>
+		<span class="c">#:note: need entry to be None if cite_key not found, so discard=False</span>
+		<span class="n">entry_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_manager</span><span class="o">.</span><span class="n">find_entries</span><span class="p">(</span><span class="n">cite_key_list</span><span class="p">,</span><span class="n">discard</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+		<span class="c">#substitute formatted citation reference into document text</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_manager</span><span class="o">.</span><span class="n">format_inline_cite</span><span class="p">(</span><span class="n">cite_key_list</span><span class="p">)</span> <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CiteRefProcessor.inline_literal"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CiteRefProcessor.inline_literal">[docs]</a>	<span class="k">def</span> <span class="nf">inline_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">,</span><span class="n">subtags</span><span class="p">),</span> <span class="nb">buffer</span><span class="p">):</span>
+		<span class="s">&quot;Return everything.&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">]</span> <span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">log_msg</span><span class="p">(</span><span class="s">&quot;The following is parsed as inline_literal:</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="CiteRefProcessor.fn"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CiteRefProcessor.fn">[docs]</a>	<span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">,</span><span class="n">subtags</span><span class="p">),</span> <span class="nb">buffer</span><span class="p">):</span>
+		<span class="s">&quot;Return everything.&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">])</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">log_msg</span><span class="p">(</span><span class="s">&quot;The following is parsed as fn:</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="CiteRefProcessor.plain"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.CiteRefProcessor.plain">[docs]</a>	<span class="k">def</span> <span class="nf">plain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">,</span><span class="n">subtags</span><span class="p">),</span> <span class="nb">buffer</span><span class="p">):</span>
+		<span class="s">&quot;Return everything.&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">])</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">log_msg</span><span class="p">(</span><span class="s">&quot;The following is parsed as plain:</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">])</span>
+	
+</div></div>
+<div class="viewcode-block" id="EntryFormatter"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.EntryFormatter">[docs]</a><span class="k">class</span> <span class="nc">EntryFormatter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">citation_template</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span> <span class="o">=</span> <span class="n">citation_template</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">names_formatter</span><span class="o">=</span><span class="n">NamesFormatter</span><span class="p">(</span><span class="n">citation_template</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EntryFormatter.format_entry"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.EntryFormatter.format_entry">[docs]</a>	<span class="k">def</span> <span class="nf">format_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">citation_template</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return string.</span>
+<span class="sd">		Format an entry (e.g., as a citation, i.e., a single bibliography reference).</span>
+<span class="sd">		Note that a BibEntry object acts like a dict for Bib fields</span>
+<span class="sd">		*except* no KeyError (returns None instead).</span>
+<span class="sd">		`citation_template` holds templates for entry types</span>
+
+<span class="sd">		:note: something related to this method was formerly Bibstyle&#39;s formatRef method</span>
+<span class="sd">		:note: called by make_citations (and currently nothing else)</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Entering format_citation.&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">citation_template</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">citation_template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span>
+		<span class="c">#:note: a BibEntry object will return None if field is missing</span>
+		<span class="c">#get the other (not name) fields</span>
+		<span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_citation_names</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">citation_template</span><span class="p">)</span>
+		<span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_citation_details</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">citation_template</span><span class="p">)</span>
+		<span class="n">sep</span> <span class="o">=</span> <span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;names_details_sep&#39;</span><span class="p">]</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">append_sep</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="n">details</span>
+		<span class="c">#ai 2009-02-11 by request but, good idea? think about it</span>
+		<span class="n">post_processor</span> <span class="o">=</span> <span class="n">citation_template</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;post_processor&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">post_processor</span><span class="p">:</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">post_processor</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;EntryFormatter.format_citation: result = &quot;</span><span class="o">+</span><span class="n">result</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">result</span></div>
+<div class="viewcode-block" id="EntryFormatter.format_citation_names"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.EntryFormatter.format_citation_names">[docs]</a>	<span class="k">def</span> <span class="nf">format_citation_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">citation_template</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">citation_template</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">citation_template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span>
+		<span class="c">#get the names from the entry (as a BibName object)</span>
+		<span class="n">names</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">make_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c">#use this entry formatter (self) to make the names</span>
+		<span class="c">#use own names_formatter (based on citation_template) to format the names</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_formatter</span><span class="o">.</span><span class="n">format_names</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+		<span class="c">#shared_logger.debug(&quot;name_name_sep: &quot;+str(template[&#39;name_name_sep&#39;]))</span>
+		<span class="c">#shared_logger.debug(&quot;format_citation_names: result = &quot;+result)</span>
+		<span class="k">return</span> <span class="n">result</span>
+	<span class="c">#TODO: this deserves substantial enhancement, at the least for journal handling for articles</span></div>
+<div class="viewcode-block" id="EntryFormatter.format_citation_details"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.EntryFormatter.format_citation_details">[docs]</a>	<span class="k">def</span> <span class="nf">format_citation_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">citation_template</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return string.&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">citation_template</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">citation_template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_template</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">type_template</span> <span class="o">=</span> <span class="n">citation_template</span><span class="p">[</span><span class="n">entry</span><span class="o">.</span><span class="n">entry_type</span><span class="p">]</span>  <span class="c">#:note: recall entry_type was stored as lowercase</span>
+		<span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>  <span class="c">#no template exists for this entry_type -&gt; use default</span>
+			<span class="n">type_template</span> <span class="o">=</span> <span class="n">citation_template</span><span class="p">[</span><span class="s">&#39;default_type&#39;</span><span class="p">]</span>
+			<span class="n">shared_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;Unknown entry type: &quot;</span><span class="o">+</span><span class="n">entry</span><span class="o">.</span><span class="n">entry_type</span><span class="o">+</span><span class="s">&quot;. Using default format.&quot;</span><span class="p">)</span>
+		<span class="c">#:note: entry will return None instead of KeyError</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">type_template</span> <span class="o">%</span> <span class="n">entry</span>
+		<span class="k">return</span> <span class="n">result</span></div>
+<div class="viewcode-block" id="EntryFormatter.pick_raw_names"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.EntryFormatter.pick_raw_names">[docs]</a>	<span class="k">def</span> <span class="nf">pick_raw_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return BibName-object if possible else string</span>
+<span class="sd">		(from &quot;raw&quot; names).</span>
+<span class="sd">		</span>
+<span class="sd">		:type `field`: str</span>
+<span class="sd">		:note: 2006-08-02 altered to return BibName instance and not set _names</span>
+<span class="sd">		:note: self returns None if field missing (-&gt; no KeyError)</span>
+<span class="sd">		:TODO: return BibName instance for each available name field??</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">names_source</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+		<span class="n">article</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;author&#39;</span><span class="p">,</span><span class="s">&#39;organization&#39;</span><span class="p">],</span>
+		<span class="n">book</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;author&#39;</span><span class="p">,</span><span class="s">&#39;editor&#39;</span><span class="p">,</span><span class="s">&#39;organization&#39;</span><span class="p">]</span>
+		<span class="p">)</span>
+		<span class="k">if</span> <span class="n">fields</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+				<span class="n">raw_names</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s">&#39;field&#39;</span><span class="p">]</span>
+				<span class="k">if</span> <span class="n">raw_names</span><span class="p">:</span>
+					<span class="k">break</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">raw_names</span><span class="p">:</span>
+				<span class="n">shared_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;EntryFormatter.make_names: empty field -&gt; empty BibName object.&quot;</span><span class="p">)</span>
+		<span class="c">#raw_names = self[&#39;author&#39;] or self[&#39;editor&#39;] #TODO: distinguish author and editor</span>
+		<span class="k">elif</span> <span class="n">entry</span><span class="o">.</span><span class="n">entry_type</span> <span class="ow">in</span> <span class="n">names_source</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">names_source</span><span class="p">[</span><span class="n">entry</span><span class="o">.</span><span class="n">entry_type</span><span class="p">]:</span>
+				<span class="n">raw_names</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+				<span class="k">if</span> <span class="n">raw_names</span><span class="p">:</span>
+					<span class="k">break</span>
+		<span class="k">else</span><span class="p">:</span> <span class="c"># default formatting</span>
+			<span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;author&#39;</span><span class="p">,</span><span class="s">&#39;editor&#39;</span><span class="p">,</span><span class="s">&#39;organization&#39;</span><span class="p">]:</span>
+				<span class="n">raw_names</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+				<span class="k">if</span> <span class="n">raw_names</span><span class="p">:</span>
+					<span class="k">break</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">raw_names</span><span class="p">:</span>
+			<span class="n">shared_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;No raw names for bib citekey &quot;</span><span class="o">+</span><span class="n">entry</span><span class="o">.</span><span class="n">citekey</span><span class="p">)</span>
+			<span class="n">raw_names</span> <span class="o">=</span> <span class="s">&quot;Anonymous&quot;</span>  <span class="c">#TODO: shd be a formatting choice (use None?)</span>
+			<span class="n">field</span> <span class="o">=</span> <span class="bp">None</span>
+		<span class="c">#return  bibname.BibName(raw_names,from_field=field)  #names are in a BibName object</span>
+		<span class="k">return</span>  <span class="n">raw_names</span><span class="p">,</span> <span class="n">field</span>
+	</div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../bibstyles.html" >bibstuff.bibstyles</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Dylan W. Schwilk and Alan G. Isaac.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

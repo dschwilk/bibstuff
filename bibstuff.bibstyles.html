@@ -1,0 +1,868 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>bibstuff.bibstyles package &mdash; bibstuff 1.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="bibstuff 1.3.1 documentation" href="index.html" />
+    <link rel="prev" title="bibstuff.bibstyles package" href="" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="#" title="bibstuff.bibstyles package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">bibstuff 1.3.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="bibstuff-bibstyles-package">
+<h1>bibstuff.bibstyles package<a class="headerlink" href="#bibstuff-bibstyles-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-bibstuff.bibstyles.default">
+<span id="bibstuff-bibstyles-default-module"></span><h2>bibstuff.bibstyles.default module<a class="headerlink" href="#module-bibstuff.bibstyles.default" title="Permalink to this headline">¶</a></h2>
+<p>Provides a default style for bib4txt.py
+Produces a list of citations that to be included in a reStructuredText document.
+(In very simple documents, can also provide citation reference formatting
+by substituting in the document text for the citation references.)</p>
+<p>A style includes:</p>
+<ul class="simple">
+<li>citation template</li>
+<li>CitationManager class</li>
+<li>sortkey for make_text_output
+(often based on a field list)</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">note:</th><td class="field-body">you will often want to override these</td>
+</tr>
+<tr class="field-even field"><th class="field-name">note:</th><td class="field-body">shared.py holds defintions common to most styles</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">note:</th><td class="field-body">see the examples (e.g., example_numbered.py) of different styles</td>
+</tr>
+<tr class="field-even field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">copyright:</th><td class="field-body">2006 by Alan G Isaac</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">MIT (see <a class="reference external" href="../../license.txt">license.txt</a>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">date:</th><td class="field-body">2006-08-01</td>
+</tr>
+</tbody>
+</table>
+<dl class="data">
+<dt id="bibstuff.bibstyles.default.CITEREF_TEMPLATE">
+<tt class="descclassname">bibstuff.bibstyles.default.</tt><tt class="descname">CITEREF_TEMPLATE</tt><em class="property"> = {'citeref_sep': ', ', 'max_cite_names': 2}</em><a class="headerlink" href="#bibstuff.bibstyles.default.CITEREF_TEMPLATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Every style must have a CITATION_TEMPLATE, a CitationManager, and a ref_list_sort_key.
+Crucial formatting decisions are made int the CITATION_TEMPLATE.
+The CITATION_TEMPLATE provides default reference formatting (may also be used by BibStyle)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body"><ul class="first last simple">
+<li>provide graceful handling of missing fields</li>
+<li>allow different formatting of first and other names</li>
+<li>allow different initial line and subsequent line indenting</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="bibstuff.bibstyles.default.CitationManager">
+<em class="property">class </em><tt class="descclassname">bibstuff.bibstyles.default.</tt><tt class="descname">CitationManager</tt><big>(</big><em>biblist</em>, <em>citekeys=None</em>, <em>citation_template=None</em>, <em>sortkey=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/default.html#CitationManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.default.CitationManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bibstuff.bibstyles.shared.CitationManager" title="bibstuff.bibstyles.shared.CitationManager"><tt class="xref py py-class docutils literal"><span class="pre">bibstuff.bibstyles.shared.CitationManager</span></tt></a></p>
+<dl class="method">
+<dt id="bibstuff.bibstyles.default.CitationManager.format_inline_cite">
+<tt class="descname">format_inline_cite</tt><big>(</big><em>cite_key_list</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/default.html#CitationManager.format_inline_cite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.default.CitationManager.format_inline_cite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Usually you will need to write a &#8216;format_inline_cite&#8217; function
+that the CiteRefProcessor will use to substitute inline for citation references.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.default.CitationManager.get_citation_label">
+<tt class="descname">get_citation_label</tt><big>(</big><em>entry</em>, <em>citation_template=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/default.html#CitationManager.get_citation_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.default.CitationManager.get_citation_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.default.CitationManager.sortkey">
+<tt class="descname">sortkey</tt><big>(</big><em>bibentry</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/default.html#CitationManager.sortkey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.default.CitationManager.sortkey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="bibstuff.bibstyles.default.format_inline_cite">
+<tt class="descclassname">bibstuff.bibstyles.default.</tt><tt class="descname">format_inline_cite</tt><big>(</big><em>entry_list</em>, <em>citation_manager</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/default.html#format_inline_cite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.default.format_inline_cite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return string, formatted in-text citation (allows <em>multiple</em> citations).</p>
+<dl class="docutils">
+<dt><cite>entry_list</cite> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>entries to be formatted</dd>
+<dt><cite>citation_manager</cite> <span class="classifier-delimiter">:</span> <span class="classifier">CitationManager instance</span></dt>
+<dd>handles name formatting</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">need the entry formatter bc its determines the field of the names for the cite</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Note:</th><td class="field-body">much of the following functionality was in the old Bibstyle&#8217;s formatCitation() method</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">rewrite</td>
+</tr>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">? entries shd be more featureful ? (conflicts with core goal of BibEntry class)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-bibstuff.bibstyles.default_templates">
+<span id="bibstuff-bibstyles-default-templates-module"></span><h2>bibstuff.bibstyles.default_templates module<a class="headerlink" href="#module-bibstuff.bibstyles.default_templates" title="Permalink to this headline">¶</a></h2>
+<p>Provides default templates for style writers.
+Used by the default style (default.py).</p>
+<div class="section" id="citation-template">
+<h3>CITATION TEMPLATE<a class="headerlink" href="#citation-template" title="Permalink to this headline">¶</a></h3>
+<p>book = &#8216;%(year)s. %(title)s.&#8217;,
+article  = &#8216;%(year)s. %(title)s. %(journal)s %(volume)s, %(pages)s.&#8217;,
+misc = &#8216;%(year)s.  %(title)s.&#8217;,</p>
+<dl class="docutils">
+<dt><cite>default_type</cite> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>provide template for string interpolation (use fields as keys)
+e.g.,  &#8216;  %(year)s. %(title)s.&#8217;</dd>
+<dt><cite>name_first</cite> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>name template for primary name in citation (see NameFormatter documentation)</dd>
+<dt><cite>name_other</cite> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>name template for remaining names in citation (see NameFormatter documentation)</dd>
+<dt><cite>name_name_sep</cite> <span class="classifier-delimiter">:</span> <span class="classifier">2-tuple of str</span></dt>
+<dd>first element separates each name from the next,
+second element separates penultimate name from ultimate</dd>
+<dt><cite>etal</cite> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>replacement for name when max_citation_names exceeded (e.g., &#8216;, et al.&#8217;)</dd>
+<dt><cite>initials</cite> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>first letter of first (f), von (v), last (l), jr (j) (e.g., &#8216;f&#8217;)</dd>
+<dt><cite>max_citation_names</cite> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>maximum number of names to format for a citation definition</dd>
+<dt><cite>indent_left</cite> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>left indent for citation definitions</dd>
+<dt><cite>citation_sep</cite> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>separator between citations (e.g.,  &#8220;</dd>
+</dl>
+<p>&#8221;)
+<cite>names_details_sep</cite> : str</p>
+<blockquote>
+<div>separator between the names and the details in a citation definition (e.g., &#8216;. &#8216;)</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
+</tr>
+<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2006 by Alan G Isaac</td>
+</tr>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see <a class="reference external" href="../../license.txt">license.txt</a>)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">since:</th><td class="field-body">2006-08-19</td>
+</tr>
+</tbody>
+</table>
+<dl class="data">
+<dt id="bibstuff.bibstyles.default_templates.DEFAULT_CITEREF_TEMPLATE">
+<tt class="descclassname">bibstuff.bibstyles.default_templates.</tt><tt class="descname">DEFAULT_CITEREF_TEMPLATE</tt><em class="property"> = {'citeref_sep': ', ', 'max_cite_names': 2}</em><a class="headerlink" href="#bibstuff.bibstyles.default_templates.DEFAULT_CITEREF_TEMPLATE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>initials</dt>
+<dd>string containing none, any, or all of f,v,l,j</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">add separate editor handling</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bibstuff.bibstyles.default_templates.default_post_processor">
+<tt class="descclassname">bibstuff.bibstyles.default_templates.</tt><tt class="descname">default_post_processor</tt><big>(</big><em>citations_as_string</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/default_templates.html#default_post_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.default_templates.default_post_processor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-bibstuff.bibstyles.example_numbered">
+<span id="bibstuff-bibstyles-example-numbered-module"></span><h2>bibstuff.bibstyles.example_numbered module<a class="headerlink" href="#module-bibstuff.bibstyles.example_numbered" title="Permalink to this headline">¶</a></h2>
+<p>Provides an examle of how to easily modify an existing style:
+Just import everything from that style, and then override
+what you wish to change.  In this case, we import from
+default.py, the default style.</p>
+<p>This style changes to numbered citation references and citations.
+Citation references are numbered like this: (1,2).
+Citations are numbered like this:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>First Citation Definition</li>
+<li>Second Citation Definition</li>
+</ol>
+</div></blockquote>
+<p>The numbers reflect the order cited (the &#8216;citation_rank&#8217;).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
+</tr>
+<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2006 by Alan G Isaac</td>
+</tr>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see <a class="reference external" href="../../license.txt">license.txt</a>)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">date:</th><td class="field-body">2006-08-01</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="bibstuff.bibstyles.example_numbered.CitationManager">
+<em class="property">class </em><tt class="descclassname">bibstuff.bibstyles.example_numbered.</tt><tt class="descname">CitationManager</tt><big>(</big><em>biblist</em>, <em>citekeys=None</em>, <em>citation_template=None</em>, <em>sortkey=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/example_numbered.html#CitationManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.example_numbered.CitationManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bibstuff.bibstyles.shared.CitationManager" title="bibstuff.bibstyles.shared.CitationManager"><tt class="xref py py-class docutils literal"><span class="pre">bibstuff.bibstyles.shared.CitationManager</span></tt></a></p>
+<dl class="attribute">
+<dt id="bibstuff.bibstyles.example_numbered.CitationManager.default_citation_template">
+<tt class="descname">default_citation_template</tt><em class="property"> = {'name_first': 'f{. }. |v |l|, j', 'misc': '%(year)s.  %(title)s.', 'default_type': '  %(year)s. %(title)s.', 'max_citation_names': 3, 'article': '%(year)s. %(title)s. *%(journal)s* %(volume)s, %(pages)s.', 'indent_left': 0, 'citation_sep': '\n\n', 'post_processor': &lt;function default_post_processor at 0x2af4bd530668&gt;, 'inproceedings': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'name_other': 'f{. }. |v |l|, j', 'incollection': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'techreport': '(%(year)s) &quot;%(title)s&quot;. %(institution)s %(type)s %(number)s. %(url)s', 'book': '(%(year)s) *%(title)s*. %(address)s: %(publisher)s.', 'etal': ', et al.', 'name_name_sep': (', ', ' and '), 'initials': 'f', 'names_details_sep': '. '}</em><a class="headerlink" href="#bibstuff.bibstyles.example_numbered.CitationManager.default_citation_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.example_numbered.CitationManager.format_inline_cite">
+<tt class="descname">format_inline_cite</tt><big>(</big><em>cite_key_list</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/example_numbered.html#CitationManager.format_inline_cite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.example_numbered.CitationManager.format_inline_cite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.example_numbered.CitationManager.get_citation_label">
+<tt class="descname">get_citation_label</tt><big>(</big><em>entry</em>, <em>template=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/example_numbered.html#CitationManager.get_citation_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.example_numbered.CitationManager.get_citation_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.example_numbered.CitationManager.sortkey">
+<tt class="descname">sortkey</tt><big>(</big><em>bibentry</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/example_numbered.html#CitationManager.sortkey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.example_numbered.CitationManager.sortkey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="bibstuff.bibstyles.example_numbered.format_inline_cite">
+<tt class="descclassname">bibstuff.bibstyles.example_numbered.</tt><tt class="descname">format_inline_cite</tt><big>(</big><em>entries</em>, <em>keys</em>, <em>all_keys</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/example_numbered.html#format_inline_cite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.example_numbered.format_inline_cite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-bibstuff.bibstyles.jasss_style">
+<span id="bibstuff-bibstyles-jasss-style-module"></span><h2>bibstuff.bibstyles.jasss_style module<a class="headerlink" href="#module-bibstuff.bibstyles.jasss_style" title="Permalink to this headline">¶</a></h2>
+<p>Style for the Journal of Artificial Societies and Social Simulation
+The JASSS page for <a href="#id5"><span class="problematic" id="id6">authors__</span></a> claims they use the <a href="#id5"><span class="problematic" id="id7">`Oxford style`__</span></a>,
+but these are clearly different.</p>
+<p>__http://jasss.soc.surrey.ac.uk/admin/submit.html
+__http://www.usq.edu.au/library/help/ehelp/ref_guides/oxford.htm</p>
+<p>Examples (from the journal website) inconsistent in use of commas, quotes, ...</p>
+<blockquote>
+<div><p>HASTIE, R (1986) &#8220;Experimental evidence on group accuracy&#8221;.
+In Jablin F M, Putnam L L, Roberts K H and Porter L W (Eds.)
+Handbook of Organizational Communication: An Interdisciplinary Perspective, Beverly Hills, CA: Sage.</p>
+<p>KALAKOTA R and Whinston A B (1996)
+Frontiers of Electronic Commerce. Reading, MA: Addison-Wesley Publishing Company, Inc..</p>
+<p>KARPINSKI R (1997) Extranets emerge as next challenge for marketers. Netmarketing, April 1997. pp. 1-4.</p>
+<p>LEE H L and Billington C (1992) Managing Supply Chain Inventory: Pitfalls and Opportunities.
+Sloan Management Review, Spring 1992. pp. 65-73.</p>
+<p>RICHIARDI, M, Leombruni, R, Sonnessa, M and Saam, N (2006).
+&#8216;A Common Protocol for Agent-Based Social Simulation&#8217;.
+Journal of Artificial Societies and Social Simulation 9(1) <a class="reference external" href="http://jasss.soc.surrey.ac.uk/9/1/15.html">http://jasss.soc.surrey.ac.uk/9/1/15.html</a>.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">MIT (see <a class="reference external" href="../../license.txt">license.txt</a>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">date:</th><td class="field-body">2006-08-01</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="bibstuff.bibstyles.jasss_style.CitationManager">
+<em class="property">class </em><tt class="descclassname">bibstuff.bibstyles.jasss_style.</tt><tt class="descname">CitationManager</tt><big>(</big><em>biblist</em>, <em>citekeys=None</em>, <em>citation_template=None</em>, <em>sortkey=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/jasss_style.html#CitationManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.jasss_style.CitationManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bibstuff.bibstyles.shared.CitationManager" title="bibstuff.bibstyles.shared.CitationManager"><tt class="xref py py-class docutils literal"><span class="pre">bibstuff.bibstyles.shared.CitationManager</span></tt></a></p>
+<dl class="attribute">
+<dt id="bibstuff.bibstyles.jasss_style.CitationManager.default_citation_manager">
+<tt class="descname">default_citation_manager</tt><em class="property"> = {'name_first': 'V |L |f', 'misc': '%(year)s.  %(title)s.', 'default_type': '  %(year)s. %(title)s.', 'max_citation_names': 5, 'article': '(%(year)s) &quot;%(title)s&quot;. *%(journal)s* %(volume)s, %(month)s %(year)s. pp. %(pages)s. %(url)s', 'indent_left': 3, 'citation_sep': '\n\n', 'post_processor': &lt;function default_post_processor at 0x2af4bd530668&gt;, 'inproceedings': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publishers)s', 'name_other': 'v |l |f', 'incollection': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publishers)s', 'techreport': '(%(year)s) &quot;%(title)s&quot;. %(institution)s %(type)s %(number)s. %(url)s', 'book': '(%(year)s) *%(title)s*. %(address)s: %(publisher)s.', 'etal': ', et al.', 'name_name_sep': (', ', ' and '), 'initials': 'f', 'names_details_sep': ' '}</em><a class="headerlink" href="#bibstuff.bibstyles.jasss_style.CitationManager.default_citation_manager" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.jasss_style.CitationManager.format_inline_cite">
+<tt class="descname">format_inline_cite</tt><big>(</big><em>cite_key_list</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/jasss_style.html#CitationManager.format_inline_cite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.jasss_style.CitationManager.format_inline_cite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.jasss_style.CitationManager.get_citation_label">
+<tt class="descname">get_citation_label</tt><big>(</big><em>entry</em>, <em>citation_template=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/jasss_style.html#CitationManager.get_citation_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.jasss_style.CitationManager.get_citation_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.jasss_style.CitationManager.sortkey">
+<tt class="descname">sortkey</tt><big>(</big><em>bibentry</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/jasss_style.html#CitationManager.sortkey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.jasss_style.CitationManager.sortkey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-bibstuff.bibstyles.shared">
+<span id="bibstuff-bibstyles-shared-module"></span><h2>bibstuff.bibstyles.shared module<a class="headerlink" href="#module-bibstuff.bibstyles.shared" title="Permalink to this headline">¶</a></h2>
+<p>Utilities and formatting classes for BibStuff,
+especially for bib4txt.py.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
+</tr>
+<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2008 by Alan G. Isaac</td>
+</tr>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see <a class="reference external" href="../../license.txt">license.txt</a>)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">since:</th><td class="field-body">2006-08-01</td>
+</tr>
+<tr class="field-even field"><th class="field-name">date:</th><td class="field-body">2008-10-14</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="bibstuff.bibstyles.shared.CitationManager">
+<em class="property">class </em><tt class="descclassname">bibstuff.bibstyles.shared.</tt><tt class="descname">CitationManager</tt><big>(</big><em>biblist</em>, <em>citekeys=None</em>, <em>citation_template=None</em>, <em>sortkey=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">possibly useful for bibsearch.py</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="bibstuff.bibstyles.shared.CitationManager.citekeys">
+<tt class="descname">citekeys</tt><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.citekeys" title="Permalink to this definition">¶</a></dt>
+<dd><p>citekeys property</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bibstuff.bibstyles.shared.CitationManager.default_citation_template">
+<tt class="descname">default_citation_template</tt><em class="property"> = {'name_first': 'v |l,| j,| f', 'misc': '%(year)s.  %(title)s.', 'default_type': '  %(year)s. %(title)s.', 'max_citation_names': 3, 'article': '%(year)s. %(title)s. *%(journal)s* %(volume)s, %(pages)s.', 'indent_left': 3, 'citation_sep': '\n\n', 'post_processor': &lt;function default_post_processor at 0x2af4bd530668&gt;, 'inproceedings': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'name_other': 'f |v |l|, j', 'incollection': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'techreport': '(%(year)s) &quot;%(title)s&quot;. %(institution)s %(type)s %(number)s. %(url)s', 'book': '(%(year)s) *%(title)s*. %(address)s: %(publisher)s.', 'etal': ', et al.', 'name_name_sep': (', ', ', and '), 'names_details_sep': '. ', 'initials': ''}</em><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.default_citation_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.find_entries">
+<tt class="descname">find_entries</tt><big>(</big><em>citekeys=None</em>, <em>discard=True</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.find_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.find_entries" title="Permalink to this definition">¶</a></dt>
+<dd><p>return all entries if citekeys==None else matching entries
+discard=True -&gt; discard keys that do not have a bib entry</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.format_citation">
+<tt class="descname">format_citation</tt><big>(</big><em>entry</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.format_citation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.format_citation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.format_inline_cite">
+<tt class="descname">format_inline_cite</tt><big>(</big><em>cite_key_list</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.format_inline_cite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.format_inline_cite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a formatted inline citation reference.
+Usually used by a CiteRefProcessor object during processing. 
+Usually styles need to override this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.get_citation_label">
+<tt class="descname">get_citation_label</tt><big>(</big><em>entry</em>, <em>citation_template=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.get_citation_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.get_citation_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.get_citation_rank">
+<tt class="descname">get_citation_rank</tt><big>(</big><em>entry</em>, <em>citekeys=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.get_citation_rank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.get_citation_rank" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.get_citekeys">
+<tt class="descname">get_citekeys</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.get_citekeys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.get_citekeys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.get_entries">
+<tt class="descname">get_entries</tt><big>(</big><em>citekeys=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.make_citations">
+<tt class="descname">make_citations</tt><big>(</big><em>entries=None</em>, <em>citation_template=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.make_citations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.make_citations" title="Permalink to this definition">¶</a></dt>
+<dd><p>return formatted citations based on list of entries</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">called by ../bib4txt.py in make_text_output</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Note:</th><td class="field-body">citation order based on order of entries (so must sort ahead of time)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">related functionality was in the old CitationFormatter&#8217;s FormatReferences() method</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.make_sort_key">
+<tt class="descname">make_sort_key</tt><big>(</big><em>bibentry</em>, <em>field_list</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.make_sort_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.make_sort_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a string for sorting.
+Function returns tuple: (sort_string, bibentry key)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">this is essentially what was Bibstyle&#8217;s makeSortKey method</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.set_citekeys">
+<tt class="descname">set_citekeys</tt><big>(</big><em>citekeys</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.set_citekeys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.set_citekeys" title="Permalink to this definition">¶</a></dt>
+<dd><p>set self._citekeys to keys <strong>and</strong> make associated entries</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.set_citeref_processor">
+<tt class="descname">set_citeref_processor</tt><big>(</big><em>processor</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.set_citeref_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.set_citeref_processor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.sort">
+<tt class="descname">sort</tt><big>(</big><em>sortkey=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.sort" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CitationManager.sortkey">
+<tt class="descname">sortkey</tt><big>(</big><em>entry</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CitationManager.sortkey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.sortkey" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">the sort key is a style consideration and so must be provided by the style;
+therefore, you must usually OVERRIDE this default sort key</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="bibstuff.bibstyles.shared.CiteRefProcessor">
+<em class="property">class </em><tt class="descclassname">bibstuff.bibstyles.shared.</tt><tt class="descname">CiteRefProcessor</tt><big>(</big><em>citation_manager</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CiteRefProcessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CiteRefProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">simpleparse.dispatchprocessor.DispatchProcessor</span></tt></p>
+<p>Formats inline citations and substitutes them into text.
+Stores all cite keys in <cite>all_citekeys</cite> (a list, to record citation order).
+Can store <cite>result</cite> as original text with substituted citation references.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">based on the defunct &#8216;addrefs.py&#8217; CitationFormatter class</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CiteRefProcessor.cite">
+<tt class="descname">cite</tt><big>(</big><em>(tag</em>, <em>start</em>, <em>stop</em>, <em>subtags)</em>, <em>buffer</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CiteRefProcessor.cite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CiteRefProcessor.cite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return everything.</p>
+<p>Alternative default def:
+self.result.append( buffer[start:stop])</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CiteRefProcessor.fn">
+<tt class="descname">fn</tt><big>(</big><em>(tag</em>, <em>start</em>, <em>stop</em>, <em>subtags)</em>, <em>buffer</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CiteRefProcessor.fn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CiteRefProcessor.fn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return everything.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CiteRefProcessor.inline_literal">
+<tt class="descname">inline_literal</tt><big>(</big><em>(tag</em>, <em>start</em>, <em>stop</em>, <em>subtags)</em>, <em>buffer</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CiteRefProcessor.inline_literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CiteRefProcessor.inline_literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return everything.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CiteRefProcessor.log_msg">
+<tt class="descname">log_msg</tt><big>(</big><em>msg</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CiteRefProcessor.log_msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CiteRefProcessor.log_msg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.CiteRefProcessor.plain">
+<tt class="descname">plain</tt><big>(</big><em>(tag</em>, <em>start</em>, <em>stop</em>, <em>subtags)</em>, <em>buffer</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#CiteRefProcessor.plain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.CiteRefProcessor.plain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return everything.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="bibstuff.bibstyles.shared.EntryFormatter">
+<em class="property">class </em><tt class="descclassname">bibstuff.bibstyles.shared.</tt><tt class="descname">EntryFormatter</tt><big>(</big><em>citation_template</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#EntryFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.EntryFormatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.EntryFormatter.format_citation_details">
+<tt class="descname">format_citation_details</tt><big>(</big><em>entry</em>, <em>citation_template=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#EntryFormatter.format_citation_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.EntryFormatter.format_citation_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.EntryFormatter.format_citation_names">
+<tt class="descname">format_citation_names</tt><big>(</big><em>entry</em>, <em>citation_template=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#EntryFormatter.format_citation_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.EntryFormatter.format_citation_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.EntryFormatter.format_entry">
+<tt class="descname">format_entry</tt><big>(</big><em>entry</em>, <em>citation_template=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#EntryFormatter.format_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.EntryFormatter.format_entry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return string.
+Format an entry (e.g., as a citation, i.e., a single bibliography reference).
+Note that a BibEntry object acts like a dict for Bib fields
+<em>except</em> no KeyError (returns None instead).
+<cite>citation_template</cite> holds templates for entry types</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">something related to this method was formerly Bibstyle&#8217;s formatRef method</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Note:</th><td class="field-body">called by make_citations (and currently nothing else)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.EntryFormatter.pick_raw_names">
+<tt class="descname">pick_raw_names</tt><big>(</big><em>entry</em>, <em>fields=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#EntryFormatter.pick_raw_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.EntryFormatter.pick_raw_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return BibName-object if possible else string
+(from &#8220;raw&#8221; names).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">2006-08-02 altered to return BibName instance and not set _names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Note:</th><td class="field-body">self returns None if field missing (-&gt; no KeyError)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">return BibName instance for each available name field??</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="bibstuff.bibstyles.shared.NameFormatter">
+<em class="property">class </em><tt class="descclassname">bibstuff.bibstyles.shared.</tt><tt class="descname">NameFormatter</tt><big>(</big><em>template</em>, <em>initials=''</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#NameFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.NameFormatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Create a NameFormatter object based on a template string.</p>
+<p>The name template takes some explanation.</p>
+<p>Name parts are referred to by part-designator, which is just the part&#8217;s first letter:
+(v)on, (l)last, (j)r or (f)irst.
+The designator may be capitalized for force upper-casing the entire part.</p>
+<p>Each name part may have one associated section in a name formatting template.
+Sections are separated by &#8216;|&#8217; and <em>must</em> include a part-designator (one of &#8216;FVLJfvlj&#8217;).
+The presumption is that part-designators will be the only alphabetic characters in a name template.</p>
+<p>A section will generate output iff the name part for that section exists.
+Each section may have a partsep
+(in curly braces, immediately following the part-designator)
+and other characters
+(which may not be any of &#8216;fvljFVLJ&#8217;).
+The partsep indicates what should separate multiple tokens of the same part
+(e.g., two part last names, or &#8216;van der&#8217; for the (v)on part).
+A part separator will replace the default space to separate multiple tokens in a part.
+Any other characters are included as is.</p>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;v{~}~|l,| j,| f{. }.&quot; with initials=&#39;f&#39; produces:
+&quot;McFeely, J. W.&quot; or &quot;van~der~Stadt, Jr, C. M.&quot;
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">has a property -&gt; must be new style class, inherit carefully</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Note:</th><td class="field-body">20080331 allow capital part-designators (FVLJ) to force capitalization</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="bibstuff.bibstyles.shared.NameFormatter.default_partsep">
+<tt class="descname">default_partsep</tt><em class="property"> = None</em><a class="headerlink" href="#bibstuff.bibstyles.shared.NameFormatter.default_partsep" title="Permalink to this definition">¶</a></dt>
+<dd><p>note: not planning to parameterize this default (e.g., in the citation template)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.NameFormatter.format_name">
+<tt class="descname">format_name</tt><big>(</big><em>name_data</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#NameFormatter.format_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.NameFormatter.format_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return one name (stored in <cite>name_data</cite>) as a formatted string.</p>
+<p>Formats <cite>name_data</cite> according to the <cite>NameFormatter</cite> template.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name_data</strong> (<em>list or string</em>) &#8211; list of name_parts or name as string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.NameFormatter.get_template">
+<tt class="descname">get_template</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#NameFormatter.get_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.NameFormatter.get_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.NameFormatter.name_dict2formatted">
+<tt class="descname">name_dict2formatted</tt><big>(</big><em>name_dict</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#NameFormatter.name_dict2formatted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.NameFormatter.name_dict2formatted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns one fully formatted name, based on a name_dict.
+the name_dict should have the keys: first , von, last, jr</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.NameFormatter.set_template">
+<tt class="descname">set_template</tt><big>(</big><em>template</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#NameFormatter.set_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.NameFormatter.set_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return None.</p>
+<p>sets the name formatting template <em>and</em> sets the associated partdict used for actual formatting</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bibstuff.bibstyles.shared.NameFormatter.template">
+<tt class="descname">template</tt><a class="headerlink" href="#bibstuff.bibstyles.shared.NameFormatter.template" title="Permalink to this definition">¶</a></dt>
+<dd><p>template property</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.NameFormatter.template2dict">
+<tt class="descname">template2dict</tt><big>(</big><em>template</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#NameFormatter.template2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.NameFormatter.template2dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse the name formatting template into a partdict to be used for the actual formatting</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">parsing a name template into a partdict is trivial, so just do it here</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Note:</th><td class="field-body">allow capital part id (to force capitalization)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="bibstuff.bibstyles.shared.NamesFormatter">
+<em class="property">class </em><tt class="descclassname">bibstuff.bibstyles.shared.</tt><tt class="descname">NamesFormatter</tt><big>(</big><em>citation_template=None</em>, <em>template_list=None</em>, <em>initials=''</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#NamesFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.NamesFormatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Provides a formatter for BibName instances.
+Instances are initialized with formatting information.
+Use the <cite>format_names</cite> method to produce
+a formatted string representing a BibName instance.</p>
+<p>Sample usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#create an author entry</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">bibname</span><span class="o">.</span><span class="n">BibName</span><span class="p">(</span><span class="s">&#39;One, Test and Test Two&#39;</span><span class="p">,</span><span class="s">&#39;author&#39;</span><span class="p">)</span> 
+<span class="c">#create a formatter</span>
+<span class="n">nf</span> <span class="o">=</span> <span class="n">bibstyles</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">NamesFormatter</span><span class="p">(</span><span class="n">template_list</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;f| v| l| j&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">initials</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="c">#print the formatted names</span>
+<span class="k">print</span> <span class="n">nf</span><span class="o">.</span><span class="n">format_names</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">See:</th><td class="field-body">documentation for the <cite>NameFormatter</cite> class</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Note:</th><td class="field-body">2006-08-03 add initials keyword to <tt class="docutils literal"><span class="pre">__init__</span></tt></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="bibstuff.bibstyles.shared.NamesFormatter.format_names">
+<tt class="descname">format_names</tt><big>(</big><em>names</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#NamesFormatter.format_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.NamesFormatter.format_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return string,
+which represents the BibName instance <cite>names</cite>
+formatted as determined by the <cite>NamesFormatter</cite> attributes.</p>
+<p><a class="reference external" href="bibstyles/shared.py">NAME FORMATTING TEMPLATES</a> are explained in some detail
+in the doc string for the NameFormatter class.  Briefly:</p>
+<p>Template sections are separated by <tt class="docutils literal"><span class="pre">|</span></tt>.
+Name parts are referred to by first letter: (v)on, (l)last, (j)r or (f)irst.
+These letters may be followed by token separator enclosed in curly braces.
+Any other characters are included as is.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body">2006-07-25 radically refactored from bibname.py&#8217;s FormatName() function</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="bibstuff.bibstyles.shared.append_sep">
+<tt class="descclassname">bibstuff.bibstyles.shared.</tt><tt class="descname">append_sep</tt><big>(</big><em>s</em>, <em>sep</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#append_sep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.append_sep" title="Permalink to this definition">¶</a></dt>
+<dd><p>return s+sep after removing duplicate punctuation at the join
+<cite>s</cite>: string
+<cite>sep</cite>: string
+TODO? restrict characters removed</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bibstuff.bibstyles.shared.reformat_para">
+<tt class="descclassname">bibstuff.bibstyles.shared.</tt><tt class="descname">reformat_para</tt><big>(</big><em>para=''</em>, <em>left=0</em>, <em>right=72</em>, <em>just='LEFT'</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#reformat_para"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.reformat_para" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple paragraph reformatter.  Allows specification
+of left and right margins, and of justification style
+(using constants defined in module).
+:note: Adopted by Schwilk from David Mertz&#8217;s example in TPiP
+:see:  Mertz, David,  <em>Text Processing in Python</em> (TPiP)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-bibstuff.bibstyles">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bibstuff.bibstyles" title="Permalink to this headline">¶</a></h2>
+<p>The bibstyles package provides classes and styles for formatted text output.</p>
+<p>This is the __init__.py for bibstyles package</p>
+<dl class="function">
+<dt id="bibstuff.bibstyles.from_name">
+<tt class="descclassname">bibstuff.bibstyles.</tt><tt class="descname">from_name</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles.html#from_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.from_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">bibstuff.bibstyles package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-bibstuff.bibstyles.default">bibstuff.bibstyles.default module</a></li>
+<li><a class="reference internal" href="#module-bibstuff.bibstyles.default_templates">bibstuff.bibstyles.default_templates module</a><ul>
+<li><a class="reference internal" href="#citation-template">CITATION TEMPLATE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bibstuff.bibstyles.example_numbered">bibstuff.bibstyles.example_numbered module</a></li>
+<li><a class="reference internal" href="#module-bibstuff.bibstyles.jasss_style">bibstuff.bibstyles.jasss_style module</a></li>
+<li><a class="reference internal" href="#module-bibstuff.bibstyles.shared">bibstuff.bibstyles.shared module</a></li>
+<li><a class="reference internal" href="#module-bibstuff.bibstyles">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href=""
+                        title="previous chapter">bibstuff.bibstyles package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/bibstuff.bibstyles.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="#" title="bibstuff.bibstyles package"
+             >previous</a> |</li>
+        <li><a href="index.html">bibstuff 1.3.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Dylan W. Schwilk and Alan G. Isaac.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

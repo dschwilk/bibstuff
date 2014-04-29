@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>bibstuff.bibstyles.default &mdash; bibstuff 1.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="bibstuff 1.3.1 documentation" href="../../../index.html" />
+    <link rel="up" title="bibstuff.bibstyles" href="../bibstyles.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../bibstyles.html" accesskey="U">bibstuff.bibstyles</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for bibstuff.bibstyles.default</h1><div class="highlight"><pre>
+<span class="c">#File: default.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Provides a default style for bib4txt.py</span>
+<span class="sd">Produces a list of citations that to be included in a reStructuredText document.</span>
+<span class="sd">(In very simple documents, can also provide citation reference formatting</span>
+<span class="sd">by substituting in the document text for the citation references.)</span>
+
+<span class="sd">A style includes:</span>
+
+<span class="sd">- citation template </span>
+<span class="sd">- CitationManager class</span>
+<span class="sd">- sortkey for make_text_output</span>
+<span class="sd">  (often based on a field list)</span>
+
+<span class="sd">:note: you will often want to override these</span>
+<span class="sd">:note: shared.py holds defintions common to most styles</span>
+<span class="sd">:note: see the examples (e.g., example_numbered.py) of different styles</span>
+
+<span class="sd">:author: Alan G Isaac</span>
+<span class="sd">:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</span>
+<span class="sd">:copyright: 2006 by Alan G Isaac</span>
+<span class="sd">:license: MIT (see `license.txt`_)</span>
+<span class="sd">:date: 2006-08-01</span>
+
+<span class="sd">.. _`license.txt`: ../../license.txt</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
+<span class="n">__author__</span>  <span class="o">=</span>   <span class="s">&quot;Alan G. Isaac&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;0.6&quot;</span>
+<span class="n">__needs__</span> <span class="o">=</span> <span class="s">&#39;2.4&#39;</span>
+
+<span class="c">###################  IMPORTS  ##########################</span>
+<span class="c"># from standard library</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">style_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;bibstuff_logger&#39;</span><span class="p">)</span>
+<span class="c">#shared_logger = logging.getLogger(&#39;bibstuff_logger&#39;)</span>
+
+<span class="c"># imports from bibstuff</span>
+
+<span class="c"># :IMPORTANT: every style must import shared!</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">shared</span>
+<span class="c"># most styles with start with the default templates:</span>
+<span class="c">#  in default_templates.py</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">default_templates</span>
+<span class="c">########################################################</span>
+
+
+
+	
+
+<span class="c">##########################################################################</span>
+<span class="c">###################  CITEREF FORMATTING  #################################</span>
+<span class="c">##########################################################################</span>
+<span class="n">CITEREF_TEMPLATE</span> <span class="o">=</span> <span class="n">default_templates</span><span class="o">.</span><span class="n">DEFAULT_CITEREF_TEMPLATE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+
+<span class="c">##########################################################################</span>
+<span class="c">##################  CITATION FORMATTING  #################################</span>
+<span class="c">##########################################################################</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Every style must have a CITATION_TEMPLATE, a CitationManager, and a ref_list_sort_key.</span>
+<span class="sd">Crucial formatting decisions are made int the CITATION_TEMPLATE.</span>
+<span class="sd">The CITATION_TEMPLATE provides default reference formatting (may also be used by BibStyle) </span>
+
+<span class="sd">:TODO:</span>
+
+<span class="sd">	- provide graceful handling of missing fields</span>
+<span class="sd">	- allow different formatting of first and other names</span>
+<span class="sd">	- allow different initial line and subsequent line indenting</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c"># here we simply use the default citation template</span>
+<span class="n">CITATION_TEMPLATE</span> <span class="o">=</span> <span class="n">shared</span><span class="o">.</span><span class="n">CitationManager</span><span class="o">.</span><span class="n">default_citation_template</span>
+
+<div class="viewcode-block" id="CitationManager"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.default.CitationManager">[docs]</a><span class="k">class</span> <span class="nc">CitationManager</span><span class="p">(</span><span class="n">shared</span><span class="o">.</span><span class="n">CitationManager</span><span class="p">):</span>
+
+	<span class="c">################### CITEREF FORMATTING #########################</span>
+	<span class="c">#we set the &#39;format_inline_cite&#39; method equal to the below &#39;format_inline_cite&#39; function</span>
+<div class="viewcode-block" id="CitationManager.format_inline_cite"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.default.CitationManager.format_inline_cite">[docs]</a>	<span class="k">def</span> <span class="nf">format_inline_cite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cite_key_list</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Usually you will need to write a &#39;format_inline_cite&#39; function</span>
+<span class="sd">		that the CiteRefProcessor will use to substitute inline for citation references.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">style_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;default: enter CitationManager.format_inline_cite&#39;</span><span class="p">)</span>
+		<span class="c">#:note: need entry to be None if cite_key not found, so discard=False</span>
+		<span class="n">entry_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_entries</span><span class="p">(</span><span class="n">cite_key_list</span><span class="p">,</span><span class="n">discard</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		for entry in entry_list:</span>
+<span class="sd">			print entry</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">format_inline_cite</span><span class="p">(</span><span class="n">entry_list</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+	<span class="c">################### CITATION FORMATTING ########################</span></div>
+<div class="viewcode-block" id="CitationManager.get_citation_label"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.default.CitationManager.get_citation_label">[docs]</a>	<span class="k">def</span> <span class="nf">get_citation_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">entry</span><span class="p">,</span><span class="n">citation_template</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s">&#39;.. [&#39;</span> <span class="o">+</span> <span class="n">entry</span><span class="o">.</span><span class="n">citekey</span> <span class="o">+</span> <span class="s">&#39;]</span><span class="se">\n</span><span class="s">&#39;</span>
+
+	<span class="c">#sort_key for sorting list of references</span>
+	<span class="c"># (choice of field_list is a formatting decision)</span></div>
+<div class="viewcode-block" id="CitationManager.sortkey"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.default.CitationManager.sortkey">[docs]</a>	<span class="k">def</span> <span class="nf">sortkey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bibentry</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_sort_key</span><span class="p">(</span><span class="n">bibentry</span><span class="p">,[</span><span class="s">&#39;Author&#39;</span><span class="p">,</span><span class="s">&#39;Year&#39;</span><span class="p">])</span>
+</div></div>
+<div class="viewcode-block" id="format_inline_cite"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.default.format_inline_cite">[docs]</a><span class="k">def</span> <span class="nf">format_inline_cite</span><span class="p">(</span><span class="n">entry_list</span><span class="p">,</span> <span class="n">citation_manager</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;Return string, formatted in-text citation (allows *multiple* citations).</span>
+
+<span class="sd">	`entry_list` : list</span>
+<span class="sd">		entries to be formatted</span>
+<span class="sd">	`citation_manager` : CitationManager instance</span>
+<span class="sd">		handles name formatting</span>
+
+<span class="sd">	:note: need the entry formatter bc its determines the field of the names for the cite</span>
+<span class="sd">	:note: much of the following functionality was in the old Bibstyle&#39;s formatCitation() method</span>
+<span class="sd">	:TODO: rewrite</span>
+<span class="sd">	:TODO: ? entries shd be more featureful ? (conflicts with core goal of BibEntry class)</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">style_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;default.py: Entering format_inline_cite.&quot;</span><span class="p">)</span>
+	<span class="n">name_date_sep</span> <span class="o">=</span> <span class="s">&#39; &#39;</span>
+	<span class="n">formatted_list</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entry_list</span><span class="p">:</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">entry</span><span class="p">:</span> <span class="c">#None replaces missing entries</span>
+			<span class="n">formatted_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;?&#39;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">year</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span>
+			<span class="n">entry_formatter</span> <span class="o">=</span> <span class="n">citation_manager</span><span class="o">.</span><span class="n">entry_formatter</span>
+			<span class="n">last_names</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">get_names</span><span class="p">(</span><span class="n">entry_formatter</span><span class="p">)</span><span class="o">.</span><span class="n">get_last_names</span><span class="p">()</span> <span class="c">#:note: ignores &quot;von&quot; part</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">last_names</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+				<span class="n">last_names</span> <span class="o">=</span> <span class="s">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">last_names</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">last_names</span> <span class="o">=</span> <span class="n">last_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39; et al.&#39;</span>
+			<span class="n">formatted_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">+</span> <span class="n">name_date_sep</span> <span class="o">+</span>  <span class="s">&#39;</span><span class="si">%s</span><span class="s">&#39;</span><span class="p">)</span><span class="o">%</span><span class="p">(</span><span class="n">last_names</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="p">)</span>
+			<span class="c">#to cite by number can use this instead:</span>
+			<span class="c">#formatted_list.append(&#39;%d&#39;%entry.citation_rank)</span>
+	<span class="n">style_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Exiting format_inline_cite.&quot;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="s">&#39;(&#39;</span> <span class="o">+</span> <span class="n">CITEREF_TEMPLATE</span><span class="p">[</span><span class="s">&#39;citeref_sep&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">formatted_list</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;)&#39;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../bibstyles.html" >bibstuff.bibstyles</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Dylan W. Schwilk and Alan G. Isaac.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

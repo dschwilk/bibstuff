@@ -1,0 +1,373 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>bibstuff.bibname &mdash; bibstuff 1.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="bibstuff 1.3.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for bibstuff.bibname</h1><div class="highlight"><pre>
+<span class="c">#! /usr/bin/env python</span>
+<span class="c">#File: bibname.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">:mod:`bibstuff.bibname` --- Name Parser and Formatter</span>
+<span class="sd">=====================================================</span>
+
+<span class="sd">Parses bibtex-formatted author/editor raw names and provides</span>
+<span class="sd">formatting functions (e.g., via bibstyles/shared.NamesFormatter).</span>
+
+<span class="sd">:author: Dylan W. Schwilk</span>
+<span class="sd">:contact: http://www.schwilk.org</span>
+<span class="sd">:author: Alan G. Isaac</span>
+<span class="sd">:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</span>
+<span class="sd">:copyright: 2009 by Dylan Schwilk and Alan G Isaac</span>
+<span class="sd">:license: MIT (see `license.txt`_)</span>
+<span class="sd">:date: 2009-01-14</span>
+<span class="sd">:since: 2006-08-29</span>
+
+
+<span class="sd">:note: Major change as of 2008-07-02. Now the ebnf grammar and processor</span>
+<span class="sd">       handles parsing of a list of names (a bibtex names field such as editor</span>
+<span class="sd">       or author) and parses the single author name into its fvlj parts. This</span>
+<span class="sd">       eliminates the need for the original hand-coded parse_raw_names_parts</span>
+<span class="sd">       function. Moved to using names_dicts rather than names_parts. The</span>
+<span class="sd">       grammar handles latex accents and ligatures as well as braces strings so</span>
+<span class="sd">       that a name such as {Barnes and Noble, Inc} is parsed as a single name</span>
+<span class="sd">       and not split on the &quot; and &quot;.</span>
+<span class="sd">:todo: The dispatch processor does not currently strip the leading and trailing</span>
+<span class="sd">       braces from latex/bibtex strings. Not hard to add (see bibfile.py). This</span>
+<span class="sd">       should be done eventually.</span>
+<span class="sd">:todo: The grammar does not support quoted strings, only braces strings. Could</span>
+<span class="sd">       be added fairly simply</span>
+
+<span class="sd">.. _`license.txt`: ../license.txt</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
+<span class="n">__authors__</span>  <span class="o">=</span>    <span class="p">[</span><span class="s">&quot;Dylan W. Schwilk&quot;</span><span class="p">,</span> <span class="s">&quot;Alan G. Isaac&quot;</span><span class="p">]</span>
+<span class="n">__version__</span> <span class="o">=</span>    <span class="s">&#39;2.0&#39;</span>
+<span class="n">__needs__</span> <span class="o">=</span> <span class="s">&#39;2.4&#39;</span>
+
+
+<span class="c">################ IMPORTS #############################</span>
+<span class="c"># import from standard library</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\n</span><span class="si">%(levelname)s</span><span class="s">:</span><span class="se">\n</span><span class="si">%(message)s</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+<span class="n">bibname_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;bibstuff_logger&#39;</span><span class="p">)</span>
+
+<span class="c"># import dependencies</span>
+<span class="kn">import</span> <span class="nn">simpleparse</span>
+<span class="kn">from</span> <span class="nn">simpleparse.dispatchprocessor</span> <span class="kn">import</span> <span class="n">dispatch</span><span class="p">,</span> <span class="n">DispatchProcessor</span><span class="p">,</span> <span class="n">getString</span><span class="p">,</span> <span class="n">lines</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">maketrans</span>
+<span class="c"># BibStuff imports</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">bibstyles</span><span class="p">,</span> <span class="n">bibfile</span><span class="p">,</span> <span class="n">bibgrammar</span>
+<span class="c">######################################################</span>
+
+
+<span class="c">################## Global Variables ##################</span>
+
+<span class="c"># constant needed for populating dicts in names_dicts with empty lists for</span>
+<span class="c"># missing parts</span>
+<span class="n">nameparts</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;first&quot;</span><span class="p">,</span><span class="s">&quot;last&quot;</span><span class="p">,</span><span class="s">&quot;von&quot;</span><span class="p">,</span><span class="s">&quot;jr&quot;</span><span class="p">)</span>
+
+<span class="c"># The EBNF description of a bibtex name field (such as a list of author names).</span>
+<span class="n">ebnf_bibname</span> <span class="o">=</span> <span class="s">r&quot;&quot;&quot;</span>
+<span class="s">namelist := sp*, name, (_and_, name)*</span>
+<span class="s">&lt;_and_&gt;  := sp+, &quot;and&quot;, sp+</span>
+<span class="s">name     := vlf / fvl / fl / vljf / fvlj / l</span>
+<span class="s">&gt;l&lt;      :=  last</span>
+<span class="s">&gt;vlf&lt;    := (von, sp+)*, last, (sp+, last)*, comma, (sp*, first)+</span>
+<span class="s">&gt;fl&lt;     := first, sp+, (first, sp+, ?(capitalized/capstring))*, last</span>
+<span class="s">&gt;fvl&lt;    := (first, sp+)+, (von, sp+)+, last, (sp+, last)*</span>
+<span class="s">&gt;fvlj&lt;   := fvl, comma, jr</span>
+<span class="s">&gt;vljf&lt;   := (von, sp+)*, last, (sp+, last)*, comma, jr,  comma,  first, (sp+ , first)*</span>
+<span class="s">von      := lowercase / lowerstring</span>
+<span class="s">first    := capitalized / capstring</span>
+<span class="s">last     := capitalized / capstring</span>
+<span class="s">jr       := &quot;jr&quot; / &quot;Jr&quot; / &quot;JR&quot; /  &quot;Junior&quot; / &quot;junior&quot; /</span>
+<span class="s">            &quot;Sr&quot; / &quot;sr&quot; / &quot;II&quot; / &quot;III&quot; / &quot;IV&quot; / &quot;2nd&quot; / &quot;3rd&quot; / &quot;4th&quot;</span>
+<span class="s">&lt;comma&gt;           := sp*, &#39;,&#39;, sp*</span>
+<span class="s">&lt;capitalized&gt;     := capital  , anyc*    </span>
+<span class="s">&lt;lowercase&gt;       := ?lowerc, -&quot;and &quot;, anyc*  # Mustn&#39;t grab the delimiter _and_ for a part</span>
+<span class="s">&lt;ltx_accent&gt;      := &#39;\\`&#39; / &quot;\\&#39;&quot; / &#39;\\^&#39; / &#39;\\&quot;&#39;  /  &#39;\\H&#39; / &#39;\\~&#39; / &#39;\\c&#39; / &#39;\\=&#39; / &#39;\\b&#39; / &#39;\\.&#39; /</span>
+<span class="s">                      &#39;\\d&#39; / &#39;\\u&#39; / &#39;\\v&#39; / &#39;\\t&#39;</span>
+<span class="s">&lt;ltx_ij_accent&gt;   := &#39;\\^{\\i}&#39; / &#39;\\&quot;{\\i}&#39; / &#39;\\^{\\j}&#39; / &#39;\\&quot;{\\j}&#39;</span>
+<span class="s">&lt;ltx_ligature_uc&gt; := &#39;\\AE&#39; / &#39;\\OE&#39; / &#39;\\AA&#39; / &#39;\\O&#39;</span>
+<span class="s">&lt;ltx_ligature_lc&gt; := &#39;\\ae&#39; / &#39;\\oe&#39; / &#39;\\aa&#39; / &#39;\\o&#39; / &#39;\\ss&#39;</span>
+<span class="s">&lt;capital&gt;         := (&#39;{&#39;,capital,&#39;}&#39;) / [A-Z] /</span>
+<span class="s">                     (ltx_accent, [A-Z]) / (ltx_accent, &#39;{&#39; , [A-Z] , &#39;}&#39;) /</span>
+<span class="s">                     ltx_ligature_uc</span>
+<span class="s">&lt;lowerc&gt;          := (&#39;{&#39;,lowerc,&#39;}&#39;) / [a-z] / (ltx_accent, [a-z]) /</span>
+<span class="s">                     (ltx_accent, &#39;{&#39; , [a-z] , &#39;}&#39;) /</span>
+<span class="s">                     ltx_ij_accent / ltx_ligature_lc</span>
+<span class="s">&lt;anyc&gt;            := [~&#39;-] / capital / lowerc</span>
+<span class="s">&lt;string&gt;              :=  &#39;{&#39; , braces_string?, &#39;}&#39;</span>
+<span class="s">&lt;capstring&gt;           := &#39;{&#39; , cap_braces_string?, &#39;}&#39;</span>
+<span class="s">&lt;lowerstring&gt;         := &#39;{&#39; , lower_braces_string?, &#39;}&#39;</span>
+<span class="s">&lt;cap_braces_string&gt;   := ( (capital, -[{}]*) / capstring)+ </span>
+<span class="s">&lt;lower_braces_string&gt; := ( (capital, -[{}]*) / lowerstring)+</span>
+<span class="s">&lt;braces_string&gt;       := (-[{}]+ / string)+</span>
+<span class="s">&lt;sp&gt;                  := [ \t\n\r.]</span>
+<span class="s">&quot;&quot;&quot;</span>
+
+<span class="n">bibnamelist_parser</span> <span class="o">=</span> <span class="n">simpleparse</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">Parser</span><span class="p">(</span><span class="n">ebnf_bibname</span><span class="p">,</span> <span class="s">&#39;namelist&#39;</span><span class="p">)</span>
+
+<span class="c">######################################################</span>
+
+<span class="c"># ----------- Public Classes and Functions -----------------#</span>
+
+
+<span class="c"># ----------------------------------------------------------</span>
+<span class="c"># BibName</span>
+<span class="c"># -------</span>
+<span class="c"># Parser processor for bibtex names</span>
+<span class="c"># ----------------------------------------------------------</span>
+<div class="viewcode-block" id="BibName"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.BibName">[docs]</a><span class="k">class</span> <span class="nc">BibName</span><span class="p">(</span> <span class="n">simpleparse</span><span class="o">.</span><span class="n">dispatchprocessor</span><span class="o">.</span><span class="n">DispatchProcessor</span> <span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;Processes a bibtex names entry (author, editor, etc) and</span>
+<span class="sd">	stores the resulting raw_names_parts.</span>
+<span class="sd">	</span>
+<span class="sd">	:note: a BibName object should be bibstyle independent.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_names</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">from_field</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="p">:</span>  <span class="c">#:note: 2006-07-25 add initialization based on raw name</span>
+		<span class="sd">&quot;&quot;&quot;initialize a BibName instance</span>
+<span class="sd">		</span>
+<span class="sd">		:Parameters:</span>
+<span class="sd">			`raw_names` : str</span>
+<span class="sd">				the raw names (e.g., unparsed author field of a BibEntry instance)</span>
+<span class="sd">			`from_field` : str</span>
+<span class="sd">				the entry field for the raw name</span>
+
+<span class="sd">		:note: 2006-08-02 add `from_field` argument (set by `BibEntry.make_names`)</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">from_field</span> <span class="o">=</span> <span class="n">from_field</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">raw_names</span> <span class="o">=</span> <span class="n">raw_names</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="c">#populate self.names_dicts from raw_names</span>
+		<span class="k">if</span> <span class="n">raw_names</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">parse_raw_names</span><span class="p">(</span><span class="n">raw_names</span><span class="p">)</span>
+
+	<span class="c">###############  PRODUCTION FUNCTIONS  #######################</span>
+	<span class="c"># Handle each name by adding new dict to list &quot;names_dicts&quot;, then</span>
+	<span class="c"># handle each name part by adding to last dict in names_dict list.</span>
+
+<div class="viewcode-block" id="BibName.name"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.BibName.name">[docs]</a>	<span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">,</span><span class="n">subtags</span><span class="p">),</span> <span class="nb">buffer</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Prduction function to process a single name in a nameslist&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span> <span class="c"># add new dict to list</span>
+		<span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">subtags</span><span class="p">:</span>
+			<span class="n">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="nb">buffer</span><span class="p">)</span>
+		<span class="c"># Create empty lists for missing parts</span>
+		<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">nameparts</span><span class="p">:</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</div>
+<div class="viewcode-block" id="BibName.last"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.BibName.last">[docs]</a>	<span class="k">def</span> <span class="nf">last</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">,</span><span class="n">subtags</span><span class="p">),</span> <span class="nb">buffer</span> <span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Processes last name part in a single name of a bibtex names field&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;last&quot;</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s">&quot;last&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">])</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s">&quot;last&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">],]</span>
+</div>
+<div class="viewcode-block" id="BibName.first"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.BibName.first">[docs]</a>	<span class="k">def</span> <span class="nf">first</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">,</span><span class="n">subtags</span><span class="p">),</span> <span class="nb">buffer</span> <span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Processes first name part in a single name of a bibtex names field&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;first&quot;</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s">&quot;first&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">])</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s">&quot;first&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">],]</span>
+</div>
+<div class="viewcode-block" id="BibName.von"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.BibName.von">[docs]</a>	<span class="k">def</span> <span class="nf">von</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">,</span><span class="n">subtags</span><span class="p">),</span> <span class="nb">buffer</span> <span class="p">):</span> 
+		<span class="sd">&quot;&quot;&quot;Processes von name part in a single name of a bibtex names field&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;von&quot;</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s">&quot;von&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">])</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s">&quot;von&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">],]</span>
+</div>
+<div class="viewcode-block" id="BibName.jr"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.BibName.jr">[docs]</a>	<span class="k">def</span> <span class="nf">jr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">,</span><span class="n">subtags</span><span class="p">),</span> <span class="nb">buffer</span> <span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Processes jr name part in a single name of a bibtex names field&quot;&quot;&quot;</span>
+		<span class="c"># Just on jr part so simple add list with one item</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s">&quot;jr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">buffer</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">],]</span>
+		
+	<span class="c">##############  HELPER FUNCTIONS  ######################</span>
+</div>
+<div class="viewcode-block" id="BibName.parse_raw_names"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.BibName.parse_raw_names">[docs]</a>	<span class="k">def</span> <span class="nf">parse_raw_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_name</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;This function can be used to populate an empty BibName</span>
+<span class="sd">		instance or replace all the name values currently contained in</span>
+<span class="sd">		an instance. It parses the names field with the bibname grammar&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># Replace extant list of  names</span>
+		<span class="n">bibnamelist_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">raw_name</span><span class="p">,</span>  <span class="n">processor</span> <span class="o">=</span>  <span class="bp">self</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="BibName.get_names_dicts"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.BibName.get_names_dicts">[docs]</a>	<span class="k">def</span> <span class="nf">get_names_dicts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c">#:note: renamed</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Return a list of name dicts,</span>
+<span class="sd">		one dict per name,</span>
+<span class="sd">		having the fields: first , von, last, jr</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span>
+
+	
+	<span class="c">#ai: method to get last names, which is needed by bibstyle.py and by</span>
+	<span class="c">#some style sortkeys</span></div>
+<div class="viewcode-block" id="BibName.get_last_names"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.BibName.get_last_names">[docs]</a>	<span class="k">def</span> <span class="nf">get_last_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return list of strings, where each string is a last name.</span>
+<span class="sd">		</span>
+<span class="sd">		:TODO: graceful handling of missing names parts</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name_dict</span><span class="p">[</span><span class="s">&#39;last&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">name_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_dicts</span><span class="p">)</span>
+		<span class="c">#bibname_logger.debug(&quot;BibName.get_last_names result: &quot;+str(result))</span>
+		<span class="k">return</span> <span class="n">result</span>
+</div>
+<div class="viewcode-block" id="BibName.format"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.BibName.format">[docs]</a>	<span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names_formatter</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		format a BibName object into a string useful for citations</span>
+
+<span class="sd">		:note: called by the BibEntry class in bibfile.py when entry formatting</span>
+<span class="sd">			is requested</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">names_formatter</span><span class="o">.</span><span class="n">format_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="getNames"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibname.getNames">[docs]</a><span class="k">def</span> <span class="nf">getNames</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;Returns list of name dicts. Each dict has keys &quot;first&quot;, &quot;last&quot;,</span>
+<span class="sd">	&quot;von&quot;, &quot;jr&quot;. `src` is a string is in bibtex name format.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">try</span> <span class="p">:</span>
+		<span class="n">p</span> <span class="o">=</span> <span class="n">BibName</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>  <span class="c">#:note: 2006-07-25 allow initialization w src</span>
+		<span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">get_names_dicts</span><span class="p">()</span>  <span class="c">#:note: 2006-07-25 renamed</span>
+	<span class="k">except</span> <span class="p">:</span>
+		<span class="n">bibname_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&#39;Error in name </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">src</span><span class="p">)</span>
+		<span class="k">raise</span>
+
+
+<span class="c"># command-line version</span></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span><span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+	<span class="kn">import</span> <span class="nn">sys</span>
+	<span class="kn">from</span> <span class="nn">optparse</span> <span class="kn">import</span> <span class="n">OptionParser</span>
+	
+	<span class="n">usage</span> <span class="o">=</span> <span class="s">&quot;usage: %prog [options] filenames&quot;</span>
+
+	<span class="n">parser</span> <span class="o">=</span> <span class="n">OptionParser</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="n">usage</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span><span class="s">&quot;%prog &quot;</span> <span class="o">+</span> <span class="n">__version__</span><span class="p">)</span>
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&quot;-t&quot;</span><span class="p">,</span> <span class="s">&quot;--template&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">&quot;string&quot;</span><span class="p">,</span> \
+					  <span class="n">dest</span><span class="o">=</span><span class="s">&quot;template&quot;</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="s">&#39;f{.}. |v |l| jr&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;Name format template&quot;</span><span class="p">)</span>
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&quot;-i&quot;</span><span class="p">,</span> <span class="s">&quot;--initials&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;initials&quot;</span><span class="p">,</span> \
+					  <span class="n">default</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;Initialize first names&quot;</span><span class="p">)</span>
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&quot;-I&quot;</span><span class="p">,</span> <span class="s">&quot;--no-initials&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store_false&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;initials&quot;</span><span class="p">,</span> \
+					  <span class="n">default</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;do not initialize first names&quot;</span><span class="p">)</span>
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&quot;-l&quot;</span><span class="p">,</span> <span class="s">&quot;--last-names&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;last_names&quot;</span><span class="p">,</span> \
+					  <span class="n">default</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;Print last names only.&quot;</span><span class="p">)</span>
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&quot;-v&quot;</span><span class="p">,</span> <span class="s">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;verbose&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+					  <span class="n">help</span><span class="o">=</span><span class="s">&quot;Print INFO messages to stdout, default=</span><span class="si">%d</span><span class="s">efault&quot;</span><span class="p">)</span>
+
+	<span class="c"># get options</span>
+	<span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+	<span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+		<span class="n">bibname_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">last_names</span><span class="p">:</span>
+		<span class="n">options</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+	<span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">initials</span> <span class="p">:</span>
+		<span class="n">initials</span> <span class="o">=</span> <span class="s">&#39;f&#39;</span>  <span class="c"># only first names.  Does any style ever use initials for anything else?</span>
+	<span class="k">else</span> <span class="p">:</span>
+		<span class="n">initials</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+		<span class="n">src</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+	<span class="k">else</span> <span class="p">:</span>
+		<span class="n">flist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+		<span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="n">flist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">))</span>
+			<span class="k">except</span> <span class="ne">IOError</span> <span class="p">:</span>
+				<span class="n">bibname_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&#39;Error in filelist: </span><span class="si">%s</span><span class="s">.&#39;</span><span class="o">%</span><span class="n">fname</span><span class="p">)</span>
+		<span class="n">src</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">flist</span><span class="p">)</span>
+		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">(),</span> <span class="n">flist</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">src</span><span class="p">:</span>
+		<span class="n">bibname_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;No bibtex source database found&quot;</span><span class="p">)</span>
+		<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">bfile</span> <span class="o">=</span> <span class="n">bibfile</span><span class="o">.</span><span class="n">BibFile</span><span class="p">()</span>
+		<span class="n">bibgrammar</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">bfile</span><span class="p">)</span>
+
+	<span class="n">names_formatter</span> <span class="o">=</span> <span class="n">bibstyles</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">NamesFormatter</span><span class="p">(</span><span class="n">template_list</span><span class="o">=</span><span class="p">[</span><span class="n">options</span><span class="o">.</span><span class="n">template</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">initials</span><span class="o">=</span><span class="n">initials</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">bfile</span><span class="o">.</span><span class="n">entries</span><span class="p">:</span>
+		<span class="k">print</span> <span class="n">entry</span><span class="o">.</span><span class="n">format_names</span><span class="p">(</span><span class="n">names_formatter</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">bibstuff 1.3.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Dylan W. Schwilk and Alan G. Isaac.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

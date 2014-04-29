@@ -1,0 +1,54 @@
+bibstuff.bibstyles package
+==========================
+
+Submodules
+----------
+
+bibstuff.bibstyles.default module
+---------------------------------
+
+.. automodule:: bibstuff.bibstyles.default
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bibstuff.bibstyles.default_templates module
+-------------------------------------------
+
+.. automodule:: bibstuff.bibstyles.default_templates
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bibstuff.bibstyles.example_numbered module
+------------------------------------------
+
+.. automodule:: bibstuff.bibstyles.example_numbered
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bibstuff.bibstyles.jasss_style module
+-------------------------------------
+
+.. automodule:: bibstuff.bibstyles.jasss_style
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bibstuff.bibstyles.shared module
+--------------------------------
+
+.. automodule:: bibstuff.bibstyles.shared
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: bibstuff.bibstyles
+    :members:
+    :undoc-members:
+    :show-inheritance:
