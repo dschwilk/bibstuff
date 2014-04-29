@@ -2,20 +2,32 @@
      README: BibStuff
 ================================
 
-:authors: See `AUTHORS.rst`_
+:authors: Dylan W. Schwilk, Alan G. Isaac and others
 :source code: https://github.com/dschwilk/bibstuff
+
+See `AUTHORS.rst`_
+
+This project contains the bibstuff python package which provides modules and classes for interacting with BibTeX style databases of citation references. The package contains classes for parsing and storing BibTeX files and for defining citation styles.
+
+The project also includes command-line scripts for searching and labeling BibTeX entries and a utility for replacing in-text citations in a reStructured text document.
 
 BibStuff License
 ================
 
-See `license.txt`_, which must be included when this software is
-distributed.
+See `license.txt`_, which must be included when this software is distributed and `AUTHORS.rst`_ for contributors to the project
 
 Installation
 ============
 
-Simply type 'python setup.py install' in the unpacked directory.
+  1. clone repository:
+     ``git clone https://github.com/dschwilk/bibstuff``
 
+  2. ``python setup.py install`` in the cloned directory.
+
+bibstuff module
+===============
+
+The module documentation is at http://dschwilk.github.io/bibstuff
 
 Command-line tools (scripts)
 ============================
