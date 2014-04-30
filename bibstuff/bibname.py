@@ -47,8 +47,8 @@ bibname_logger = logging.getLogger('bibstuff_logger')
 
 # import dependencies
 import simpleparse
-from simpleparse.dispatchprocessor import dispatch, DispatchProcessor, getString, lines
-from string import maketrans
+from simpleparse.dispatchprocessor import dispatch
+#from string import maketrans
 # BibStuff imports
 from . import bibstyles, bibfile, bibgrammar
 ######################################################

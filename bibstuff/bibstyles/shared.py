@@ -17,7 +17,7 @@ __version__ = "1.3"
 
 ###################  IMPORTS  ##################################################
 #import from standard library
-import logging, re
+import logging
 #import dependencies
 import simpleparse
 # We need to import this specifically because simpleparse does not import it by
@@ -75,9 +75,12 @@ def reformat_para(para='', left=0, right=72, just='LEFT'):
 		r, l = right, left
 		return '\n'.join([' '*left+ln.center(r-l) for ln in lines])
 	elif just.upper() == RIGHT:
-		return '\n'.join([line.rjust(right) for line in lines])
-	else: # left justify
-		return '\n'.join([' '*left+line for line in lines])
+		return '\n'.join([line.rjust(right) for ln in lines])
+	elif just.upper() == LEFT:
+		return '\n'.join([' '*left+line for ln in lines])
+	else:
+		shared_logger.error("Unrecognized justification style: %s", just)
+
 
 class NamesFormatter(object):
 	"""Provides a formatter for BibName instances.
@@ -365,8 +368,9 @@ class CitationManager(object):
 		Usually used by a CiteRefProcessor object during processing. 
 		Usually styles need to override this method.
 		"""
+
 		#substitute formatted citation reference into document text
-		self.result.append( self.citation_manager.format_inline_cite(entry_list,cite_key_list) )
+		self.result.append( self.citation_manager.format_inline_cite(self.entry_list,cite_key_list) )
 		return '**[' + ','.join(cite_key_list) + ']_'
 
 
@@ -541,7 +545,7 @@ class CiteRefProcessor( simpleparse.dispatchprocessor.DispatchProcessor ):
 				self.all_citekeys.append(cite_key)
 		#make (ordered) list of entries for the current cite key(s)
 		#:note: need entry to be None if cite_key not found, so discard=False
-		entry_list = self.citation_manager.find_entries(cite_key_list,discard=False)
+		self.entry_list = self.citation_manager.find_entries(cite_key_list,discard=False)
 		#substitute formatted citation reference into document text
 		self.result.append( self.citation_manager.format_inline_cite(cite_key_list) )
 

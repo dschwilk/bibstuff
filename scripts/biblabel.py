@@ -30,7 +30,7 @@ logging.basicConfig(format='\n%(levelname)s:\n%(message)s\n')
 biblabel_logger = logging.getLogger('bibstuff_logger')
 
 # bibstuff imports
-from bibstuff import bibfile, bibname, bibstyles
+from bibstuff import bibfile, bibstyles
 
 ################################################################################
 

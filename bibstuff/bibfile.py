@@ -34,17 +34,14 @@ __strict__ = False # should we be strict with bibtex format?
 
 ####################### IMPORTS #####################################
 # import from standard library
-import re
-import sys
-import logging
+import re, logging
 bibfile_logger = logging.getLogger('bibstuff_logger')
 
 # import dependencies
 from simpleparse.dispatchprocessor import dispatch, DispatchProcessor, getString, lines
 
 #bibstuff imports
-from . import bibgrammar
-from .bibstyles.shared import reformat_para
+# from . import bibgrammar
 #####################################################################
 
 ###############  GLOBAL VARIABLES  ##################################
@@ -84,7 +81,7 @@ class BibEntry(dict):
 		for key in self._fields:
 			addbraces = True
                         addquotes = False
-			spacer = ' '*(mlen - len(key) )
+			#spacer = ' '*(mlen - len(key) )
 			val = self[key]
 			#handle crossref
 			if key == 'crossref':
@@ -432,15 +429,15 @@ class BibFile( DispatchProcessor ):
 # self test
 # -------------------------
 # usage: bibfile.py DATABASE_FILE
-if __name__ == "__main__":
-	import sys
-	if len(sys.argv) > 1 :
-		src = open(sys.argv[1]).read()
-		bfile = BibFile()
-		bibgrammar.Parse(src, bfile)
-		for entry in bfile.entries :
-			print entry
+# if __name__ == "__main__":
+# 	import sys
+# 	if len(sys.argv) > 1 :
+# 		src = open(sys.argv[1]).read()
+# 		bfile = BibFile()
+# 		bibgrammar.Parse(src, bfile)
+# 		for entry in bfile.entries :
+# 			print entry
 
-	else :
-		print "self test usage: bibfile.py DATABASE_FILE"
+# 	else :
+# 		print "self test usage: bibfile.py DATABASE_FILE"
 
