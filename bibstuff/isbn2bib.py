@@ -52,9 +52,9 @@ isbn2bib_logger = logging.getLogger('bibstuff_logger')
 # we need pyaws to get data from Amazon
 def import_pyaws_ecs():
 	try:
-	from pyaws import ecs
+		from pyaws import ecs
 	except ImportError:
-	raise RuntimeError('Need pyaws to read book data')
+		raise RuntimeError('Need pyaws to read book data')
 	return ecs
 
 
@@ -66,10 +66,10 @@ def set_license_key():
 	cfg.read('bibstuff.cfg')
 	aws_key = cfg.get('isbn2bib','aws_key')
 	try:
-	ecs.setLicenseKey(aws_key)
+		ecs.setLicenseKey(aws_key)
 	except ecs.AWSException:
-	raise RuntimeError("Failed to set key.	Do you have a bibstuff.cfg "
-			   " file in your current directory?")
+		raise RuntimeError("Failed to set key.	Do you have a bibstuff.cfg "
+						   " file in your current directory?")
 
 
 def read_publisher_dict():
@@ -79,8 +79,8 @@ def read_publisher_dict():
 	my_path = dirname(__file__)
 	fh = open(pjoin(my_path, 'data', 'publisher_addresses.txt'),'rt')
 	for line in fh:
-	if line.startswith('#') or not line.strip():
-		continue
+		if line.startswith('#') or not line.strip():
+			continue
 	info = tuple(item.strip() for item in line.split('|') )
 	try:
 		name = info[0].strip()

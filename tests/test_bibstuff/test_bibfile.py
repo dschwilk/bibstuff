@@ -57,13 +57,13 @@ class TestBibFile(unittest.TestCase):
 
 	def test_simple_read(self):
 		"""Check for read success on a simple .bib file"""
-	bfile = bibfile.BibFile()
+		bfile = bibfile.BibFile()
 		bibgrammar.Parse(bib1, bfile)
 		self.assertTrue(len(bfile.entries) == 5)
 
 	def test_search_bibentry(self):
 		"""Check search"""
-	bfile = bibfile.BibFile()
+		bfile = bibfile.BibFile()
 		bibgrammar.Parse(bib1, bfile)
 		ck = bfile.search_entries("Schwilk")[1]["citekey"]
 		self.assertTrue(ck == "schwilk+isaac:2010")
