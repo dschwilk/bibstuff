@@ -66,10 +66,9 @@ class BibEntry(dict):
 	def __init__(self,*args,**kwargs):
 		dict.__init__(self,*args,**kwargs)
 		self._fields = []
+
 	def __repr__(self):
 		"""return string representation of entry
-		
-		:note: 2006-08-11:eliminate final comma, handle months-> macro and journal macros
 		"""
 		stringrep = '@%s{%s,\n' % (self.entry_type.upper() , self.citekey)
 		try:
@@ -110,6 +109,7 @@ class BibEntry(dict):
 		stringrep += ",\n".join(field_list)
 		stringrep += '\n}\n'
 		return stringrep
+
 	def __setitem__(self, key, val):
 		key = key.lower()
 		dict.__setitem__(self, key, val)
@@ -118,6 +118,7 @@ class BibEntry(dict):
 			"Setting 'key' as an entry *field*. (Recall 'citekey' holds the entry id.)")
 		if key not in self._fields and key not in ["citekey","entry_type"] and val:
 			self._fields.append(key)
+
 	def __getitem__(self, field):  #field is usually a BibTeX field but can be a citekey
 		field = field.lower()
 		if field == "key":
@@ -137,6 +138,7 @@ class BibEntry(dict):
 		if field == 'month' and result in monthmacros_en:
 			result = MONTH_DICT[result]
 		return result
+	
 	def __delitem__(self,key) :
 		key = key.lower()
 		try:
@@ -167,9 +169,9 @@ class BibEntry(dict):
 	fields = property(get_fields, set_fields, None, "property: 'fields'")
 
 	def search_fields(self, string_or_compiled, field='', ignore_case=True):
-		"""Return MatchObject if string_or_compiled found in entry else None.
-		Find regular expression in entry.
-		If field is omitted, search is through all fields.
+		"""Return MatchObject if string_or_compiled found in entry else None. Find
+		regular expression in entry. If field is omitted, search is through all
+		fields.
 		
 		:note: used by BibFile's find_re method, which is used in turn by bibsearch.py
 		:Parameters:
@@ -177,6 +179,7 @@ class BibEntry(dict):
 		    pattern for searching
 		  `field` : string
 		    field to search in self (default: search all fields)
+
 		"""
 		if isinstance(string_or_compiled, str):
 			if ignore_case:
@@ -188,9 +191,11 @@ class BibEntry(dict):
 		if not field: #->try all fields (but not citekey)
 			for f in self.get_fields():
 				found = reo.search( self[f] )
-				if found: break # no need to check more fields
-		#:note: CAN test 'field in self' (even though an entry will not raise KeyError! see TODO above)
-		#       BUT do not test 'field in self' bc want test for empty fields below
+				if found: break # no need to check more fields 
+
+		# :note: CAN test 'field in self' (even though an entry will not raise
+		#KeyError! see TODO above) BUT do not test 'field in self' bc want test
+		#for empty fields below
 		elif self[field]:
 			found = reo.search( self[field] )
 		else:
@@ -255,6 +260,112 @@ class BibEntry(dict):
 		bibfile_logger.debug("BibEntry.format_with: arg is:"+str(entry_formatter))
 		#ask the EntryFormatter to do it
 		return entry_formatter.format_entry(self)
+
+	# A default label style for citekeys created by make_citekey()
+	# first max_names names included, then etal
+	citekey_label_style1 = dict(
+		name_template = 'v{_}_|l{}', # "van_der_Meer" or "van_DerStadt"
+		max_names = 2,
+		name_name_sep = '+',
+		etal = 'etal',
+		anonymous = 'anon',
+		lower_name = False,
+		article = "%(names)s-%(year)s",
+		book = "%(names)s-%(year)s",
+		misc = "%(names)s-%(year)s",
+		default_type = "%(names)s-%(year)s",
+	)
+
+	#style2 shd be rst compatible
+	# citekey_label_style2 = dict(
+	# 	name_first = 'l{_}',
+	# 	name_other = 'l{_}',
+	# 	max_names = 2,
+	# 	use_max_names = False,
+	# 	name_name_sep = ('.','.'),
+	# 	etal = '',
+	# 	lower_name = True,
+	# 	anonymous = 'anon',
+	# 	article = "%(names)s-%(year)s-%(jrnl)s",
+	# 	book = "%(names)s-%(year)s",
+	# 	misc = "%(names)s-%(year)s",
+	# 	default_type = "%(names)s-%(year)s",
+	# )
+
+
+	def make_citekey(self, used_citekeys = [], style = citekey_label_style1):
+		"""Create and return a new citekey based on the entry's data. This is for
+		creating predictable and useful citekey (labels) for BibEntry objects.
+		This is not integrated with the citation styles in bibstuff.bibstyles;
+		but it serves a very different purpose. This is to create consistent
+		citation keys that are easy to type and guess and that are valid BibTeX
+		citation keys. The format of the citetekey is determined by a
+		`label_style`: simply a Dict() with the following fields:
+
+	citekey_label_style1 = dict(
+		name_template = 'v{_}_|l{}', # see NameFormatter class
+		max_names = 2,
+		name_name_sep = "+",
+		etal = 'etal',
+		anonymous = 'anon',
+		lower_name = False,
+		article = "%(names)s-%(year)s",
+		book = "%(names)s-%(year)s",
+		misc = "%(names)s-%(year)s",
+		default_type = "%(names)s-%(year)s",
+	)
+		:TODO: Strip LaTeX accent characters from names when making label"""
+
+		from .bibstyles.shared import NameFormatter
+		from string import ascii_lowercase
+
+		format_dict = {}
+		entry_type = self.entry_type.lower()
+		try:
+			label_template = style[entry_type]
+		except KeyError:
+			label_template = style['default_type']
+
+		name_template = style['name_template']
+		max_names = style['max_names']
+		name_name_sep = style['name_name_sep']
+		lower_name = style['lower_name']
+		etal = style['etal']
+
+		# first, make names
+		name_formatter = NameFormatter(template = name_template)
+		names_dicts = self.get_names().get_names_dicts()
+		# make list of 'v_|l' last names, which can possibly have multiple
+		# tokens (e.g., two piece last names)
+		ls = [name_formatter.format_name(name_dict) for name_dict in names_dicts]
+		if len(ls) > max_names:
+			ls = ls[:max_names] + [etal]
+
+		names =  name_name_sep.join(ls)
+		if lower_name:
+			names = names.lower()
+		format_dict['names'] = names
+		year = self['year'] or '????'
+		format_dict['year'] = year
+		if entry_type == "article":
+			jrnl = self['journal']
+			jrnl = ''.join(jrnl.split()).lower()  # keep macro
+			jrnl = jrnl.replace("journal","j",1)
+			format_dict['jrnl'] = jrnl  # short form, no spaces
+
+		# make unique result: if needed, append suffix b or c or d... to year
+		sfx = ''; c = 1
+		# while result+sfx in used_citekeys:
+		while label_template%format_dict in used_citekeys:
+			sfx = ascii_lowercase[c%26]*(1+c//26)  # :note: lowercase since
+												   # BibTeX does not
+												   # distinguish case
+			format_dict['year'] = year+sfx
+			c += 1
+
+		result = label_template%format_dict
+		return result
+
 
 
 # ----------------------------------------------------------

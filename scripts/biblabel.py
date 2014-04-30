@@ -35,54 +35,33 @@ from bibstuff import bibfile, bibstyles
 ################################################################################
 
 
-def make_entry_citekey(entry, used_citekeys, name_template = 'v_|l', max_names = 2, sep = '+' , ysep = ':', etal = 'etal'):
-	'''return new entry key (as string)
-	'''
-	a = entry['author'] or entry['editor']
-	if not a:
-		a = 'anon'
+citekey_label_style1 = dict(
+	name_template = 'v{_}_|l{}',
+	max_names = 2,
+	name_name_sep = '+',
+	etal = 'etal',
+	anonymous = 'anon',
+	lower_name = False,
+	article = "%(names)s:%(year)s",
+	book = "%(names)s:%(year)s",
+	misc = "%(names)s:%(year)s",
+	default_type = "%(names)s:%(year)s",
+)
 
-	y = entry['year'] or '????'
-
-	name_formatter = bibstyles.shared.NameFormatter(template = name_template)
-	names_dicts = entry.get_names().get_names_dicts()
-	#make list of 'v_|l' last names, which can possibly have multiple tokens (e.g., two piece last names)
-	ls = [name_formatter.format_name(name_dict) for name_dict in names_dicts]
-	if len(ls) > max_names:
-		ls = ls[:max_names] + [etal]
-	#for each name, join the tokens with an underscore (i.e., split on whitespace and then join with '_').
-	ls = ['_'.join( s.split() )  for s in ls]
-	result =  sep.join(ls) + ysep + y
-
-	#make unique result: if needed, append suffix (sfx) b or c or d . . .
-	sfx = ''; c = 1
-	while result+sfx in used_citekeys:
-		sfx = ascii_lowercase[c%26]*(1+c//26)  #:note: lowercase since BibTeX does not distinguish case
-		c += 1
-	result += sfx
-	return result
-
-		  
 
 #-- Command line version of tool
 def main():
 	'''Command line version of tool'''
 	import sys
-	from bibstuff import bibgrammar
-
 	from optparse import OptionParser
+	from bibstuff import bibgrammar
 	
 	usage = "%prog [options] filename(s)"
 
 	parser = OptionParser(usage=usage, version ="%prog " + __version__)
-	parser.add_option("-y", "--yearsep", action="store", type="string", \
-					  dest="yearsep", default = ':', help="char to separate names and year")
-	parser.add_option("-s", "--sep", action="store", type="string", \
-					  dest="sep",  default = '+', help="char to separate names")
-	parser.add_option("-m", "--maxnames", action="store", type="int", \
-					  dest="maxnames",  default = 2, help="Max names to add to key")
-	parser.add_option("-e", "--etal", action="store", type="string", \
-					  dest="etal",  default = 'etal',help="What to add after max names")
+	# :TODO: Add option to read label style from file
+	# parser.add_option("-s", "--style", action="store", type="string", \
+	# 				  dest="style", default = '', help="File with label format (json)")
 	parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False,
 					  help="Print INFO messages to stdout, default=%default")
 
@@ -100,21 +79,15 @@ def main():
 	else :
 		src = sys.stdin.read()
 	 
-
 	bfile = bibfile.BibFile()
 	bibgrammar.Parse(src, bfile)
 	used_citekeys = [] # stores created keys
 	for entry in bfile.entries:
-		label = make_entry_citekey( entry,
-		                        used_citekeys,
-		                        max_names = options.maxnames,
-		                        sep = options.sep,
-		                        ysep = options.yearsep,
-		                        etal = options.etal)
-		#:note: citekey != key, be careful!
+		label = entry.make_citekey(used_citekeys, citekey_label_style1)
 		entry.citekey = label
-		used_citekeys.insert(0,label) #prepend to take advantage (in make_entry_citekey) of possibly sorted bfile
-
+		used_citekeys.insert(0,label) # prepend to take advantage (in
+									  # make_entry_citekey) of possibly sorted
+									  # bfile
 	for entry in bfile.entries:
 		print entry
 

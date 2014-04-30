@@ -5,8 +5,6 @@
 ===================================================
 
 Add entry/entries to .bib file.
-Default format produces citekeys like:
-Schwilk+Isaac:2002 and Isaac+Schwilk+etal:2006.
 
 :WARNING: works but currently *very* crude and rough!  (no special characters; macros alpha-lower only)
 :author: Alan G Isaac
@@ -14,13 +12,6 @@ Schwilk+Isaac:2002 and Isaac+Schwilk+etal:2006.
 :copyright: 2006 by Alan Isaac
 :license: MIT (see `license.txt`_)
 :date: 2006-09-25
-:since: 2006-08-04
-:change: 2006-09-24 move isbn to optional2 for books (not strictly correct, but often wanted)
-:change: 2006-08-04 eliminated that final comma (believe illegal)
-:change: 2006-08-24 add make_entry_citekey
-:change: 2006-08-24 add label styles
-:TODO: eliminate simpleparse dependency (via bibfile.BibEntry)
-:TODO: fix make_entry_citekey to use one name + 'etal'? or just '+'?
 :TODO: add checking for unique key
 :TODO: allow multiple entries
 :TODO: allow correcting entries
@@ -33,14 +24,13 @@ Schwilk+Isaac:2002 and Isaac+Schwilk+etal:2006.
 .. _license.txt: ../license.txt
 '''
 __docformat__ = "restructuredtext en"
-__authors__  =    ['Alan G. Isaac']
-__version__ =    '0.3.1'
+__authors__  =    ['Alan G. Isaac', 'Dylan W. Schwilk']
+__version__ =    '0.3.2'
 __needs__ = '2.4'
 
 
 ###################  IMPORTS  ##################################################
 # import from standard library
-#from string import ascii_lowercase
 import logging
 logging.basicConfig(format='\n%(levelname)s:\n%(message)s\n')
 bibadd_logger = logging.getLogger('bibstuff_logger')
@@ -131,11 +121,6 @@ optional1 = 'Y',
 optional2 = 'm',
 )
 
-#for testing script:
-#def raw_input(arg,stuff = ['','M. Me and Y. You', '2006', 'My Title', 'jtrix', '2', '3', 'jan', '99--100']): return stuff.pop(0)
-
-
-
 def make_entry(choosetype='', options=False, extras=False, raw_input = raw_input):
 	"""
 	:author: Alan G. Isaac
@@ -201,100 +186,9 @@ def make_entry(choosetype='', options=False, extras=False, raw_input = raw_input
 	if 'k' in fields:
 		entry['key'] = raw_input("key (*not* citekey)? ").strip()
 	if not citekey:
-		citekey = make_entry_citekey(entry,[],label_style2)
+		citekey = entry.make_citekey([])
 		entry.citekey = citekey
 	return entry
-
-
-# for a discussion of name templates, see the NameFormatter docstring
-# a style must always define a default entry_type
-# use_max_names True -> first max_names names included, then etal
-# use_max_names False -> first name included, then etal
-label_style1 = dict(
-name_template = 'v_|l{_}',
-max_names = 2,
-use_max_names = True,
-name_name_sep = ('+','+'),
-etal = 'etal',
-anonymous = 'anon',
-lower_name = False,
-article = "%(names)s:%(year)s",
-book = "%(names)s:%(year)s",
-misc = "%(names)s:%(year)s",
-default_type = "%(names)s:%(year)s",
-)
-
-#style2 shd be rst compatible
-label_style2 = dict(
-name_first = 'l{_}',
-name_other = 'l{_}',
-max_names = 2,
-use_max_names = False,
-name_name_sep = ('.','.'),
-etal = '',
-lower_name = True,
-anonymous = 'anon',
-article = "%(names)s-%(year)s-%(jrnl)s",
-book = "%(names)s-%(year)s",
-misc = "%(names)s-%(year)s",
-default_type = "%(names)s-%(year)s",
-)
-
-#:note: this is a variant of a function in biblabel.py
-#:TODO: make this a BibEntry method
-#:TODO: integrate styles with CITATION_TEMPLATE styles (note: anon, lower_name, templates (names))
-def make_entry_citekey(entry, used_citekeys,style=label_style1):
-	"""return new entry key (as string)
-	"""
-
-	format_dict = {}
-	entry_type = entry.entry_type.lower()
-	try:
-		label_template = style[entry_type]
-	except KeyError:
-		label_template = style['default_type']
-
-	name_template = style['name_first']  #:TODO: ? adjust this ?
-	max_names = style['max_names']
-	name_name_sep = style['name_name_sep'][0] #:TODO: ? adjust this ?
-	#name_parts_sep = style['name_parts_sep'] #superfluous if name templates used correctly; just in case ...
-	lower_name = style['lower_name']
-	etal = style['etal']
-
-	#first, make names
-	name_formatter = bibstyles.shared.NameFormatter(template = name_template)
-	names_dicts = entry.get_names().get_names_dicts()
-	#make list of 'v_|l' last names, which can possibly have multiple tokens (e.g., two piece last names)
-	ls = [name_formatter.format_name(name_dict) for name_dict in names_dicts]
-	if len(ls) > max_names:
-		if use_max_names:
-			ls = ls[:max_names] + [etal]
-		else:
-			ls = ls[0] + [etal]
-	#for each name, join the tokens with an underscore (i.e., split on whitespace and then join with '_').
-	#ls = [name_parts_sep.join( s.split() )  for s in ls]  #shd handle this with name template
-	names =  name_name_sep.join(ls)
-	if lower_name:
-		names = names.lower()
-	format_dict['names'] = names
-	year = entry['year'] or '????'
-	format_dict['year'] = year
-	if entry_type == "article":
-		jrnl = entry['journal']
-		jrnl = ''.join(jrnl.split()).lower()  #keep macro; ow abbreviate (TODO: adjust this)
-		jrnl = jrnl.replace("journal","j",1)
-		format_dict['jrnl'] = jrnl  #short form, no spaces
-
-	#make unique result: if needed, append suffix (sfx) b or c or d . . . to year
-	sfx = ''; c = 1
-	#while result+sfx in used_citekeys:
-	while label_template%format_dict in used_citekeys:
-		sfx = ascii_lowercase[c%26]*(1+c//26)  #:note: lowercase since BibTeX does not distinguish case
-		format_dict['year'] = year+sfx
-		c += 1
-	result = label_template%format_dict
-
-	return result
 
 ###########  HTML formatting  ########################
 html_templates = dict(
@@ -364,6 +258,7 @@ def text_format(entry):
 	if entry_type == "article":
 		info['journal'] = get_journal(entry)
 		pubinfo = get_volnum(entry)
+		pages = entry['pages']
 		if pages:
 			pubinfo += pages
 		info['pubinfo'] = pubinfo #TODO move into template
@@ -406,12 +301,14 @@ def get_journal(entry, jrnl_lst=None): #TODO: extract fr journal list
 	return journal
 
 def get_volnum(entry):
+	volume = entry['volume']
+	number = entry['number']
 	if volume:
 		volnum = str(volume)
 		if number:
 			volnum = str(volume) + "(" + str(number) + ")"
 	elif number:
-		volnume = str(number)
+		volnum = str(number)
 	else:
 		volnum = ""
 	return volnum
@@ -437,8 +334,7 @@ def html_format(entry):
 	if entry_type == "article":
 		#journal may be a macro; ask to replace
 		info['journal'] = get_journal(entry)
-		pubinfo="<span class='journal'>" + journal + "</span>"
-		volume = entry['volume']
+		pubinfo="<span class='journal'>" + info['journal'] + "</span>"
 		number = entry['number']
 		volnum = get_volnum(entry)
 		if volnum:
@@ -474,5 +370,3 @@ def html_format(entry):
 	#apply template to aggregated information
 	result = html_templates[entry_type] % info
 	return result
-
-
