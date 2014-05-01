@@ -228,15 +228,20 @@ def getNames(src) :
 
 
 # command-line version
+
+## TODO: move this to script
+
 if __name__ =="__main__":
 	import sys
 	from optparse import OptionParser
-	
+	from bibstyles.default import DEFAULT_CITATION_TEMPLATE
+
+	defaultformat = DEFAULT_CITATION_TEMPLATE['name_first']
 	usage = "usage: %prog [options] filenames"
 
 	parser = OptionParser(usage=usage, version ="%prog " + __version__)
 	parser.add_option("-t", "--template", action="store", type="string", \
-					  dest="template", default = 'f{.}. |v |l| jr', help="Name format template")
+					  dest="template", default = defaultformat, help="Name format template")
 	parser.add_option("-i", "--initials", action="store_true", dest="initials", \
 					  default = True, help="Initialize first names")
 	parser.add_option("-I", "--no-initials", action="store_false", dest="initials", \
