@@ -1,0 +1,12 @@
+{
+  "name_template" : "v{_}_|l{_}",
+   "max_names" : "2",
+   "name_name_sep" : "+",
+   "etal" : "etal",
+   "anonymous" : "anon",
+   "lower_name" : "False",
+   "article" : "%(names)s:%(year)s",
+   "book" : "%(names)s:%(year)s",
+   "misc" : "%(names)s:%(year)s",
+   "default_type" : "%(names)s:%(year)s"
+ }
