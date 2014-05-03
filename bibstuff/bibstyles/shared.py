@@ -232,7 +232,7 @@ class NameFormatter(object):
 		elif isinstance(name_data, dict):
 			shared_logger.debug("Assume dict is a name_dict.")
 			result = self.name_dict2formatted(name_data)
-		elif isinstance(name_data, str):
+		elif isinstance(name_data, basestring):
 			result = name_data
 		else:
 			raise ValueError("Unrecognized name_data type.")
@@ -302,7 +302,7 @@ class NameFormatter(object):
 		sets the name formatting template *and* sets the associated partdict used for actual formatting 
 		"""
 		shared_logger.debug("NameFormatter.set_template args: "+str(template))
-		assert isinstance(template,str), "Provide a name-template string to make a NameFormatter object."
+		assert isinstance(template, basestring), "Provide a name-template string to make a NameFormatter object."
 		self._template = template
 		self.partdict = self.template2dict(template)
 	template = property(get_template,set_template,None,"template property")
