@@ -83,17 +83,14 @@
 
 <span class="c">####################### IMPORTS #####################################</span>
 <span class="c"># import from standard library</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">logging</span>
 <span class="n">bibfile_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;bibstuff_logger&#39;</span><span class="p">)</span>
 
 <span class="c"># import dependencies</span>
 <span class="kn">from</span> <span class="nn">simpleparse.dispatchprocessor</span> <span class="kn">import</span> <span class="n">dispatch</span><span class="p">,</span> <span class="n">DispatchProcessor</span><span class="p">,</span> <span class="n">getString</span><span class="p">,</span> <span class="n">lines</span>
 
 <span class="c">#bibstuff imports</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">bibgrammar</span>
-<span class="kn">from</span> <span class="nn">.bibstyles.shared</span> <span class="kn">import</span> <span class="n">reformat_para</span>
+<span class="c"># from . import bibgrammar</span>
 <span class="c">#####################################################################</span>
 
 <span class="c">###############  GLOBAL VARIABLES  ##################################</span>
@@ -118,10 +115,9 @@
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 		<span class="nb">dict</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="p">[]</span>
+
 	<span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;return string representation of entry</span>
-<span class="sd">		</span>
-<span class="sd">		:note: 2006-08-11:eliminate final comma, handle months-&gt; macro and journal macros</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">stringrep</span> <span class="o">=</span> <span class="s">&#39;@</span><span class="si">%s</span><span class="s">{</span><span class="si">%s</span><span class="s">,</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">citekey</span><span class="p">)</span>
 		<span class="k">try</span><span class="p">:</span>
@@ -133,7 +129,7 @@
 		<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">:</span>
 			<span class="n">addbraces</span> <span class="o">=</span> <span class="bp">True</span>
                         <span class="n">addquotes</span> <span class="o">=</span> <span class="bp">False</span>
-			<span class="n">spacer</span> <span class="o">=</span> <span class="s">&#39; &#39;</span><span class="o">*</span><span class="p">(</span><span class="n">mlen</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="p">)</span>
+			<span class="c">#spacer = &#39; &#39;*(mlen - len(key) )</span>
 			<span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 			<span class="c">#handle crossref</span>
 			<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;crossref&#39;</span><span class="p">:</span>
@@ -162,6 +158,7 @@
 		<span class="n">stringrep</span> <span class="o">+=</span> <span class="s">&quot;,</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">field_list</span><span class="p">)</span>
 		<span class="n">stringrep</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">}</span><span class="se">\n</span><span class="s">&#39;</span>
 		<span class="k">return</span> <span class="n">stringrep</span>
+
 	<span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
 		<span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 		<span class="nb">dict</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
@@ -170,6 +167,7 @@
 			<span class="s">&quot;Setting &#39;key&#39; as an entry *field*. (Recall &#39;citekey&#39; holds the entry id.)&quot;</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;citekey&quot;</span><span class="p">,</span><span class="s">&quot;entry_type&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">val</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
 	<span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>  <span class="c">#field is usually a BibTeX field but can be a citekey</span>
 		<span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 		<span class="k">if</span> <span class="n">field</span> <span class="o">==</span> <span class="s">&quot;key&quot;</span><span class="p">:</span>
@@ -189,6 +187,7 @@
 		<span class="k">if</span> <span class="n">field</span> <span class="o">==</span> <span class="s">&#39;month&#39;</span> <span class="ow">and</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">monthmacros_en</span><span class="p">:</span>
 			<span class="n">result</span> <span class="o">=</span> <span class="n">MONTH_DICT</span><span class="p">[</span><span class="n">result</span><span class="p">]</span>
 		<span class="k">return</span> <span class="n">result</span>
+	
 	<span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="p">)</span> <span class="p">:</span>
 		<span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 		<span class="k">try</span><span class="p">:</span>
@@ -219,9 +218,9 @@
 	<span class="n">fields</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_fields</span><span class="p">,</span> <span class="n">set_fields</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&quot;property: &#39;fields&#39;&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BibEntry.search_fields"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibfile.BibEntry.search_fields">[docs]</a>	<span class="k">def</span> <span class="nf">search_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string_or_compiled</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Return MatchObject if string_or_compiled found in entry else None.</span>
-<span class="sd">		Find regular expression in entry.</span>
-<span class="sd">		If field is omitted, search is through all fields.</span>
+		<span class="sd">&quot;&quot;&quot;Return MatchObject if string_or_compiled found in entry else None. Find</span>
+<span class="sd">		regular expression in entry. If field is omitted, search is through all</span>
+<span class="sd">		fields.</span>
 <span class="sd">		</span>
 <span class="sd">		:note: used by BibFile&#39;s find_re method, which is used in turn by bibsearch.py</span>
 <span class="sd">		:Parameters:</span>
@@ -229,6 +228,7 @@
 <span class="sd">		    pattern for searching</span>
 <span class="sd">		  `field` : string</span>
 <span class="sd">		    field to search in self (default: search all fields)</span>
+
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string_or_compiled</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 			<span class="k">if</span> <span class="n">ignore_case</span><span class="p">:</span>
@@ -240,9 +240,11 @@
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">field</span><span class="p">:</span> <span class="c">#-&gt;try all fields (but not citekey)</span>
 			<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fields</span><span class="p">():</span>
 				<span class="n">found</span> <span class="o">=</span> <span class="n">reo</span><span class="o">.</span><span class="n">search</span><span class="p">(</span> <span class="bp">self</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="p">)</span>
-				<span class="k">if</span> <span class="n">found</span><span class="p">:</span> <span class="k">break</span> <span class="c"># no need to check more fields</span>
-		<span class="c">#:note: CAN test &#39;field in self&#39; (even though an entry will not raise KeyError! see TODO above)</span>
-		<span class="c">#       BUT do not test &#39;field in self&#39; bc want test for empty fields below</span>
+				<span class="k">if</span> <span class="n">found</span><span class="p">:</span> <span class="k">break</span> <span class="c"># no need to check more fields </span>
+
+		<span class="c"># :note: CAN test &#39;field in self&#39; (even though an entry will not raise</span>
+		<span class="c">#KeyError! see TODO above) BUT do not test &#39;field in self&#39; bc want test</span>
+		<span class="c">#for empty fields below</span>
 		<span class="k">elif</span> <span class="bp">self</span><span class="p">[</span><span class="n">field</span><span class="p">]:</span>
 			<span class="n">found</span> <span class="o">=</span> <span class="n">reo</span><span class="o">.</span><span class="n">search</span><span class="p">(</span> <span class="bp">self</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
@@ -307,6 +309,112 @@
 		<span class="n">bibfile_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;BibEntry.format_with: arg is:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">entry_formatter</span><span class="p">))</span>
 		<span class="c">#ask the EntryFormatter to do it</span>
 		<span class="k">return</span> <span class="n">entry_formatter</span><span class="o">.</span><span class="n">format_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+	<span class="c"># A default label style for citekeys created by make_citekey()</span>
+	<span class="c"># first max_names names included, then etal</span></div>
+	<span class="n">citekey_label_style1</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+		<span class="n">name_template</span> <span class="o">=</span> <span class="s">&#39;v{_}_|l{}&#39;</span><span class="p">,</span> <span class="c"># &quot;van_der_Meer&quot; or &quot;van_DerStadt&quot;</span>
+		<span class="n">max_names</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+		<span class="n">name_name_sep</span> <span class="o">=</span> <span class="s">&#39;+&#39;</span><span class="p">,</span>
+		<span class="n">etal</span> <span class="o">=</span> <span class="s">&#39;etal&#39;</span><span class="p">,</span>
+		<span class="n">anonymous</span> <span class="o">=</span> <span class="s">&#39;anon&#39;</span><span class="p">,</span>
+		<span class="n">lower_name</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+		<span class="n">article</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
+		<span class="n">book</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
+		<span class="n">misc</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
+		<span class="n">default_type</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
+	<span class="p">)</span>
+
+	<span class="c">#style2 shd be rst compatible</span>
+	<span class="c"># citekey_label_style2 = dict(</span>
+	<span class="c"># 	name_first = &#39;l{_}&#39;,</span>
+	<span class="c"># 	name_other = &#39;l{_}&#39;,</span>
+	<span class="c"># 	max_names = 2,</span>
+	<span class="c"># 	use_max_names = False,</span>
+	<span class="c"># 	name_name_sep = (&#39;.&#39;,&#39;.&#39;),</span>
+	<span class="c"># 	etal = &#39;&#39;,</span>
+	<span class="c"># 	lower_name = True,</span>
+	<span class="c"># 	anonymous = &#39;anon&#39;,</span>
+	<span class="c"># 	article = &quot;%(names)s-%(year)s-%(jrnl)s&quot;,</span>
+	<span class="c"># 	book = &quot;%(names)s-%(year)s&quot;,</span>
+	<span class="c"># 	misc = &quot;%(names)s-%(year)s&quot;,</span>
+	<span class="c"># 	default_type = &quot;%(names)s-%(year)s&quot;,</span>
+	<span class="c"># )</span>
+
+
+<div class="viewcode-block" id="BibEntry.make_citekey"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibfile.BibEntry.make_citekey">[docs]</a>	<span class="k">def</span> <span class="nf">make_citekey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">used_citekeys</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">style</span> <span class="o">=</span> <span class="n">citekey_label_style1</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Create and return a new citekey based on the entry&#39;s data. This is for</span>
+<span class="sd">		creating predictable and useful citekey (labels) for BibEntry objects.</span>
+<span class="sd">		This is not integrated with the citation styles in bibstuff.bibstyles;</span>
+<span class="sd">		but it serves a very different purpose. This is to create consistent</span>
+<span class="sd">		citation keys that are easy to type and guess and that are valid BibTeX</span>
+<span class="sd">		citation keys. The format of the citetekey is determined by a</span>
+<span class="sd">		`label_style`: simply a Dict() with the following fields:</span>
+
+<span class="sd">	citekey_label_style1 = dict(</span>
+<span class="sd">		name_template = &#39;v{_}_|l{}&#39;, # see NameFormatter class</span>
+<span class="sd">		max_names = 2,</span>
+<span class="sd">		name_name_sep = &quot;+&quot;,</span>
+<span class="sd">		etal = &#39;etal&#39;,</span>
+<span class="sd">		anonymous = &#39;anon&#39;,</span>
+<span class="sd">		lower_name = False,</span>
+<span class="sd">		article = &quot;%(names)s-%(year)s&quot;,</span>
+<span class="sd">		book = &quot;%(names)s-%(year)s&quot;,</span>
+<span class="sd">		misc = &quot;%(names)s-%(year)s&quot;,</span>
+<span class="sd">		default_type = &quot;%(names)s-%(year)s&quot;,</span>
+<span class="sd">	)</span>
+<span class="sd">		:TODO: Strip LaTeX accent characters from names when making label&quot;&quot;&quot;</span>
+
+		<span class="kn">from</span> <span class="nn">.bibstyles.shared</span> <span class="kn">import</span> <span class="n">NameFormatter</span>
+		<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">ascii_lowercase</span>
+
+		<span class="n">format_dict</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">entry_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">label_template</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="n">entry_type</span><span class="p">]</span>
+		<span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+			<span class="n">label_template</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;default_type&#39;</span><span class="p">]</span>
+
+		<span class="n">name_template</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;name_template&#39;</span><span class="p">]</span>
+		<span class="n">max_names</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;max_names&#39;</span><span class="p">]</span>
+		<span class="n">name_name_sep</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;name_name_sep&#39;</span><span class="p">]</span>
+		<span class="n">lower_name</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;lower_name&#39;</span><span class="p">]</span>
+		<span class="n">etal</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;etal&#39;</span><span class="p">]</span>
+
+		<span class="c"># first, make names</span>
+		<span class="n">name_formatter</span> <span class="o">=</span> <span class="n">NameFormatter</span><span class="p">(</span><span class="n">template</span> <span class="o">=</span> <span class="n">name_template</span><span class="p">)</span>
+		<span class="n">names_dicts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_names</span><span class="p">()</span><span class="o">.</span><span class="n">get_names_dicts</span><span class="p">()</span>
+		<span class="c"># make list of &#39;v_|l&#39; last names, which can possibly have multiple</span>
+		<span class="c"># tokens (e.g., two piece last names)</span>
+		<span class="n">ls</span> <span class="o">=</span> <span class="p">[</span><span class="n">name_formatter</span><span class="o">.</span><span class="n">format_name</span><span class="p">(</span><span class="n">name_dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">name_dict</span> <span class="ow">in</span> <span class="n">names_dicts</span><span class="p">]</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_names</span><span class="p">:</span>
+			<span class="n">ls</span> <span class="o">=</span> <span class="n">ls</span><span class="p">[:</span><span class="n">max_names</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">etal</span><span class="p">]</span>
+
+		<span class="n">names</span> <span class="o">=</span>  <span class="n">name_name_sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">lower_name</span><span class="p">:</span>
+			<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+		<span class="n">format_dict</span><span class="p">[</span><span class="s">&#39;names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">names</span>
+		<span class="n">year</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s">&#39;????&#39;</span>
+		<span class="n">format_dict</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">year</span>
+		<span class="k">if</span> <span class="n">entry_type</span> <span class="o">==</span> <span class="s">&quot;article&quot;</span><span class="p">:</span>
+			<span class="n">jrnl</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;journal&#39;</span><span class="p">]</span>
+			<span class="n">jrnl</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">jrnl</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>  <span class="c"># keep macro</span>
+			<span class="n">jrnl</span> <span class="o">=</span> <span class="n">jrnl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;journal&quot;</span><span class="p">,</span><span class="s">&quot;j&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+			<span class="n">format_dict</span><span class="p">[</span><span class="s">&#39;jrnl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">jrnl</span>  <span class="c"># short form, no spaces</span>
+
+		<span class="c"># make unique result: if needed, append suffix b or c or d... to year</span>
+		<span class="n">sfx</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">;</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span>
+		<span class="c"># while result+sfx in used_citekeys:</span>
+		<span class="k">while</span> <span class="n">label_template</span><span class="o">%</span><span class="n">format_dict</span> <span class="ow">in</span> <span class="n">used_citekeys</span><span class="p">:</span>
+			<span class="n">sfx</span> <span class="o">=</span> <span class="n">ascii_lowercase</span><span class="p">[</span><span class="n">c</span><span class="o">%</span><span class="mi">26</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">c</span><span class="o">//</span><span class="mi">26</span><span class="p">)</span>  <span class="c"># :note: lowercase since</span>
+												   <span class="c"># BibTeX does not</span>
+												   <span class="c"># distinguish case</span>
+			<span class="n">format_dict</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">year</span><span class="o">+</span><span class="n">sfx</span>
+			<span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="n">result</span> <span class="o">=</span> <span class="n">label_template</span><span class="o">%</span><span class="n">format_dict</span>
+		<span class="k">return</span> <span class="n">result</span>
+
 
 
 <span class="c"># ----------------------------------------------------------</span>
@@ -480,19 +588,19 @@
 
 <span class="c"># self test</span>
 <span class="c"># -------------------------</span>
-<span class="c"># usage: bibfile.py DATABASE_FILE</span></div></div>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
-	<span class="kn">import</span> <span class="nn">sys</span>
-	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="p">:</span>
-		<span class="n">src</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-		<span class="n">bfile</span> <span class="o">=</span> <span class="n">BibFile</span><span class="p">()</span>
-		<span class="n">bibgrammar</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">bfile</span><span class="p">)</span>
-		<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">bfile</span><span class="o">.</span><span class="n">entries</span> <span class="p">:</span>
-			<span class="k">print</span> <span class="n">entry</span>
+<span class="c"># usage: bibfile.py DATABASE_FILE</span>
+<span class="c"># if __name__ == &quot;__main__&quot;:</span>
+<span class="c"># 	import sys</span>
+<span class="c"># 	if len(sys.argv) &gt; 1 :</span>
+<span class="c"># 		src = open(sys.argv[1]).read()</span>
+<span class="c"># 		bfile = BibFile()</span>
+<span class="c"># 		bibgrammar.Parse(src, bfile)</span>
+<span class="c"># 		for entry in bfile.entries :</span>
+<span class="c"># 			print entry</span>
 
-	<span class="k">else</span> <span class="p">:</span>
-		<span class="k">print</span> <span class="s">&quot;self test usage: bibfile.py DATABASE_FILE&quot;</span>
-</pre></div>
+<span class="c"># 	else :</span>
+<span class="c"># 		print &quot;self test usage: bibfile.py DATABASE_FILE&quot;</span>
+</pre></div></div></div>
 
           </div>
         </div>

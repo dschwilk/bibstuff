@@ -67,7 +67,7 @@
 
 <span class="c">###################  IMPORTS  ##################################################</span>
 <span class="c">#import from standard library</span>
-<span class="kn">import</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="c">#import dependencies</span>
 <span class="kn">import</span> <span class="nn">simpleparse</span>
 <span class="c"># We need to import this specifically because simpleparse does not import it by</span>
@@ -125,9 +125,12 @@
 		<span class="n">r</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span>
 		<span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39; &#39;</span><span class="o">*</span><span class="n">left</span><span class="o">+</span><span class="n">ln</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
 	<span class="k">elif</span> <span class="n">just</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
-		<span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">line</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
-	<span class="k">else</span><span class="p">:</span> <span class="c"># left justify</span>
-		<span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39; &#39;</span><span class="o">*</span><span class="n">left</span><span class="o">+</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
+		<span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">line</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
+	<span class="k">elif</span> <span class="n">just</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="n">LEFT</span><span class="p">:</span>
+		<span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39; &#39;</span><span class="o">*</span><span class="n">left</span><span class="o">+</span><span class="n">line</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">shared_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Unrecognized justification style: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">just</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="NamesFormatter"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.NamesFormatter">[docs]</a><span class="k">class</span> <span class="nc">NamesFormatter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;Provides a formatter for BibName instances.</span>
@@ -279,7 +282,7 @@
 		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
 			<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Assume dict is a name_dict.&quot;</span><span class="p">)</span>
 			<span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_dict2formatted</span><span class="p">(</span><span class="n">name_data</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name_data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name_data</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
 			<span class="n">result</span> <span class="o">=</span> <span class="n">name_data</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unrecognized name_data type.&quot;</span><span class="p">)</span>
@@ -349,7 +352,7 @@
 <span class="sd">		sets the name formatting template *and* sets the associated partdict used for actual formatting </span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;NameFormatter.set_template args: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="p">))</span>
-		<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">template</span><span class="p">,</span><span class="nb">str</span><span class="p">),</span> <span class="s">&quot;Provide a name-template string to make a NameFormatter object.&quot;</span>
+		<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">),</span> <span class="s">&quot;Provide a name-template string to make a NameFormatter object.&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_template</span> <span class="o">=</span> <span class="n">template</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">partdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template2dict</span><span class="p">(</span><span class="n">template</span><span class="p">)</span></div>
 	<span class="n">template</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_template</span><span class="p">,</span><span class="n">set_template</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="s">&quot;template property&quot;</span><span class="p">)</span>
@@ -415,8 +418,9 @@
 <span class="sd">		Usually used by a CiteRefProcessor object during processing. </span>
 <span class="sd">		Usually styles need to override this method.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
+
 		<span class="c">#substitute formatted citation reference into document text</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_manager</span><span class="o">.</span><span class="n">format_inline_cite</span><span class="p">(</span><span class="n">entry_list</span><span class="p">,</span><span class="n">cite_key_list</span><span class="p">)</span> <span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_manager</span><span class="o">.</span><span class="n">format_inline_cite</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_list</span><span class="p">,</span><span class="n">cite_key_list</span><span class="p">)</span> <span class="p">)</span>
 		<span class="k">return</span> <span class="s">&#39;**[&#39;</span> <span class="o">+</span> <span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cite_key_list</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;]_&#39;</span>
 
 </div>
@@ -591,7 +595,7 @@
 				<span class="bp">self</span><span class="o">.</span><span class="n">all_citekeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cite_key</span><span class="p">)</span>
 		<span class="c">#make (ordered) list of entries for the current cite key(s)</span>
 		<span class="c">#:note: need entry to be None if cite_key not found, so discard=False</span>
-		<span class="n">entry_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_manager</span><span class="o">.</span><span class="n">find_entries</span><span class="p">(</span><span class="n">cite_key_list</span><span class="p">,</span><span class="n">discard</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entry_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_manager</span><span class="o">.</span><span class="n">find_entries</span><span class="p">(</span><span class="n">cite_key_list</span><span class="p">,</span><span class="n">discard</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 		<span class="c">#substitute formatted citation reference into document text</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">citation_manager</span><span class="o">.</span><span class="n">format_inline_cite</span><span class="p">(</span><span class="n">cite_key_list</span><span class="p">)</span> <span class="p">)</span>
 </div>

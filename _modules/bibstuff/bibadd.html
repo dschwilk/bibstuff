@@ -54,8 +54,6 @@
 <span class="sd">===================================================</span>
 
 <span class="sd">Add entry/entries to .bib file.</span>
-<span class="sd">Default format produces citekeys like:</span>
-<span class="sd">Schwilk+Isaac:2002 and Isaac+Schwilk+etal:2006.</span>
 
 <span class="sd">:WARNING: works but currently *very* crude and rough!  (no special characters; macros alpha-lower only)</span>
 <span class="sd">:author: Alan G Isaac</span>
@@ -63,13 +61,6 @@
 <span class="sd">:copyright: 2006 by Alan Isaac</span>
 <span class="sd">:license: MIT (see `license.txt`_)</span>
 <span class="sd">:date: 2006-09-25</span>
-<span class="sd">:since: 2006-08-04</span>
-<span class="sd">:change: 2006-09-24 move isbn to optional2 for books (not strictly correct, but often wanted)</span>
-<span class="sd">:change: 2006-08-04 eliminated that final comma (believe illegal)</span>
-<span class="sd">:change: 2006-08-24 add make_entry_citekey</span>
-<span class="sd">:change: 2006-08-24 add label styles</span>
-<span class="sd">:TODO: eliminate simpleparse dependency (via bibfile.BibEntry)</span>
-<span class="sd">:TODO: fix make_entry_citekey to use one name + &#39;etal&#39;? or just &#39;+&#39;?</span>
 <span class="sd">:TODO: add checking for unique key</span>
 <span class="sd">:TODO: allow multiple entries</span>
 <span class="sd">:TODO: allow correcting entries</span>
@@ -82,14 +73,13 @@
 <span class="sd">.. _license.txt: ../license.txt</span>
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
-<span class="n">__authors__</span>  <span class="o">=</span>    <span class="p">[</span><span class="s">&#39;Alan G. Isaac&#39;</span><span class="p">]</span>
-<span class="n">__version__</span> <span class="o">=</span>    <span class="s">&#39;0.3.1&#39;</span>
+<span class="n">__authors__</span>  <span class="o">=</span>    <span class="p">[</span><span class="s">&#39;Alan G. Isaac&#39;</span><span class="p">,</span> <span class="s">&#39;Dylan W. Schwilk&#39;</span><span class="p">]</span>
+<span class="n">__version__</span> <span class="o">=</span>    <span class="s">&#39;0.3.2&#39;</span>
 <span class="n">__needs__</span> <span class="o">=</span> <span class="s">&#39;2.4&#39;</span>
 
 
 <span class="c">###################  IMPORTS  ##################################################</span>
 <span class="c"># import from standard library</span>
-<span class="c">#from string import ascii_lowercase</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\n</span><span class="si">%(levelname)s</span><span class="s">:</span><span class="se">\n</span><span class="si">%(message)s</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
 <span class="n">bibadd_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;bibstuff_logger&#39;</span><span class="p">)</span>
@@ -180,12 +170,7 @@
 <span class="n">optional2</span> <span class="o">=</span> <span class="s">&#39;m&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c">#for testing script:</span>
-<span class="c">#def raw_input(arg,stuff = [&#39;&#39;,&#39;M. Me and Y. You&#39;, &#39;2006&#39;, &#39;My Title&#39;, &#39;jtrix&#39;, &#39;2&#39;, &#39;3&#39;, &#39;jan&#39;, &#39;99--100&#39;]): return stuff.pop(0)</span>
-
-
-
-<div class="viewcode-block" id="make_entry"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibadd.make_entry">[docs]</a><span class="k">def</span> <span class="nf">make_entry</span><span class="p">(</span><span class="n">choosetype</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">extras</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="make_entry"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibadd.make_entry">[docs]</a><span class="k">def</span> <span class="nf">make_entry</span><span class="p">(</span><span class="n">choosetype</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">extras</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="nb">raw_input</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	:author: Alan G. Isaac</span>
 <span class="sd">	:date: 2006-08-11</span>
@@ -250,100 +235,9 @@
 	<span class="k">if</span> <span class="s">&#39;k&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
 		<span class="n">entry</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;key (*not* citekey)? &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="n">citekey</span><span class="p">:</span>
-		<span class="n">citekey</span> <span class="o">=</span> <span class="n">make_entry_citekey</span><span class="p">(</span><span class="n">entry</span><span class="p">,[],</span><span class="n">label_style2</span><span class="p">)</span>
+		<span class="n">citekey</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">make_citekey</span><span class="p">([])</span>
 		<span class="n">entry</span><span class="o">.</span><span class="n">citekey</span> <span class="o">=</span> <span class="n">citekey</span>
 	<span class="k">return</span> <span class="n">entry</span>
-
-
-<span class="c"># for a discussion of name templates, see the NameFormatter docstring</span>
-<span class="c"># a style must always define a default entry_type</span>
-<span class="c"># use_max_names True -&gt; first max_names names included, then etal</span>
-<span class="c"># use_max_names False -&gt; first name included, then etal</span></div>
-<span class="n">label_style1</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-<span class="n">name_template</span> <span class="o">=</span> <span class="s">&#39;v_|l{_}&#39;</span><span class="p">,</span>
-<span class="n">max_names</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-<span class="n">use_max_names</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
-<span class="n">name_name_sep</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;+&#39;</span><span class="p">,</span><span class="s">&#39;+&#39;</span><span class="p">),</span>
-<span class="n">etal</span> <span class="o">=</span> <span class="s">&#39;etal&#39;</span><span class="p">,</span>
-<span class="n">anonymous</span> <span class="o">=</span> <span class="s">&#39;anon&#39;</span><span class="p">,</span>
-<span class="n">lower_name</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
-<span class="n">article</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">:</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
-<span class="n">book</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">:</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
-<span class="n">misc</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">:</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
-<span class="n">default_type</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">:</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="c">#style2 shd be rst compatible</span>
-<span class="n">label_style2</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-<span class="n">name_first</span> <span class="o">=</span> <span class="s">&#39;l{_}&#39;</span><span class="p">,</span>
-<span class="n">name_other</span> <span class="o">=</span> <span class="s">&#39;l{_}&#39;</span><span class="p">,</span>
-<span class="n">max_names</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-<span class="n">use_max_names</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
-<span class="n">name_name_sep</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span><span class="s">&#39;.&#39;</span><span class="p">),</span>
-<span class="n">etal</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">,</span>
-<span class="n">lower_name</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
-<span class="n">anonymous</span> <span class="o">=</span> <span class="s">&#39;anon&#39;</span><span class="p">,</span>
-<span class="n">article</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">-</span><span class="si">%(jrnl)s</span><span class="s">&quot;</span><span class="p">,</span>
-<span class="n">book</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
-<span class="n">misc</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
-<span class="n">default_type</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="c">#:note: this is a variant of a function in biblabel.py</span>
-<span class="c">#:TODO: make this a BibEntry method</span>
-<span class="c">#:TODO: integrate styles with CITATION_TEMPLATE styles (note: anon, lower_name, templates (names))</span>
-<div class="viewcode-block" id="make_entry_citekey"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibadd.make_entry_citekey">[docs]</a><span class="k">def</span> <span class="nf">make_entry_citekey</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">used_citekeys</span><span class="p">,</span><span class="n">style</span><span class="o">=</span><span class="n">label_style1</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;return new entry key (as string)</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-
-	<span class="n">format_dict</span> <span class="o">=</span> <span class="p">{}</span>
-	<span class="n">entry_type</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">entry_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-	<span class="k">try</span><span class="p">:</span>
-		<span class="n">label_template</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="n">entry_type</span><span class="p">]</span>
-	<span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-		<span class="n">label_template</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;default_type&#39;</span><span class="p">]</span>
-
-	<span class="n">name_template</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;name_first&#39;</span><span class="p">]</span>  <span class="c">#:TODO: ? adjust this ?</span>
-	<span class="n">max_names</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;max_names&#39;</span><span class="p">]</span>
-	<span class="n">name_name_sep</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;name_name_sep&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="c">#:TODO: ? adjust this ?</span>
-	<span class="c">#name_parts_sep = style[&#39;name_parts_sep&#39;] #superfluous if name templates used correctly; just in case ...</span>
-	<span class="n">lower_name</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;lower_name&#39;</span><span class="p">]</span>
-	<span class="n">etal</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s">&#39;etal&#39;</span><span class="p">]</span>
-
-	<span class="c">#first, make names</span>
-	<span class="n">name_formatter</span> <span class="o">=</span> <span class="n">bibstyles</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">NameFormatter</span><span class="p">(</span><span class="n">template</span> <span class="o">=</span> <span class="n">name_template</span><span class="p">)</span>
-	<span class="n">names_dicts</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">get_names</span><span class="p">()</span><span class="o">.</span><span class="n">get_names_dicts</span><span class="p">()</span>
-	<span class="c">#make list of &#39;v_|l&#39; last names, which can possibly have multiple tokens (e.g., two piece last names)</span>
-	<span class="n">ls</span> <span class="o">=</span> <span class="p">[</span><span class="n">name_formatter</span><span class="o">.</span><span class="n">format_name</span><span class="p">(</span><span class="n">name_dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">name_dict</span> <span class="ow">in</span> <span class="n">names_dicts</span><span class="p">]</span>
-	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_names</span><span class="p">:</span>
-		<span class="k">if</span> <span class="n">use_max_names</span><span class="p">:</span>
-			<span class="n">ls</span> <span class="o">=</span> <span class="n">ls</span><span class="p">[:</span><span class="n">max_names</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">etal</span><span class="p">]</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="n">ls</span> <span class="o">=</span> <span class="n">ls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">etal</span><span class="p">]</span>
-	<span class="c">#for each name, join the tokens with an underscore (i.e., split on whitespace and then join with &#39;_&#39;).</span>
-	<span class="c">#ls = [name_parts_sep.join( s.split() )  for s in ls]  #shd handle this with name template</span>
-	<span class="n">names</span> <span class="o">=</span>  <span class="n">name_name_sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
-	<span class="k">if</span> <span class="n">lower_name</span><span class="p">:</span>
-		<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-	<span class="n">format_dict</span><span class="p">[</span><span class="s">&#39;names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">names</span>
-	<span class="n">year</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s">&#39;????&#39;</span>
-	<span class="n">format_dict</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">year</span>
-	<span class="k">if</span> <span class="n">entry_type</span> <span class="o">==</span> <span class="s">&quot;article&quot;</span><span class="p">:</span>
-		<span class="n">jrnl</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s">&#39;journal&#39;</span><span class="p">]</span>
-		<span class="n">jrnl</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">jrnl</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>  <span class="c">#keep macro; ow abbreviate (TODO: adjust this)</span>
-		<span class="n">jrnl</span> <span class="o">=</span> <span class="n">jrnl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;journal&quot;</span><span class="p">,</span><span class="s">&quot;j&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-		<span class="n">format_dict</span><span class="p">[</span><span class="s">&#39;jrnl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">jrnl</span>  <span class="c">#short form, no spaces</span>
-
-	<span class="c">#make unique result: if needed, append suffix (sfx) b or c or d . . . to year</span>
-	<span class="n">sfx</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">;</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span>
-	<span class="c">#while result+sfx in used_citekeys:</span>
-	<span class="k">while</span> <span class="n">label_template</span><span class="o">%</span><span class="n">format_dict</span> <span class="ow">in</span> <span class="n">used_citekeys</span><span class="p">:</span>
-		<span class="n">sfx</span> <span class="o">=</span> <span class="n">ascii_lowercase</span><span class="p">[</span><span class="n">c</span><span class="o">%</span><span class="mi">26</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">c</span><span class="o">//</span><span class="mi">26</span><span class="p">)</span>  <span class="c">#:note: lowercase since BibTeX does not distinguish case</span>
-		<span class="n">format_dict</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">year</span><span class="o">+</span><span class="n">sfx</span>
-		<span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
-	<span class="n">result</span> <span class="o">=</span> <span class="n">label_template</span><span class="o">%</span><span class="n">format_dict</span>
-
-	<span class="k">return</span> <span class="n">result</span>
 
 <span class="c">###########  HTML formatting  ########################</span></div>
 <span class="n">html_templates</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
@@ -413,6 +307,7 @@
 	<span class="k">if</span> <span class="n">entry_type</span> <span class="o">==</span> <span class="s">&quot;article&quot;</span><span class="p">:</span>
 		<span class="n">info</span><span class="p">[</span><span class="s">&#39;journal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_journal</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
 		<span class="n">pubinfo</span> <span class="o">=</span> <span class="n">get_volnum</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+		<span class="n">pages</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s">&#39;pages&#39;</span><span class="p">]</span>
 		<span class="k">if</span> <span class="n">pages</span><span class="p">:</span>
 			<span class="n">pubinfo</span> <span class="o">+=</span> <span class="n">pages</span>
 		<span class="n">info</span><span class="p">[</span><span class="s">&#39;pubinfo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pubinfo</span> <span class="c">#TODO move into template</span>
@@ -455,12 +350,14 @@
 	<span class="k">return</span> <span class="n">journal</span>
 </div>
 <div class="viewcode-block" id="get_volnum"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibadd.get_volnum">[docs]</a><span class="k">def</span> <span class="nf">get_volnum</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+	<span class="n">volume</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s">&#39;volume&#39;</span><span class="p">]</span>
+	<span class="n">number</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s">&#39;number&#39;</span><span class="p">]</span>
 	<span class="k">if</span> <span class="n">volume</span><span class="p">:</span>
 		<span class="n">volnum</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">number</span><span class="p">:</span>
 			<span class="n">volnum</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span>
 	<span class="k">elif</span> <span class="n">number</span><span class="p">:</span>
-		<span class="n">volnume</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+		<span class="n">volnum</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="n">volnum</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
 	<span class="k">return</span> <span class="n">volnum</span>
@@ -486,8 +383,7 @@
 	<span class="k">if</span> <span class="n">entry_type</span> <span class="o">==</span> <span class="s">&quot;article&quot;</span><span class="p">:</span>
 		<span class="c">#journal may be a macro; ask to replace</span>
 		<span class="n">info</span><span class="p">[</span><span class="s">&#39;journal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_journal</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
-		<span class="n">pubinfo</span><span class="o">=</span><span class="s">&quot;&lt;span class=&#39;journal&#39;&gt;&quot;</span> <span class="o">+</span> <span class="n">journal</span> <span class="o">+</span> <span class="s">&quot;&lt;/span&gt;&quot;</span>
-		<span class="n">volume</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s">&#39;volume&#39;</span><span class="p">]</span>
+		<span class="n">pubinfo</span><span class="o">=</span><span class="s">&quot;&lt;span class=&#39;journal&#39;&gt;&quot;</span> <span class="o">+</span> <span class="n">info</span><span class="p">[</span><span class="s">&#39;journal&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;&lt;/span&gt;&quot;</span>
 		<span class="n">number</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s">&#39;number&#39;</span><span class="p">]</span>
 		<span class="n">volnum</span> <span class="o">=</span> <span class="n">get_volnum</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">volnum</span><span class="p">:</span>
@@ -522,8 +418,8 @@
 		<span class="n">info</span><span class="p">[</span><span class="s">&#39;pubinfo&#39;</span><span class="p">]</span><span class="o">=</span><span class="s">&quot;(</span><span class="si">%(address)s</span><span class="s">: </span><span class="si">%(publisher)s</span><span class="s">)</span><span class="se">\n</span><span class="s">isbn: </span><span class="si">%(isbn)s</span><span class="s">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 	<span class="c">#apply template to aggregated information</span>
 	<span class="n">result</span> <span class="o">=</span> <span class="n">html_templates</span><span class="p">[</span><span class="n">entry_type</span><span class="p">]</span> <span class="o">%</span> <span class="n">info</span>
-	<span class="k">return</span> <span class="n">result</span>
-</pre></div></div>
+	<span class="k">return</span> <span class="n">result</span></div>
+</pre></div>
 
           </div>
         </div>

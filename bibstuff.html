@@ -81,9 +81,7 @@
 <span id="bibstuff-bibadd-module"></span><h2>bibstuff.bibadd module<a class="headerlink" href="#module-bibstuff.bibadd" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="bibstuff-bibadd-add-entries-to-bib-file">
 <h3><a class="reference internal" href="#module-bibstuff.bibadd" title="bibstuff.bibadd"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibadd</span></tt></a> &#8212; Add entries to .bib File<a class="headerlink" href="#bibstuff-bibadd-add-entries-to-bib-file" title="Permalink to this headline">¶</a></h3>
-<p>Add entry/entries to .bib file.
-Default format produces citekeys like:
-Schwilk+Isaac:2002 and Isaac+Schwilk+etal:2006.</p>
+<p>Add entry/entries to .bib file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -100,35 +98,21 @@ Schwilk+Isaac:2002 and Isaac+Schwilk+etal:2006.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">date:</th><td class="field-body">2006-09-25</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">since:</th><td class="field-body">2006-08-04</td>
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">add checking for unique key</td>
 </tr>
-<tr class="field-even field"><th class="field-name">change:</th><td class="field-body">2006-09-24 move isbn to optional2 for books (not strictly correct, but often wanted)</td>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">allow multiple entries</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">change:</th><td class="field-body">2006-08-04 eliminated that final comma (believe illegal)</td>
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">allow correcting entries</td>
 </tr>
-<tr class="field-even field"><th class="field-name">change:</th><td class="field-body">2006-08-24 add make_entry_citekey</td>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">use style file for HTML formatting</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">change:</th><td class="field-body">2006-08-24 add label styles</td>
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">check for macros against &#64;string defs in .bib file</td>
 </tr>
-<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">eliminate simpleparse dependency (via bibfile.BibEntry)</td>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">macro handling (journals)</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">fix make_entry_citekey to use one name + &#8216;etal&#8217;? or just &#8216;+&#8217;?</td>
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">add crossreferencing as option for inbook and incollection</td>
 </tr>
-<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">add checking for unique key</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">allow multiple entries</td>
-</tr>
-<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">allow correcting entries</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">use style file for HTML formatting</td>
-</tr>
-<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">check for macros against &#64;string defs in .bib file</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">macro handling (journals)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">add crossreferencing as option for inbook and incollection</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">change default format to legal HTML names</td>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">change default format to legal HTML names</td>
 </tr>
 </tbody>
 </table>
@@ -165,7 +149,7 @@ TODO: rethink this.</p>
 
 <dl class="function">
 <dt id="bibstuff.bibadd.make_entry">
-<tt class="descclassname">bibstuff.bibadd.</tt><tt class="descname">make_entry</tt><big>(</big><em>choosetype=''</em>, <em>options=False</em>, <em>extras=False</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibadd.html#make_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibadd.make_entry" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">bibstuff.bibadd.</tt><tt class="descname">make_entry</tt><big>(</big><em>choosetype=''</em>, <em>options=False</em>, <em>extras=False</em>, <em>raw_input=&lt;built-in function raw_input&gt;</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibadd.html#make_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibadd.make_entry" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -176,12 +160,6 @@ TODO: rethink this.</p>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="function">
-<dt id="bibstuff.bibadd.make_entry_citekey">
-<tt class="descclassname">bibstuff.bibadd.</tt><tt class="descname">make_entry_citekey</tt><big>(</big><em>entry</em>, <em>used_citekeys</em>, <em>style={'misc': '%(names)s:%(year)s'</em>, <em>'default_type': '%(names)s:%(year)s'</em>, <em>'max_names': 2</em>, <em>'book': '%(names)s:%(year)s'</em>, <em>'lower_name': False</em>, <em>'anonymous': 'anon'</em>, <em>'name_template': 'v_|l{_}'</em>, <em>'etal': 'etal'</em>, <em>'name_name_sep': ('+'</em>, <em>'+')</em>, <em>'article': '%(names)s:%(year)s'</em>, <em>'use_max_names': True}</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibadd.html#make_entry_citekey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibadd.make_entry_citekey" title="Permalink to this definition">¶</a></dt>
-<dd><p>return new entry key (as string)</p>
 </dd></dl>
 
 <dl class="function">
@@ -255,6 +233,11 @@ in the order added.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="bibstuff.bibfile.BibEntry.citekey_label_style1">
+<tt class="descname">citekey_label_style1</tt><em class="property"> = {'misc': '%(names)s-%(year)s', 'default_type': '%(names)s-%(year)s', 'max_names': 2, 'book': '%(names)s-%(year)s', 'lower_name': False, 'anonymous': 'anon', 'name_template': 'v{_}_|l{}', 'etal': 'etal', 'name_name_sep': '+', 'article': '%(names)s-%(year)s'}</em><a class="headerlink" href="#bibstuff.bibfile.BibEntry.citekey_label_style1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="bibstuff.bibfile.BibEntry.entry_type">
 <tt class="descname">entry_type</tt><a class="headerlink" href="#bibstuff.bibfile.BibEntry.entry_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>property: &#8216;entry_type&#8217;</p>
@@ -319,6 +302,43 @@ in the order added.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="bibstuff.bibfile.BibEntry.make_citekey">
+<tt class="descname">make_citekey</tt><big>(</big><em>used_citekeys=</em>, <span class="optional">[</span><span class="optional">]</span><em>style={'misc': '%(names)s-%(year)s'</em>, <em>'default_type': '%(names)s-%(year)s'</em>, <em>'max_names': 2</em>, <em>'book': '%(names)s-%(year)s'</em>, <em>'lower_name': False</em>, <em>'anonymous': 'anon'</em>, <em>'name_template': 'v{_}_|l{}'</em>, <em>'etal': 'etal'</em>, <em>'name_name_sep': '+'</em>, <em>'article': '%(names)s-%(year)s'}</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibfile.html#BibEntry.make_citekey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibfile.BibEntry.make_citekey" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Create and return a new citekey based on the entry&#8217;s data. This is for</dt>
+<dd>creating predictable and useful citekey (labels) for BibEntry objects.
+This is not integrated with the citation styles in bibstuff.bibstyles;
+but it serves a very different purpose. This is to create consistent
+citation keys that are easy to type and guess and that are valid BibTeX
+citation keys. The format of the citetekey is determined by a
+<cite>label_style</cite>: simply a Dict() with the following fields:</dd>
+<dt>citekey_label_style1 = dict(</dt>
+<dd>name_template = &#8216;v{_}_|l{}&#8217;, # see NameFormatter class
+max_names = 2,
+name_name_sep = &#8220;+&#8221;,
+etal = &#8216;etal&#8217;,
+anonymous = &#8216;anon&#8217;,
+lower_name = False,
+article = &#8220;%(names)s-%(year)s&#8221;,
+book = &#8220;%(names)s-%(year)s&#8221;,
+misc = &#8220;%(names)s-%(year)s&#8221;,
+default_type = &#8220;%(names)s-%(year)s&#8221;,</dd>
+</dl>
+<dl class="docutils">
+<dt>)</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">Strip LaTeX accent characters from names when making label</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="bibstuff.bibfile.BibEntry.make_names">
 <tt class="descname">make_names</tt><big>(</big><em>entry_formatter=None</em>, <em>try_fields=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibfile.html#BibEntry.make_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibfile.BibEntry.make_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>return (BibName-object if possible else string)
@@ -352,9 +372,9 @@ in the order added.</p>
 <dl class="method">
 <dt id="bibstuff.bibfile.BibEntry.search_fields">
 <tt class="descname">search_fields</tt><big>(</big><em>string_or_compiled</em>, <em>field=''</em>, <em>ignore_case=True</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibfile.html#BibEntry.search_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibfile.BibEntry.search_fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return MatchObject if string_or_compiled found in entry else None.
-Find regular expression in entry.
-If field is omitted, search is through all fields.</p>
+<dd><p>Return MatchObject if string_or_compiled found in entry else None. Find
+regular expression in entry. If field is omitted, search is through all
+fields.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -710,99 +730,8 @@ for use in parsing with simpleparse.</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="module-bibstuff.isbn2bib">
-<span id="bibstuff-isbn2bib-module"></span><h2>bibstuff.isbn2bib module<a class="headerlink" href="#module-bibstuff.isbn2bib" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="bibstuff-isbn2bib-py-obtain-bib-entries-via-isbn">
-<h3><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.isbn2bib.py</span></tt> &#8212; Obtain bib entries via ISBN<a class="headerlink" href="#bibstuff-isbn2bib-py-obtain-bib-entries-via-isbn" title="Permalink to this headline">¶</a></h3>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">requires:</th><td class="field-body">pyaws v.0.3+ (installation is easy; see below)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">requires:</th><td class="field-body">free Amazon web services key <a class="reference external" href="http://www.amazon.com/gp/browse.html?node=3435361">http://www.amazon.com/gp/browse.html?node=3435361</a></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">MIT</td>
-</tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body">alan dot isaac at gmail dot com</td>
-</tr>
-</tbody>
-</table>
-<div class="section" id="installing-pyaws">
-<h4>Installing pyAWS<a class="headerlink" href="#installing-pyaws" title="Permalink to this headline">¶</a></h4>
-<p>You can get a tarball from:http://svn2.assembla.com
-If you use SVN, I&#8217;ll assume you want the latest version.
-(Otherwise, get the tagged version rather than the trunk.)</p>
-<ul class="simple">
-<li>Decide where you want your pyaws build directory, say in <tt class="docutils literal"><span class="pre">mysvn/pyaws</span></tt>.</li>
-<li>In a command shell, change to the <tt class="docutils literal"><span class="pre">mysvn</span></tt> directory.</li>
-<li>Issue the command: svn checkout <a class="reference external" href="http://svn2.assembla.com/svn/pyaws/trunk/">http://svn2.assembla.com/svn/pyaws/trunk/</a> pyaws</li>
-<li>Change to your new <tt class="docutils literal"><span class="pre">pyaws</span></tt> directory.</li>
-<li>Use your python to execute: setup.py install</li>
-</ul>
-</div>
-<div class="section" id="your-amazon-web-services-key">
-<h4>Your Amazon Web Services key<a class="headerlink" href="#your-amazon-web-services-key" title="Permalink to this headline">¶</a></h4>
-<ul>
-<li><p class="first">it is free from Amazon web services
-<a class="reference external" href="http://www.amazon.com/gp/browse.html?node=3435361">http://www.amazon.com/gp/browse.html?node=3435361</a></p>
-</li>
-<li><p class="first">right now I only look for it in bibstuff.cfg,
-which must be in the directory from which you
-call your script, and which must contain the lines:</p>
-<div class="highlight-python"><div class="highlight"><pre>[isbn2bib]
-aws_key : your_AWS_key_here 
-</pre></div>
-</div>
-</li>
-</ul>
-<dl class="function">
-<dt id="bibstuff.isbn2bib.import_pyaws_ecs">
-<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">import_pyaws_ecs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#import_pyaws_ecs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.import_pyaws_ecs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="bibstuff.isbn2bib.main">
-<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">main</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Command-line tool.
-See bibsearch.py -h for help.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="bibstuff.isbn2bib.make_bookdict">
-<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">make_bookdict</tt><big>(</big><em>bkinfo</em>, <em>publisher_addresses=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#make_bookdict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.make_bookdict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="bibstuff.isbn2bib.make_entry">
-<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">make_entry</tt><big>(</big><em>isbn</em><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#make_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.make_entry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a bibfile.BibEntry instance.
-Calls <cite>make_bookdict</cite>;
-called by <cite>main</cite>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Date:</th><td class="field-body">2008-08-31</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Todo:</th><td class="field-body">this is reusing too much add2bib code</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="bibstuff.isbn2bib.read_publisher_dict">
-<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">read_publisher_dict</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#read_publisher_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.read_publisher_dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="bibstuff.isbn2bib.set_license_key">
-<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">set_license_key</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#set_license_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.set_license_key" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
-</div>
+<div class="section" id="bibstuff-isbn2bib-module">
+<h2>bibstuff.isbn2bib module<a class="headerlink" href="#bibstuff-isbn2bib-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-bibstuff">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bibstuff" title="Permalink to this headline">¶</a></h2>
@@ -849,14 +778,7 @@ For more detail, see <a href="#id20"><span class="problematic" id="id21">`licens
 </ul>
 </li>
 <li><a class="reference internal" href="#module-bibstuff.ebnf_sp">bibstuff.ebnf_sp module</a></li>
-<li><a class="reference internal" href="#module-bibstuff.isbn2bib">bibstuff.isbn2bib module</a><ul>
-<li><a class="reference internal" href="#bibstuff-isbn2bib-py-obtain-bib-entries-via-isbn"><tt class="docutils literal"><span class="pre">bibstuff.isbn2bib.py</span></tt> &#8212; Obtain bib entries via ISBN</a><ul>
-<li><a class="reference internal" href="#installing-pyaws">Installing pyAWS</a></li>
-<li><a class="reference internal" href="#your-amazon-web-services-key">Your Amazon Web Services key</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a class="reference internal" href="#bibstuff-isbn2bib-module">bibstuff.isbn2bib module</a></li>
 <li><a class="reference internal" href="#module-bibstuff">Module contents</a></li>
 </ul>
 </li>
