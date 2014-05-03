@@ -1,9 +1,19 @@
 #!/usr/bin/env python
+"""
+Provides tests for the bibstuff.bibname module
+
+:author: Dylan Schwilk
+:contact: http://www.schwilk.org
+:license: MIT (see `license.txt`_)
+:date: 2014-04-30
+
+.. _`license.txt`: ../../license.txt
+
+"""
 
 import unittest
 
 from bibstuff import bibname
-from bibstuff import bibstyles
 
 class TestBibname(unittest.TestCase):
 	"""Tests for `bibname.py`"""
@@ -17,11 +27,10 @@ class TestBibname(unittest.TestCase):
 		"""Find correct parts"""
 		n = bibname.BibName("Joe von Hagel and van der Meer, Jako")
 		(a, b) = n.get_last_names()
-		self.assertTrue(a == "Hagel" and b == "Meer")
+		self.assertEqual(a,"Hagel")
+		self.assertEqual(b, "Meer")
 
 	def test_latex_accents_chars(self):
 		"LaTeX accents and non English characters"
 		n=bibname.BibName(r"J\orgen M\"{a}rtin and Sven \AAs")
-		self.assertTrue(n.get_names_dicts()[1]["first"][0] == "Sven")
-
-
+		self.assertEqual(n.get_names_dicts()[1]["first"][0], "Sven")

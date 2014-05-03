@@ -136,7 +136,7 @@ optional2 = 'm',
 
 
 
-def make_entry(choosetype='', options=False, extras=False):
+def make_entry(choosetype='', options=False, extras=False, raw_input = raw_input):
 	"""
 	:author: Alan G. Isaac
 	:date: 2006-08-11
