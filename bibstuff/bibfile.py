@@ -1,26 +1,16 @@
 """
-:mod:`bibstuff.bibfile` --- High Level BibTeX File Interface
-============================================================
+:mod:`bibstuff.bibfile`: High level BibTeX file interface
+---------------------------------------------------------
 
-Provides two classes, BibFile and BibEntry for
-accessing the parts of a bibtex database.
-BibFile inherits from ``simpleparse.dispatchprocessor``.
-To fill a BibFile instance, bfi, call bibgrammar.Parse(src, bfi).
+Provides two classes, BibFile and BibEntry for accessing the parts of a bibtex
+database. BibFile inherits from ``simpleparse.dispatchprocessor``. To fill a
+BibFile instance, bfi, call bibgrammar.Parse(src, bfi).
 
-
-:author: Dylan Schwilk (esp. BibFile)
-:contact: http://www.schwilk.org
-:author: Alan G Isaac (esp. BibEntry)
-:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm
-:copyright: 2006 by Dylan Schwilk and Alan G Isaac
-:license: MIT (see `license.txt`_)
-:date: 2006-08-05
+:copyright:  Dylan Schwilk (esp. BibFile) and Alan G Isaac (esp. BibEntry), see AUTHORS
+:license: MIT (see LICENSE)
 :requires: Python 2.4+
-:TODO: make this framework more general, perhaps along the lines of the btparse_ library in btOOL_.
+:TODO: make this framework more general, perhaps along the lines of the btparse library in `btOOL <http://www.gerg.ca/software/btOOL/>`_
 
-.. _`btOOL`: http://www.gerg.ca/software/btOOL/doc/btparse.html
-.. _`btparse`: http://www.gerg.ca/software/btOOL/doc/btparse.html
-.. _`license.txt`: ./license.txt
 """
 __docformat__ = "restructuredtext en"
 __authors__  = ["Dylan W. Schwilk", "Alan G. Isaac"]
@@ -169,9 +159,10 @@ class BibEntry(dict):
 	fields = property(get_fields, set_fields, None, "property: 'fields'")
 
 	def search_fields(self, string_or_compiled, field='', ignore_case=True):
-		"""Return MatchObject if string_or_compiled found in entry else None. Find
-		regular expression in entry. If field is omitted, search is through all
-		fields.
+		"""Find regular expression in entry. 
+
+		Return MatchObject if string_or_compiled found in entry else None. If
+		field is omitted, search is through all fields.
 		
 		:note: used by BibFile's find_re method, which is used in turn by bibsearch.py
 		:Parameters:
@@ -299,22 +290,37 @@ class BibEntry(dict):
 		This is not integrated with the citation styles in bibstuff.bibstyles;
 		but it serves a very different purpose. This is to create consistent
 		citation keys that are easy to type and guess and that are valid BibTeX
-		citation keys. The format of the citetekey is determined by a
-		`label_style`: simply a Dict() with the following fields:
+		citation keys. 
 
-	citekey_label_style1 = dict(
-		name_template = 'v{_}_|l{}', # see NameFormatter class
-		max_names = 2,
-		name_name_sep = "+",
-		etal = 'etal',
-		anonymous = 'anon',
-		lower_name = False,
-		article = "%(names)s-%(year)s",
-		book = "%(names)s-%(year)s",
-		misc = "%(names)s-%(year)s",
-		default_type = "%(names)s-%(year)s",
-	)
-		:TODO: Strip LaTeX accent characters from names when making label"""
+		:Parameters:
+			- used_citekeys : list
+				a list of the already taken citation keys
+				so that the function can avoid duplicates (by adding a,b,c,d... etc)
+			- style : str
+				The format of the citetekey is determined by a `label_style` (see below)
+
+		:Returns: string
+			the citation key (label)
+
+		Example:
+		    The label style is a dict with the following fields::
+
+			   citekey_label_style1 = dict(
+			   name_template = 'v{_}_|l{}', # see NameFormatter class
+			   max_names = 2,
+			   name_name_sep = "+",
+			   etal = 'etal',
+			   anonymous = 'anon',
+			   lower_name = False,
+			   article = "%(names)s-%(year)s",
+			   book = "%(names)s-%(year)s",
+			   misc = "%(names)s-%(year)s",
+			   default_type = "%(names)s-%(year)s")
+		
+
+		:TODO: Strip LaTeX accent characters from names when making label
+
+		"""
 
 		from .bibstyles.shared import NameFormatter
 		from string import ascii_lowercase
@@ -514,10 +520,10 @@ class BibFile( DispatchProcessor ):
 		
 		:note: used by bibsearch.py
 		:Parameters:
-		  `string_or_compiled` : string to compile or compiled regex
+		  - `string_or_compiled` : string to compile or compiled regex
 		    pattern for searching
-		  `field` : string
-		    field to search in self (default: search all fields)
+		  - `field` : string
+		      field to search in self (default: search all fields)
 		"""
 		if isinstance(string_or_compiled, str):
 			if ignore_case:

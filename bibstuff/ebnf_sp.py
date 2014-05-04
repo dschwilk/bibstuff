@@ -1,13 +1,13 @@
 """
+:mod:`bibstuff.ebnf_sp`: simpleparse EBNF declarations
+------------------------------------------------------
+
 Contains some simpleparse style ebnf declarations
 for use in parsing with simpleparse.
 
-:author: Alan G Isaac
-:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm
-:copyright: 2006 by Alan G Isaac
-:license: MIT (see `license.txt`_)
-:date: 2006-08-19
-.. _`licence.txt`: ../license.txt
+:copyright: 2006 by Alan G Isaac, see AUTHORS
+:license: MIT (see LICENSE)
+
 """
 
 # AI's modifications for reST

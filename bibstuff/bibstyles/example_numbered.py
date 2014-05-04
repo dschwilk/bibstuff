@@ -1,5 +1,8 @@
 #File: example_numbered.py
 """
+:mod:`bibstuff.bibstyles.example_numbered`
+------------------------------------------
+
 Provides an examle of how to easily modify an existing style:
 Just import everything from that style, and then override
 what you wish to change.  In this case, we import from
@@ -14,14 +17,9 @@ Citations are numbered like this:
 
 The numbers reflect the order cited (the 'citation_rank').
 
+:copyright: 2006 Alan G Isaac, see AUTHORS
+:license: MIT (see LICENSE)
 
-:author: Alan G Isaac
-:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm
-:copyright: 2006 by Alan G Isaac
-:license: MIT (see `license.txt`_)
-:date: 2006-08-01
-
-.. _`license.txt`: ../../license.txt
 """
 __docformat__ = "restructuredtext en"
 __author__  =   "Alan G. Isaac"

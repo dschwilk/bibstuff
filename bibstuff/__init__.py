@@ -1,5 +1,6 @@
 """
-Bibstuff: classes and command-line utilities for interacting with BibTeX style databases.
+Bibstuff: classes and command-line utilities for interacting with BibTeX style databases
+----------------------------------------------------------------------------------------
 
 Includes:
 
@@ -8,17 +9,14 @@ Includes:
 - utility and classes for managing citations in text files
 - utilities for searching and labeling BibTeX files
 
-For more detail, see `README.rst`_.
+For more detail, see README
 
-Bibstuff is free software distributed under the `MIT license`_.
-For more detail, see `license.txt`_.
+Bibstuff is free software distributed under the MIT license (see LICENSE)
 
 Bibstuff is pure Python_ and in that sense will run on any platform.
 
-.. _`README.rst`: ./README.rst
-.. _`MIT license`: http://www.opensource.org/licenses/mit-license.php
-.. _`license.txt`: ./license.txt
 .. _Python: http://www.python.org 
+
 """
 
 __docformat__ = "restructuredtext en"

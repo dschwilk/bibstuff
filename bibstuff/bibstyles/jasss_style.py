@@ -1,11 +1,11 @@
 #File: jass_style.py
 """
-Style for the Journal of Artificial Societies and Social Simulation
-The JASSS page for authors__ claims they use the `Oxford style`__,
-but these are clearly different.
+:mod:`bibstuff.bibstyles.JASSS_style`
+-------------------------------------
 
-__http://jasss.soc.surrey.ac.uk/admin/submit.html
-__http://www.usq.edu.au/library/help/ehelp/ref_guides/oxford.htm
+Style for the Journal of Artificial Societies and Social Simulation
+The JASSS page for `authors <http://jasss.soc.surrey.ac.uk/admin/submit.html>`__ claims they use the `Oxford style <http://www.usq.edu.au/library/help/ehelp/ref_guides/oxford.htm>`__,
+but these are clearly different.
 
 Examples (from the journal website) inconsistent in use of commas, quotes, ...
 
@@ -25,12 +25,9 @@ Examples (from the journal website) inconsistent in use of commas, quotes, ...
 	'A Common Protocol for Agent-Based Social Simulation'.
 	Journal of Artificial Societies and Social Simulation 9(1) http://jasss.soc.surrey.ac.uk/9/1/15.html. 
 
-:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm
-:author: Alan G Isaac
-:license: MIT (see `license.txt`_)
-:date: 2006-08-01
+:copyright: 2006 Alan G Isaac, see AUTHORS
+:license: MIT (see LICENSE)
 
-.. _`license.txt`: ../../license.txt
 """
 __docformat__ = "restructuredtext en"
 __author__  =   "Alan G. Isaac"

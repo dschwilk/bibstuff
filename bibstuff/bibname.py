@@ -1,21 +1,14 @@
 #! /usr/bin/env python
 #File: bibname.py
 """
-:mod:`bibstuff.bibname` --- Name Parser and Formatter
-=====================================================
+:mod:`bibstuff.bibname`: Name Parser and Formatter
+--------------------------------------------------
 
 Parses bibtex-formatted author/editor raw names and provides
 formatting functions (e.g., via bibstyles/shared.NamesFormatter).
 
-:author: Dylan W. Schwilk
-:contact: http://www.schwilk.org
-:author: Alan G. Isaac
-:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm
-:copyright: 2009 by Dylan Schwilk and Alan G Isaac
-:license: MIT (see `license.txt`_)
-:date: 2009-01-14
-:since: 2006-08-29
-
+:copyright: 2009-2014 Dylan Schwilk and Alan G Isaac, see AUTHORS
+:license: MIT (see LICENSE)
 
 :note: Major change as of 2008-07-02. Now the ebnf grammar and processor
        handles parsing of a list of names (a bibtex names field such as editor
@@ -31,7 +24,6 @@ formatting functions (e.g., via bibstyles/shared.NamesFormatter).
 :todo: The grammar does not support quoted strings, only braces strings. Could
        be added fairly simply
 
-.. _`license.txt`: ../license.txt
 """
 __docformat__ = "restructuredtext en"
 __authors__  =    ["Dylan W. Schwilk", "Alan G. Isaac"]

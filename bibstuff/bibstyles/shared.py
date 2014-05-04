@@ -1,16 +1,14 @@
 #File: shared.py
 """
+:mod:`bibstuff.bibstyles.shared`: Utilities and formatting classes
+------------------------------------------------------------------
+
 Utilities and formatting classes for BibStuff,
 especially for bib4txt.py.
 
-:author: Alan G Isaac
-:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm
-:copyright: 2008 by Alan G. Isaac
-:license: MIT (see `license.txt`_)
-:since: 2006-08-01
-:date: 2008-10-14
+:copyright: 2008 Alan G Isaac, see AUTHORS
+:license: MIT (see LICENSE)
 
-.. _`license.txt`: ../../license.txt
 """
 __docformat__ = "restructuredtext en"
 __version__ = "1.3"
@@ -35,9 +33,12 @@ CITE_SEP = ','
 
 def append_sep(s,sep):
 	"""return s+sep after removing duplicate punctuation at the join
-	`s`: string
-	`sep`: string
-	TODO? restrict characters removed
+
+	:Parameters:
+		- `s`: string
+		- `sep`: string
+
+	:TODO: restrict characters removed?
 	"""
 	if s[-1]==sep[0]:
 		sep = sep[1:]
@@ -177,27 +178,25 @@ class NameFormatter(object):
 	"""Create a NameFormatter object based on a template string.
 	
 	NAME FORMATTING TEMPLATES
-	-------------------------
-
+	
 	The name template takes some explanation.
 
-	Name parts are referred to by part-designator, which is just the part's first letter:
-	(v)on, (l)last, (j)r or (f)irst.
-	The designator may be capitalized for force upper-casing the entire part.
+	Name parts are referred to by part-designator, which is just the part's
+	first letter: (v)on, (l)last, (j)r or (f)irst. The designator may be
+	capitalized for force upper-casing the entire part.
 
-	Each name part may have one associated section in a name formatting template.
-	Sections are separated by '|' and *must* include a part-designator (one of 'FVLJfvlj').
-	The presumption is that part-designators will be the only alphabetic characters in a name template.
+	Each name part may have one associated section in a name formatting
+	template. Sections are separated by '|' and *must* include a
+	part-designator (one of 'FVLJfvlj'). The presumption is that
+	part-designators will be the only alphabetic characters in a name template.
 
 	A section will generate output iff the name part for that section exists.
-	Each section may have a partsep
-	(in curly braces, immediately following the part-designator)
-	and other characters
-	(which may not be any of 'fvljFVLJ').
+	Each section may have a partsep (in curly braces, immediately following the
+	part-designator) and other characters (which may not be any of 'fvljFVLJ').
 	The partsep indicates what should separate multiple tokens of the same part
-	(e.g., two part last names, or 'van der' for the (v)on part).
-	A part separator will replace the default space to separate multiple tokens in a part.
-	Any other characters are included as is.
+	(e.g., two part last names, or 'van der' for the (v)on part). A part
+	separator will replace the default space to separate multiple tokens in a
+	part. Any other characters are included as is.
 
 	For example::
 
@@ -206,6 +205,7 @@ class NameFormatter(object):
 
 	:note: has a property -> must be new style class, inherit carefully
 	:note: 20080331 allow capital part-designators (FVLJ) to force capitalization
+
 	"""
 	def __init__(self, template, initials=''):
 		shared_logger.debug("NameFormatter.__init__ args: "+str((template,initials)))

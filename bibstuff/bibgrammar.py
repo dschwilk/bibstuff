@@ -1,24 +1,16 @@
 #! /usr/bin/env python
 # File: bibgrammar.py
 
-""":mod:`bibstuff.bibgrammar` --- BibTeX Parser
-============================================
+"""
+:mod:`bibstuff.bibgrammar`: BibTeX Parser
+--------------------------------------------
 
 Provides an EBNF description of the bibtex bibliography format. The grammar
-draws largely from the grammar description in Nelson Beebe's `Lex/Yacc parser`_
-and also from Greg Ward's `btOOL`_ documentation.
+draws largely from the grammar description in Nelson Beebe's `Lex/Yacc parser <http://www.math.utah.edu/~beebe/>`_
+and also from Greg Ward's `btOOL <http://www.gerg.ca/software/btOOL/>`_ documentation.
 
-:author: Dylan Schwilk
-:contact: http://www.schwilk.org
-:author: Alan G Isaac
-:contact: http://www.american.edu/cas/econ/faculty/faculty.htm#isaac
-:license: MIT (see `license.txt`_)
-:date: 2008-06-28
-
-
-.. _`license.txt`: ../license.txt
-.. _`Lex/Yacc parser`: http://www.math.utah.edu/~beebe/
-.. _`btOOL`: http://www.tug.org/tex-archive/biblio/bibtex/utils/btOOL/
+:copyright: Dylan Schwilk and Alan G. Isaac, see AUTHORS
+:license: MIT (see LICENSE)
 
 """
 __docformat__ = "restructuredtext en"

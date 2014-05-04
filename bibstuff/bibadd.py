@@ -1,17 +1,11 @@
-#! /usr/bin/env python
 # -*- coding: latin-1 -*-
-# File: bibadd.py
-''':mod:`bibstuff.bibadd` --- Add entries to .bib File
-===================================================
-
-Add entry/entries to .bib file.
+'''
+:mod:`bibstuff.bibadd`: Add entries to .bib file
+------------------------------------------------
 
 :WARNING: works but currently *very* crude and rough!  (no special characters; macros alpha-lower only)
-:author: Alan G Isaac
-:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm
-:copyright: 2006 by Alan Isaac
-:license: MIT (see `license.txt`_)
-:date: 2006-09-25
+:copyright: 2006 by Alan Isaac, see AUTHORS
+:license: MIT, see LICENSE
 :TODO: add checking for unique key
 :TODO: allow multiple entries
 :TODO: allow correcting entries
@@ -21,7 +15,6 @@ Add entry/entries to .bib file.
 :TODO: add crossreferencing as option for inbook and incollection
 :TODO: change default format to legal HTML names
 
-.. _license.txt: ../license.txt
 '''
 __docformat__ = "restructuredtext en"
 __authors__  =    ['Alan G. Isaac', 'Dylan W. Schwilk']
@@ -122,9 +115,9 @@ optional2 = 'm',
 )
 
 def make_entry(choosetype='', options=False, extras=False, raw_input = raw_input):
-	"""
-	:author: Alan G. Isaac
-	:date: 2006-08-11
+	""" Create a bibtex entry by prompting the user for input
+
+	:todo: Should this be moved to a script?  
 	"""
 	entry = bibfile.BibEntry()
 	while not choosetype in entry_types:

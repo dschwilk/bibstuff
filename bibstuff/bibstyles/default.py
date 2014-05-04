@@ -1,6 +1,7 @@
-#File: default.py
 """
-Provides a default style for bib4txt.py
+:mod:`bibstuff.bibstyles.default`: default citation and reference style
+-----------------------------------------------------------------------
+
 Produces a list of citations that to be included in a reStructuredText document.
 (In very simple documents, can also provide citation reference formatting
 by substituting in the document text for the citation references.)
@@ -16,13 +17,9 @@ A style includes:
 :note: shared.py holds defintions common to most styles
 :note: see the examples (e.g., example_numbered.py) of different styles
 
-:author: Alan G Isaac
-:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm
-:copyright: 2006 by Alan G Isaac
-:license: MIT (see `license.txt`_)
-:date: 2006-08-01
+:copyright: 2006 Alan G Isaac, see AUTHORS
+:license: MIT (see LICENSE)
 
-.. _`license.txt`: ../../license.txt
 """
 __docformat__ = "restructuredtext en"
 __author__  =   "Alan G. Isaac"

@@ -1,7 +1,9 @@
 #File: default_templates.py
 """
-Provides default templates for style writers.
-Used by the default style (default.py).
+:mod:`bibstuff.bibstyles.default_templates`
+-------------------------------------------
+
+Provides default templates for style writers. Used by the default style (default.py).
 
 CITATION TEMPLATE
 -----------------
@@ -29,17 +31,14 @@ misc = '%(year)s.  %(title)s.',
 `indent_left` : int
 	left indent for citation definitions
 `citation_sep` : str
-	separator between citations (e.g.,  "\n\n")
+	separator between citations (e.g.,  "\\\\n\\\\n")
 `names_details_sep` : str
 	separator between the names and the details in a citation definition (e.g., '. ')
-	
-:author: Alan G Isaac
-:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm
+
 :copyright: 2006 by Alan G Isaac
-:license: MIT (see `license.txt`_)
+:license: `MIT <http://opensource.org/licenses/MIT>`_
 :since: 2006-08-19
 
-.. _`license.txt`: ../../license.txt
 """
 __docformat__ = "restructuredtext en"
 import re
@@ -68,12 +67,6 @@ max_cite_names = 2,
 citeref_sep = ", ",
 )
 
-"""
-initials
-	string containing none, any, or all of f,v,l,j
-:TODO: add separate editor handling
-"""
-
 DEFAULT_CITATION_TEMPLATE = dict(
 book = '(%(year)s) *%(title)s*. %(address)s: %(publisher)s.',
 article  = '%(year)s. %(title)s. *%(journal)s* %(volume)s, %(pages)s.',
@@ -93,4 +86,3 @@ citation_sep = "\n\n",
 names_details_sep = '. ',
 post_processor = default_post_processor
 )
-

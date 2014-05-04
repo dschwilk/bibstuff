@@ -1,13 +1,13 @@
 #! /usr/bin/env python
 # -*- coding: latin-1 -*-
 # File: isbn2bib.py
-""":mod:`bibstuff.isbn2bib.py` --- Obtain bib entries via ISBN
-===========================================================
+"""
+:mod:`bibstuff.isbn2bib` --- Obtain bib entries via ISBN
+--------------------------------------------------------
 
 :requires: pyaws v.0.3+ (installation is easy; see below)
 :requires: free Amazon web services key http://www.amazon.com/gp/browse.html?node=3435361
-:license: MIT
-:contact: alan dot isaac at gmail dot com 
+:license: MIT, see LICENSE
 
 Installing pyAWS
 ----------------
@@ -81,13 +81,13 @@ def read_publisher_dict():
 	for line in fh:
 		if line.startswith('#') or not line.strip():
 			continue
-	info = tuple(item.strip() for item in line.split('|') )
-	try:
-		name = info[0].strip()
-		address = info[2].strip()
-	except:
-		continue #TODO: log error
-	publisher_addresses[name] = address
+		info = tuple(item.strip() for item in line.split('|') )
+		try:
+			name = info[0].strip()
+			address = info[2].strip()
+		except:
+			continue #TODO: log error
+			publisher_addresses[name] = address
 	fh.close()
 	return publisher_addresses
 
