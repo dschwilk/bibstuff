@@ -7,7 +7,7 @@ SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = _build
 SOURCEDIR     = ../bibstuff
-GH_PAGES_SOURCES = Makefile conf.py index.rst ../bibstuff
+GH_PAGES_SOURCES = Makefile conf.py index.rst README.rst CONTRIBUTING.rst LICENSE.rst AUTHORS.rst ../bibstuff ../README.rst ../CONTRIBUTING.rst ../license.txt ../AUTHORS.rst
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
