@@ -2,27 +2,25 @@
      README: BibStuff
 ================================
 
-:authors: Dylan W. Schwilk, Alan G. Isaac and others
+:authors: Dylan W. Schwilk, Alan G. Isaac and others see AUTHORS
 :source code: https://github.com/dschwilk/bibstuff
 
-See `AUTHORS.rst`_
+See LICENSE_, which must be included when this software is distributed and AUTHORS_ for contributors to the project.
 
 This project contains the bibstuff python package which provides modules and classes for interacting with BibTeX style databases of citation references. The package contains classes for parsing and storing BibTeX files and for defining citation styles.
 
 The project also includes command-line scripts for searching and labeling BibTeX entries and a utility for replacing in-text citations in a reStructured text document.
 
-BibStuff License
-================
-
-See `license.txt`_, which must be included when this software is distributed and `AUTHORS.rst`_ for contributors to the project
-
 Installation
 ============
 
-  1. clone repository:
-     ``git clone https://github.com/dschwilk/bibstuff``
+  1. clone repository::
 
-  2. ``python setup.py install`` in the cloned directory.
+       git clone https://github.com/dschwilk/bibstuff
+
+  2. In the cloned directory run::
+
+       python setup.py install
 
 bibstuff module
 ===============
@@ -96,9 +94,9 @@ Package: bibstuff/bibstyles
 Testing
 =======
 
-Tests are located in /tests and use the unittest module. To run all tests:
+Tests are located in /tests and use the unittest module. To run all tests::
 
-  ``python -m unittest discover``
+  python -m unittest discover
 
 Related Projects
 ================
@@ -106,8 +104,8 @@ Related Projects
 For more information on BibTeX, see the excellent discussion in
 chapter 13 section 4 of `The LaTeX Companion`_.
 
-.. _`AUTHORS.rst`: ./AUTHORS.rst
+.. _AUTHORS: ./AUTHORS.rst
 
-.. _`license.txt`: ./license.txt
+.. _LICENSE: ./license.txt
 
 .. _`The LaTeX Companion`: http://www.awprofessional.com/bookstore/product.asp?isbn=0201362996&rl=1

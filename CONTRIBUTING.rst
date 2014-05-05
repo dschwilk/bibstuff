@@ -4,8 +4,8 @@ Contributing to bibstuff
 Using the issue tracker
 -----------------------
 
-The issue tracker is the preferred channel for `bug
-reports <#bugs>`__, `features requests`__ and `Pull requests`__.
+The issue tracker is the preferred channel for bug reports, 
+features requests and pull requests.
 
 Bug reports
 -----------
@@ -36,50 +36,48 @@ Pull requests
 Coding conventions
 ~~~~~~~~~~~~~~~~~~
 
-#. *Python code in bibstuff is indented with tabs.*
+#. Python code in bibstuff is indented with tabs.
+#. Use the numpy reStructured text format for docstrings: https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt
 
 Contributing via a pull request
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- 1. `Fork <http://help.github.com/fork-a-repo/>`__ the project, clone your fork,
-    and configure the remotes:
- 
- .. code:: bash
-    # Clone your fork of the repo into the current directory    
-    git clone https://github.com/<your-username>/bibstuff    
-    # Navigate to the newly cloned directory
-    cd bibstuff
-    # Assign the original repo to a remote called "upstream"
-    git remote add upstream https://github.com/dschwilk/bibstuff
+1. `Fork <http://help.github.com/fork-a-repo/>`__ the project, clone your fork,
+   and configure the remotes::
 
- 2. If you cloned a while ago, get the latest changes from upstream:
+        # Clone your fork of the repo into the current directory
+        git clone https://github.com/<your-username>/bibstuff
+        # Navigate to the newly cloned directory
+        cd bibstuff
+        # Assign the original repo to a remote called "upstream"
+        git remote add upstream https://github.com/dschwilk/bibstuff
 
- ..code:: bash
-   git checkout <dev-branch>
-   git pull upstream <dev-branch>
+2. If you cloned a while ago, get the latest changes from upstream::
 
- 3. Create a new topic branch (off the main project development branch) to
-    contain your feature, change, or fix:
+        git checkout <dev-branch>
+        git pull upstream <dev-branch>
 
-    .. code:: bash
-       git checkout -b <topic-branch-name>
+3. Create a new topic branch (off the main project development branch) to
+   contain your feature, change, or fix::
 
- 4. Commit your changes in logical chunks. Use Git's `interactive rebase
-    <https://help.github.com/articles/interactive-rebase>`__ feature to tidy up
-    your commits before making them public. The commit message should conform
-    to the description at
-    http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+      git checkout -b <topic-branch-name>
+
+4. Commit your changes in logical chunks. Use Git's 
+   `interactive rebase <https://help.github.com/articles/interactive-rebase>`__ 
+   feature to tidy up your commits before making them public. The commit message
+   should conform to the description at
+   http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+
+5. Test your code, add tests to the /tests folder
    
- 5. Locally merge (or rebase) the upstream development branch into your
-   topic branch:
+5. Locally merge (or rebase) the upstream development branch into your
+   topic branch::
 
-   .. code:: bash
       git pull [--rebase] upstream <dev-branch>
 
- 6. Push your topic branch up to your fork:
-    .. code:: bash
+6. Push your topic branch up to your fork::
+
        git push origin <topic-branch-name>
 
- 7. `Open a Pull Request
-    <https://help.github.com/articles/using-pull-requests/>`__ with a clear
-    title and description.
+7. `Open a Pull Request <https://help.github.com/articles/using-pull-requests/>`__ 
+   with a clear title and description.
