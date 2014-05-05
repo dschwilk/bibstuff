@@ -1,5 +1,9 @@
 # ignore sphinx output
 _*
-# ignore sphinx-apidoc output (all rst except index)
+# ignore sphinx-apidoc output (all rst except files listed after)
 *.rst
 !index.rst
+!README.rst
+!CONTRIBUTING.rst
+!LICENSE.rst
+!AUTHORS.rst
