@@ -60,14 +60,27 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="bibstuff.bibstyles.html">bibstuff.bibstyles package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#module-bibstuff.bibstyles.default">bibstuff.bibstyles.default module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#module-bibstuff.bibstyles.default">bibstuff.bibstyles.default module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bibstuff.bibstyles.html#bibstuff-bibstyles-default-default-citation-and-reference-style"><tt class="docutils literal"><span class="pre">bibstuff.bibstyles.default</span></tt>: default citation and reference style</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#module-bibstuff.bibstyles.default_templates">bibstuff.bibstyles.default_templates module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bibstuff.bibstyles.html#bibstuff-bibstyles-default-templates"><tt class="docutils literal"><span class="pre">bibstuff.bibstyles.default_templates</span></tt></a></li>
 <li class="toctree-l3"><a class="reference internal" href="bibstuff.bibstyles.html#citation-template">CITATION TEMPLATE</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#module-bibstuff.bibstyles.example_numbered">bibstuff.bibstyles.example_numbered module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#module-bibstuff.bibstyles.jasss_style">bibstuff.bibstyles.jasss_style module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#module-bibstuff.bibstyles.shared">bibstuff.bibstyles.shared module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#module-bibstuff.bibstyles.example_numbered">bibstuff.bibstyles.example_numbered module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bibstuff.bibstyles.html#bibstuff-bibstyles-example-numbered"><tt class="docutils literal"><span class="pre">bibstuff.bibstyles.example_numbered</span></tt></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#module-bibstuff.bibstyles.jasss_style">bibstuff.bibstyles.jasss_style module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bibstuff.bibstyles.html#bibstuff-bibstyles-jasss-style"><tt class="docutils literal"><span class="pre">bibstuff.bibstyles.JASSS_style</span></tt></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#module-bibstuff.bibstyles.shared">bibstuff.bibstyles.shared module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bibstuff.bibstyles.html#bibstuff-bibstyles-shared-utilities-and-formatting-classes"><tt class="docutils literal"><span class="pre">bibstuff.bibstyles.shared</span></tt>: Utilities and formatting classes</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="bibstuff.bibstyles.html#module-bibstuff.bibstyles">Module contents</a></li>
 </ul>
 </li>
@@ -80,39 +93,32 @@
 <div class="section" id="module-bibstuff.bibadd">
 <span id="bibstuff-bibadd-module"></span><h2>bibstuff.bibadd module<a class="headerlink" href="#module-bibstuff.bibadd" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="bibstuff-bibadd-add-entries-to-bib-file">
-<h3><a class="reference internal" href="#module-bibstuff.bibadd" title="bibstuff.bibadd"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibadd</span></tt></a> &#8212; Add entries to .bib File<a class="headerlink" href="#bibstuff-bibadd-add-entries-to-bib-file" title="Permalink to this headline">¶</a></h3>
-<p>Add entry/entries to .bib file.</p>
+<h3><a class="reference internal" href="#module-bibstuff.bibadd" title="bibstuff.bibadd"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibadd</span></tt></a>: Add entries to .bib file<a class="headerlink" href="#bibstuff-bibadd-add-entries-to-bib-file" title="Permalink to this headline">¶</a></h3>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">WARNING:</th><td class="field-body">works but currently <em>very</em> crude and rough!  (no special characters; macros alpha-lower only)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
+<tr class="field-even field"><th class="field-name">copyright:</th><td class="field-body">2006 by Alan Isaac, see AUTHORS</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
+<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">MIT, see LICENSE</td>
 </tr>
-<tr class="field-even field"><th class="field-name">copyright:</th><td class="field-body">2006 by Alan Isaac</td>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">add checking for unique key</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">MIT (see <a href="#id6"><span class="problematic" id="id7">`license.txt`_</span></a>)</td>
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">allow multiple entries</td>
 </tr>
-<tr class="field-even field"><th class="field-name">date:</th><td class="field-body">2006-09-25</td>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">allow correcting entries</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">add checking for unique key</td>
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">use style file for HTML formatting</td>
 </tr>
-<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">allow multiple entries</td>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">check for macros against &#64;string defs in .bib file</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">allow correcting entries</td>
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">macro handling (journals)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">use style file for HTML formatting</td>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">add crossreferencing as option for inbook and incollection</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">check for macros against &#64;string defs in .bib file</td>
-</tr>
-<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">macro handling (journals)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">add crossreferencing as option for inbook and incollection</td>
-</tr>
-<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">change default format to legal HTML names</td>
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">change default format to legal HTML names</td>
 </tr>
 </tbody>
 </table>
@@ -150,13 +156,12 @@ TODO: rethink this.</p>
 <dl class="function">
 <dt id="bibstuff.bibadd.make_entry">
 <tt class="descclassname">bibstuff.bibadd.</tt><tt class="descname">make_entry</tt><big>(</big><em>choosetype=''</em>, <em>options=False</em>, <em>extras=False</em>, <em>raw_input=&lt;built-in function raw_input&gt;</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibadd.html#make_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibadd.make_entry" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>Create a bibtex entry by prompting the user for input</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">Alan G. Isaac</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">2006-08-11</td>
+<tr class="field-odd field"><th class="field-name">Todo:</th><td class="field-body">Should this be moved to a script?</td>
 </tr>
 </tbody>
 </table>
@@ -179,32 +184,21 @@ TODO: rethink this.</p>
 <div class="section" id="module-bibstuff.bibfile">
 <span id="bibstuff-bibfile-module"></span><h2>bibstuff.bibfile module<a class="headerlink" href="#module-bibstuff.bibfile" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="bibstuff-bibfile-high-level-bibtex-file-interface">
-<h3><a class="reference internal" href="#module-bibstuff.bibfile" title="bibstuff.bibfile"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibfile</span></tt></a> &#8212; High Level BibTeX File Interface<a class="headerlink" href="#bibstuff-bibfile-high-level-bibtex-file-interface" title="Permalink to this headline">¶</a></h3>
-<p>Provides two classes, BibFile and BibEntry for
-accessing the parts of a bibtex database.
-BibFile inherits from <tt class="docutils literal"><span class="pre">simpleparse.dispatchprocessor</span></tt>.
-To fill a BibFile instance, bfi, call bibgrammar.Parse(src, bfi).</p>
+<h3><a class="reference internal" href="#module-bibstuff.bibfile" title="bibstuff.bibfile"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibfile</span></tt></a>: High level BibTeX file interface<a class="headerlink" href="#bibstuff-bibfile-high-level-bibtex-file-interface" title="Permalink to this headline">¶</a></h3>
+<p>Provides two classes, BibFile and BibEntry for accessing the parts of a bibtex
+database. BibFile inherits from <tt class="docutils literal"><span class="pre">simpleparse.dispatchprocessor</span></tt>. To fill a
+BibFile instance, bfi, call bibgrammar.Parse(src, bfi).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Dylan Schwilk (esp. BibFile)</td>
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">Dylan Schwilk (esp. BibFile) and Alan G Isaac (esp. BibEntry), see AUTHORS</td>
 </tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.schwilk.org">http://www.schwilk.org</a></td>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see LICENSE)</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac (esp. BibEntry)</td>
+<tr class="field-odd field"><th class="field-name">requires:</th><td class="field-body">Python 2.4+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2006 by Dylan Schwilk and Alan G Isaac</td>
-</tr>
-<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see <a href="#id8"><span class="problematic" id="id9">`license.txt`_</span></a>)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">date:</th><td class="field-body">2006-08-05</td>
-</tr>
-<tr class="field-even field"><th class="field-name">requires:</th><td class="field-body">Python 2.4+</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">make this framework more general, perhaps along the lines of the <a class="reference external" href="http://www.gerg.ca/software/btOOL/doc/btparse.html">btparse</a> library in <a href="#id10"><span class="problematic" id="id11">btOOL_</span></a>.</td>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body">make this framework more general, perhaps along the lines of the btparse library in <a class="reference external" href="http://www.gerg.ca/software/btOOL/">btOOL</a></td>
 </tr>
 </tbody>
 </table>
@@ -304,29 +298,58 @@ in the order added.</p>
 <dl class="method">
 <dt id="bibstuff.bibfile.BibEntry.make_citekey">
 <tt class="descname">make_citekey</tt><big>(</big><em>used_citekeys=</em>, <span class="optional">[</span><span class="optional">]</span><em>style={'misc': '%(names)s-%(year)s'</em>, <em>'default_type': '%(names)s-%(year)s'</em>, <em>'max_names': 2</em>, <em>'book': '%(names)s-%(year)s'</em>, <em>'lower_name': False</em>, <em>'anonymous': 'anon'</em>, <em>'name_template': 'v{_}_|l{}'</em>, <em>'etal': 'etal'</em>, <em>'name_name_sep': '+'</em>, <em>'article': '%(names)s-%(year)s'}</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibfile.html#BibEntry.make_citekey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibfile.BibEntry.make_citekey" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Create and return a new citekey based on the entry&#8217;s data. This is for</dt>
-<dd>creating predictable and useful citekey (labels) for BibEntry objects.
+<dd><p>Create and return a new citekey based on the entry&#8217;s data. This is for
+creating predictable and useful citekey (labels) for BibEntry objects.
 This is not integrated with the citation styles in bibstuff.bibstyles;
 but it serves a very different purpose. This is to create consistent
 citation keys that are easy to type and guess and that are valid BibTeX
-citation keys. The format of the citetekey is determined by a
-<cite>label_style</cite>: simply a Dict() with the following fields:</dd>
-<dt>citekey_label_style1 = dict(</dt>
-<dd>name_template = &#8216;v{_}_|l{}&#8217;, # see NameFormatter class
-max_names = 2,
-name_name_sep = &#8220;+&#8221;,
-etal = &#8216;etal&#8217;,
-anonymous = &#8216;anon&#8217;,
-lower_name = False,
-article = &#8220;%(names)s-%(year)s&#8221;,
-book = &#8220;%(names)s-%(year)s&#8221;,
-misc = &#8220;%(names)s-%(year)s&#8221;,
-default_type = &#8220;%(names)s-%(year)s&#8221;,</dd>
+citation keys.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first">
+<li><dl class="first docutils">
+<dt>used_citekeys <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd><p class="first last">a list of the already taken citation keys
+so that the function can avoid duplicates (by adding a,b,c,d... etc)</p>
+</dd>
 </dl>
+</li>
+<li><dl class="first docutils">
+<dt>style <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">The format of the citetekey is determined by a <cite>label_style</cite> (see below)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">string
+the citation key (label)</p>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="docutils">
-<dt>)</dt>
-<dd><table class="first last docutils field-list" frame="void" rules="none">
+<dt>Example:</dt>
+<dd><p class="first">The label style is a dict with the following fields:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">citekey_label_style1</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+<span class="n">name_template</span> <span class="o">=</span> <span class="s">&#39;v{_}_|l{}&#39;</span><span class="p">,</span> <span class="c"># see NameFormatter class</span>
+<span class="n">max_names</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="n">name_name_sep</span> <span class="o">=</span> <span class="s">&quot;+&quot;</span><span class="p">,</span>
+<span class="n">etal</span> <span class="o">=</span> <span class="s">&#39;etal&#39;</span><span class="p">,</span>
+<span class="n">anonymous</span> <span class="o">=</span> <span class="s">&#39;anon&#39;</span><span class="p">,</span>
+<span class="n">lower_name</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+<span class="n">article</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="n">book</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="n">misc</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="n">default_type</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%(names)s</span><span class="s">-</span><span class="si">%(year)s</span><span class="s">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -334,8 +357,6 @@ default_type = &#8220;%(names)s-%(year)s&#8221;,</dd>
 </tr>
 </tbody>
 </table>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="method">
@@ -372,9 +393,9 @@ default_type = &#8220;%(names)s-%(year)s&#8221;,</dd>
 <dl class="method">
 <dt id="bibstuff.bibfile.BibEntry.search_fields">
 <tt class="descname">search_fields</tt><big>(</big><em>string_or_compiled</em>, <em>field=''</em>, <em>ignore_case=True</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibfile.html#BibEntry.search_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibfile.BibEntry.search_fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return MatchObject if string_or_compiled found in entry else None. Find
-regular expression in entry. If field is omitted, search is through all
-fields.</p>
+<dd><p>Find regular expression in entry.</p>
+<p>Return MatchObject if string_or_compiled found in entry else None. If
+field is omitted, search is through all fields.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -508,14 +529,17 @@ If field is omitted, search is through all fields.</p>
 <tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body"><p class="first">used by bibsearch.py</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><cite>string_or_compiled</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string to compile or compiled regex</span></dt>
-<dd><p class="first last">pattern for searching</p>
-</dd>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><cite>string_or_compiled</cite> : string to compile or compiled regex
+pattern for searching</p>
+</li>
+<li><dl class="first docutils">
 <dt><cite>field</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
 <dd><p class="first last">field to search in self (default: search all fields)</p>
 </dd>
 </dl>
+</li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -535,25 +559,17 @@ If field is omitted, search is through all fields.</p>
 <div class="section" id="module-bibstuff.bibgrammar">
 <span id="bibstuff-bibgrammar-module"></span><h2>bibstuff.bibgrammar module<a class="headerlink" href="#module-bibstuff.bibgrammar" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="bibstuff-bibgrammar-bibtex-parser">
-<h3><a class="reference internal" href="#module-bibstuff.bibgrammar" title="bibstuff.bibgrammar"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibgrammar</span></tt></a> &#8212; BibTeX Parser<a class="headerlink" href="#bibstuff-bibgrammar-bibtex-parser" title="Permalink to this headline">¶</a></h3>
+<h3><a class="reference internal" href="#module-bibstuff.bibgrammar" title="bibstuff.bibgrammar"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibgrammar</span></tt></a>: BibTeX Parser<a class="headerlink" href="#bibstuff-bibgrammar-bibtex-parser" title="Permalink to this headline">¶</a></h3>
 <p>Provides an EBNF description of the bibtex bibliography format. The grammar
 draws largely from the grammar description in Nelson Beebe&#8217;s <a class="reference external" href="http://www.math.utah.edu/~beebe/">Lex/Yacc parser</a>
-and also from Greg Ward&#8217;s <a href="#id12"><span class="problematic" id="id13">`btOOL`_</span></a> documentation.</p>
+and also from Greg Ward&#8217;s <a class="reference external" href="http://www.gerg.ca/software/btOOL/">btOOL</a> documentation.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Dylan Schwilk</td>
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">Dylan Schwilk and Alan G. Isaac, see AUTHORS</td>
 </tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.schwilk.org">http://www.schwilk.org</a></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
-</tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/faculty.htm#isaac">http://www.american.edu/cas/econ/faculty/faculty.htm#isaac</a></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">MIT (see <a href="#id14"><span class="problematic" id="id15">`license.txt`_</span></a>)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">date:</th><td class="field-body">2008-06-28</td>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see LICENSE)</td>
 </tr>
 </tbody>
 </table>
@@ -568,28 +584,16 @@ and also from Greg Ward&#8217;s <a href="#id12"><span class="problematic" id="id
 <div class="section" id="module-bibstuff.bibname">
 <span id="bibstuff-bibname-module"></span><h2>bibstuff.bibname module<a class="headerlink" href="#module-bibstuff.bibname" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="bibstuff-bibname-name-parser-and-formatter">
-<h3><a class="reference internal" href="#module-bibstuff.bibname" title="bibstuff.bibname"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibname</span></tt></a> &#8212; Name Parser and Formatter<a class="headerlink" href="#bibstuff-bibname-name-parser-and-formatter" title="Permalink to this headline">¶</a></h3>
+<h3><a class="reference internal" href="#module-bibstuff.bibname" title="bibstuff.bibname"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibname</span></tt></a>: Name Parser and Formatter<a class="headerlink" href="#bibstuff-bibname-name-parser-and-formatter" title="Permalink to this headline">¶</a></h3>
 <p>Parses bibtex-formatted author/editor raw names and provides
 formatting functions (e.g., via bibstyles/shared.NamesFormatter).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Dylan W. Schwilk</td>
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2009-2014 Dylan Schwilk and Alan G Isaac, see AUTHORS</td>
 </tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.schwilk.org">http://www.schwilk.org</a></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Alan G. Isaac</td>
-</tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2009 by Dylan Schwilk and Alan G Isaac</td>
-</tr>
-<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see <a href="#id16"><span class="problematic" id="id17">`license.txt`_</span></a>)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">date:</th><td class="field-body">2009-01-14</td>
-</tr>
-<tr class="field-even field"><th class="field-name">since:</th><td class="field-body">2006-08-29</td>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see LICENSE)</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">note:</th><td class="field-body">Major change as of 2008-07-02. Now the ebnf grammar and processor
 handles parsing of a list of names (a bibtex names field such as editor
@@ -711,31 +715,118 @@ an instance. It parses the names field with the bibname grammar</p>
 </div>
 <div class="section" id="module-bibstuff.ebnf_sp">
 <span id="bibstuff-ebnf-sp-module"></span><h2>bibstuff.ebnf_sp module<a class="headerlink" href="#module-bibstuff.ebnf_sp" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bibstuff-ebnf-sp-simpleparse-ebnf-declarations">
+<h3><a class="reference internal" href="#module-bibstuff.ebnf_sp" title="bibstuff.ebnf_sp"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.ebnf_sp</span></tt></a>: simpleparse EBNF declarations<a class="headerlink" href="#bibstuff-ebnf-sp-simpleparse-ebnf-declarations" title="Permalink to this headline">¶</a></h3>
 <p>Contains some simpleparse style ebnf declarations
 for use in parsing with simpleparse.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2006 by Alan G Isaac, see AUTHORS</td>
 </tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2006 by Alan G Isaac</td>
-</tr>
-<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see <a href="#id18"><span class="problematic" id="id19">`license.txt`_</span></a>)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">date:</th><td class="field-body">2006-08-19</td>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see LICENSE)</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="bibstuff-isbn2bib-module">
-<h2>bibstuff.isbn2bib module<a class="headerlink" href="#bibstuff-isbn2bib-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-bibstuff.isbn2bib">
+<span id="bibstuff-isbn2bib-module"></span><h2>bibstuff.isbn2bib module<a class="headerlink" href="#module-bibstuff.isbn2bib" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bibstuff-isbn2bib-obtain-bib-entries-via-isbn">
+<h3><a class="reference internal" href="#module-bibstuff.isbn2bib" title="bibstuff.isbn2bib"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.isbn2bib</span></tt></a> &#8212; Obtain bib entries via ISBN<a class="headerlink" href="#bibstuff-isbn2bib-obtain-bib-entries-via-isbn" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">requires:</th><td class="field-body">pyaws v.0.3+ (installation is easy; see below)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">requires:</th><td class="field-body">free Amazon web services key <a class="reference external" href="http://www.amazon.com/gp/browse.html?node=3435361">http://www.amazon.com/gp/browse.html?node=3435361</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">MIT, see LICENSE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="installing-pyaws">
+<h3>Installing pyAWS<a class="headerlink" href="#installing-pyaws" title="Permalink to this headline">¶</a></h3>
+<p>You can get a tarball from:http://svn2.assembla.com
+If you use SVN, I&#8217;ll assume you want the latest version.
+(Otherwise, get the tagged version rather than the trunk.)</p>
+<ul class="simple">
+<li>Decide where you want your pyaws build directory, say in <tt class="docutils literal"><span class="pre">mysvn/pyaws</span></tt>.</li>
+<li>In a command shell, change to the <tt class="docutils literal"><span class="pre">mysvn</span></tt> directory.</li>
+<li>Issue the command: svn checkout <a class="reference external" href="http://svn2.assembla.com/svn/pyaws/trunk/">http://svn2.assembla.com/svn/pyaws/trunk/</a> pyaws</li>
+<li>Change to your new <tt class="docutils literal"><span class="pre">pyaws</span></tt> directory.</li>
+<li>Use your python to execute: setup.py install</li>
+</ul>
+</div>
+<div class="section" id="your-amazon-web-services-key">
+<h3>Your Amazon Web Services key<a class="headerlink" href="#your-amazon-web-services-key" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">it is free from Amazon web services
+<a class="reference external" href="http://www.amazon.com/gp/browse.html?node=3435361">http://www.amazon.com/gp/browse.html?node=3435361</a></p>
+</li>
+<li><p class="first">right now I only look for it in bibstuff.cfg,
+which must be in the directory from which you
+call your script, and which must contain the lines:</p>
+<div class="highlight-python"><div class="highlight"><pre>[isbn2bib]
+aws_key : your_AWS_key_here 
+</pre></div>
+</div>
+</li>
+</ul>
+<dl class="function">
+<dt id="bibstuff.isbn2bib.import_pyaws_ecs">
+<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">import_pyaws_ecs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#import_pyaws_ecs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.import_pyaws_ecs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bibstuff.isbn2bib.main">
+<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">main</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command-line tool.
+See bibsearch.py -h for help.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bibstuff.isbn2bib.make_bookdict">
+<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">make_bookdict</tt><big>(</big><em>bkinfo</em>, <em>publisher_addresses=None</em><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#make_bookdict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.make_bookdict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bibstuff.isbn2bib.make_entry">
+<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">make_entry</tt><big>(</big><em>isbn</em><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#make_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.make_entry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a bibfile.BibEntry instance.
+Calls <cite>make_bookdict</cite>;
+called by <cite>main</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Date:</th><td class="field-body">2008-08-31</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Todo:</th><td class="field-body">this is reusing too much add2bib code</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bibstuff.isbn2bib.read_publisher_dict">
+<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">read_publisher_dict</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#read_publisher_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.read_publisher_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bibstuff.isbn2bib.set_license_key">
+<tt class="descclassname">bibstuff.isbn2bib.</tt><tt class="descname">set_license_key</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bibstuff/isbn2bib.html#set_license_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.isbn2bib.set_license_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 </div>
 <div class="section" id="module-bibstuff">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bibstuff" title="Permalink to this headline">¶</a></h2>
-<p>Bibstuff: classes and command-line utilities for interacting with BibTeX style databases.</p>
+<div class="section" id="bibstuff-classes-and-command-line-utilities-for-interacting-with-bibtex-style-databases">
+<h3>Bibstuff: classes and command-line utilities for interacting with BibTeX style databases<a class="headerlink" href="#bibstuff-classes-and-command-line-utilities-for-interacting-with-bibtex-style-databases" title="Permalink to this headline">¶</a></h3>
 <p>Includes:</p>
 <ul class="simple">
 <li>a bibtex parser (which uses SimpleParse)</li>
@@ -743,10 +834,10 @@ for use in parsing with simpleparse.</p>
 <li>utility and classes for managing citations in text files</li>
 <li>utilities for searching and labeling BibTeX files</li>
 </ul>
-<p>For more detail, see <a class="reference external" href="./README.rst">README.rst</a>.</p>
-<p>Bibstuff is free software distributed under the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT license</a>.
-For more detail, see <a href="#id20"><span class="problematic" id="id21">`license.txt`_</span></a>.</p>
+<p>For more detail, see README</p>
+<p>Bibstuff is free software distributed under the MIT license (see LICENSE)</p>
 <p>Bibstuff is pure <a class="reference external" href="http://www.python.org">Python</a> and in that sense will run on any platform.</p>
+</div>
 </div>
 </div>
 
@@ -762,24 +853,35 @@ For more detail, see <a href="#id20"><span class="problematic" id="id21">`licens
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-bibstuff.bibadd">bibstuff.bibadd module</a><ul>
-<li><a class="reference internal" href="#bibstuff-bibadd-add-entries-to-bib-file"><tt class="docutils literal"><span class="pre">bibstuff.bibadd</span></tt> &#8212; Add entries to .bib File</a></li>
+<li><a class="reference internal" href="#bibstuff-bibadd-add-entries-to-bib-file"><tt class="docutils literal"><span class="pre">bibstuff.bibadd</span></tt>: Add entries to .bib file</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-bibstuff.bibfile">bibstuff.bibfile module</a><ul>
-<li><a class="reference internal" href="#bibstuff-bibfile-high-level-bibtex-file-interface"><tt class="docutils literal"><span class="pre">bibstuff.bibfile</span></tt> &#8212; High Level BibTeX File Interface</a></li>
+<li><a class="reference internal" href="#bibstuff-bibfile-high-level-bibtex-file-interface"><tt class="docutils literal"><span class="pre">bibstuff.bibfile</span></tt>: High level BibTeX file interface</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-bibstuff.bibgrammar">bibstuff.bibgrammar module</a><ul>
-<li><a class="reference internal" href="#bibstuff-bibgrammar-bibtex-parser"><tt class="docutils literal"><span class="pre">bibstuff.bibgrammar</span></tt> &#8212; BibTeX Parser</a></li>
+<li><a class="reference internal" href="#bibstuff-bibgrammar-bibtex-parser"><tt class="docutils literal"><span class="pre">bibstuff.bibgrammar</span></tt>: BibTeX Parser</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-bibstuff.bibname">bibstuff.bibname module</a><ul>
-<li><a class="reference internal" href="#bibstuff-bibname-name-parser-and-formatter"><tt class="docutils literal"><span class="pre">bibstuff.bibname</span></tt> &#8212; Name Parser and Formatter</a></li>
+<li><a class="reference internal" href="#bibstuff-bibname-name-parser-and-formatter"><tt class="docutils literal"><span class="pre">bibstuff.bibname</span></tt>: Name Parser and Formatter</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-bibstuff.ebnf_sp">bibstuff.ebnf_sp module</a></li>
-<li><a class="reference internal" href="#bibstuff-isbn2bib-module">bibstuff.isbn2bib module</a></li>
-<li><a class="reference internal" href="#module-bibstuff">Module contents</a></li>
+<li><a class="reference internal" href="#module-bibstuff.ebnf_sp">bibstuff.ebnf_sp module</a><ul>
+<li><a class="reference internal" href="#bibstuff-ebnf-sp-simpleparse-ebnf-declarations"><tt class="docutils literal"><span class="pre">bibstuff.ebnf_sp</span></tt>: simpleparse EBNF declarations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bibstuff.isbn2bib">bibstuff.isbn2bib module</a><ul>
+<li><a class="reference internal" href="#bibstuff-isbn2bib-obtain-bib-entries-via-isbn"><tt class="docutils literal"><span class="pre">bibstuff.isbn2bib</span></tt> &#8212; Obtain bib entries via ISBN</a></li>
+<li><a class="reference internal" href="#installing-pyaws">Installing pyAWS</a></li>
+<li><a class="reference internal" href="#your-amazon-web-services-key">Your Amazon Web Services key</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bibstuff">Module contents</a><ul>
+<li><a class="reference internal" href="#bibstuff-classes-and-command-line-utilities-for-interacting-with-bibtex-style-databases">Bibstuff: classes and command-line utilities for interacting with BibTeX style databases</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

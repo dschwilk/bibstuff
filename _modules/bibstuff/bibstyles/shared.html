@@ -50,17 +50,15 @@
   <h1>Source code for bibstuff.bibstyles.shared</h1><div class="highlight"><pre>
 <span class="c">#File: shared.py</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">:mod:`bibstuff.bibstyles.shared`: Utilities and formatting classes</span>
+<span class="sd">------------------------------------------------------------------</span>
+
 <span class="sd">Utilities and formatting classes for BibStuff,</span>
 <span class="sd">especially for bib4txt.py.</span>
 
-<span class="sd">:author: Alan G Isaac</span>
-<span class="sd">:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</span>
-<span class="sd">:copyright: 2008 by Alan G. Isaac</span>
-<span class="sd">:license: MIT (see `license.txt`_)</span>
-<span class="sd">:since: 2006-08-01</span>
-<span class="sd">:date: 2008-10-14</span>
+<span class="sd">:copyright: 2008 Alan G Isaac, see AUTHORS</span>
+<span class="sd">:license: MIT (see LICENSE)</span>
 
-<span class="sd">.. _`license.txt`: ../../license.txt</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
 <span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;1.3&quot;</span>
@@ -85,9 +83,12 @@
 
 <div class="viewcode-block" id="append_sep"><a class="viewcode-back" href="../../../bibstuff.bibstyles.html#bibstuff.bibstyles.shared.append_sep">[docs]</a><span class="k">def</span> <span class="nf">append_sep</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">sep</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;return s+sep after removing duplicate punctuation at the join</span>
-<span class="sd">	`s`: string</span>
-<span class="sd">	`sep`: string</span>
-<span class="sd">	TODO? restrict characters removed</span>
+
+<span class="sd">	:Parameters:</span>
+<span class="sd">		- `s`: string</span>
+<span class="sd">		- `sep`: string</span>
+
+<span class="sd">	:TODO: restrict characters removed?</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">sep</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
 		<span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
@@ -227,27 +228,25 @@
 	<span class="sd">&quot;&quot;&quot;Create a NameFormatter object based on a template string.</span>
 <span class="sd">	</span>
 <span class="sd">	NAME FORMATTING TEMPLATES</span>
-<span class="sd">	-------------------------</span>
-
+<span class="sd">	</span>
 <span class="sd">	The name template takes some explanation.</span>
 
-<span class="sd">	Name parts are referred to by part-designator, which is just the part&#39;s first letter:</span>
-<span class="sd">	(v)on, (l)last, (j)r or (f)irst.</span>
-<span class="sd">	The designator may be capitalized for force upper-casing the entire part.</span>
+<span class="sd">	Name parts are referred to by part-designator, which is just the part&#39;s</span>
+<span class="sd">	first letter: (v)on, (l)last, (j)r or (f)irst. The designator may be</span>
+<span class="sd">	capitalized for force upper-casing the entire part.</span>
 
-<span class="sd">	Each name part may have one associated section in a name formatting template.</span>
-<span class="sd">	Sections are separated by &#39;|&#39; and *must* include a part-designator (one of &#39;FVLJfvlj&#39;).</span>
-<span class="sd">	The presumption is that part-designators will be the only alphabetic characters in a name template.</span>
+<span class="sd">	Each name part may have one associated section in a name formatting</span>
+<span class="sd">	template. Sections are separated by &#39;|&#39; and *must* include a</span>
+<span class="sd">	part-designator (one of &#39;FVLJfvlj&#39;). The presumption is that</span>
+<span class="sd">	part-designators will be the only alphabetic characters in a name template.</span>
 
 <span class="sd">	A section will generate output iff the name part for that section exists.</span>
-<span class="sd">	Each section may have a partsep</span>
-<span class="sd">	(in curly braces, immediately following the part-designator)</span>
-<span class="sd">	and other characters</span>
-<span class="sd">	(which may not be any of &#39;fvljFVLJ&#39;).</span>
+<span class="sd">	Each section may have a partsep (in curly braces, immediately following the</span>
+<span class="sd">	part-designator) and other characters (which may not be any of &#39;fvljFVLJ&#39;).</span>
 <span class="sd">	The partsep indicates what should separate multiple tokens of the same part</span>
-<span class="sd">	(e.g., two part last names, or &#39;van der&#39; for the (v)on part).</span>
-<span class="sd">	A part separator will replace the default space to separate multiple tokens in a part.</span>
-<span class="sd">	Any other characters are included as is.</span>
+<span class="sd">	(e.g., two part last names, or &#39;van der&#39; for the (v)on part). A part</span>
+<span class="sd">	separator will replace the default space to separate multiple tokens in a</span>
+<span class="sd">	part. Any other characters are included as is.</span>
 
 <span class="sd">	For example::</span>
 
@@ -256,6 +255,7 @@
 
 <span class="sd">	:note: has a property -&gt; must be new style class, inherit carefully</span>
 <span class="sd">	:note: 20080331 allow capital part-designators (FVLJ) to force capitalization</span>
+
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">initials</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
 		<span class="n">shared_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;NameFormatter.__init__ args: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="n">template</span><span class="p">,</span><span class="n">initials</span><span class="p">)))</span>

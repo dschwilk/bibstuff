@@ -48,28 +48,18 @@
             
   <h1>Source code for bibstuff.bibfile</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">:mod:`bibstuff.bibfile` --- High Level BibTeX File Interface</span>
-<span class="sd">============================================================</span>
+<span class="sd">:mod:`bibstuff.bibfile`: High level BibTeX file interface</span>
+<span class="sd">---------------------------------------------------------</span>
 
-<span class="sd">Provides two classes, BibFile and BibEntry for</span>
-<span class="sd">accessing the parts of a bibtex database.</span>
-<span class="sd">BibFile inherits from ``simpleparse.dispatchprocessor``.</span>
-<span class="sd">To fill a BibFile instance, bfi, call bibgrammar.Parse(src, bfi).</span>
+<span class="sd">Provides two classes, BibFile and BibEntry for accessing the parts of a bibtex</span>
+<span class="sd">database. BibFile inherits from ``simpleparse.dispatchprocessor``. To fill a</span>
+<span class="sd">BibFile instance, bfi, call bibgrammar.Parse(src, bfi).</span>
 
-
-<span class="sd">:author: Dylan Schwilk (esp. BibFile)</span>
-<span class="sd">:contact: http://www.schwilk.org</span>
-<span class="sd">:author: Alan G Isaac (esp. BibEntry)</span>
-<span class="sd">:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</span>
-<span class="sd">:copyright: 2006 by Dylan Schwilk and Alan G Isaac</span>
-<span class="sd">:license: MIT (see `license.txt`_)</span>
-<span class="sd">:date: 2006-08-05</span>
+<span class="sd">:copyright:  Dylan Schwilk (esp. BibFile) and Alan G Isaac (esp. BibEntry), see AUTHORS</span>
+<span class="sd">:license: MIT (see LICENSE)</span>
 <span class="sd">:requires: Python 2.4+</span>
-<span class="sd">:TODO: make this framework more general, perhaps along the lines of the btparse_ library in btOOL_.</span>
+<span class="sd">:TODO: make this framework more general, perhaps along the lines of the btparse library in `btOOL &lt;http://www.gerg.ca/software/btOOL/&gt;`_</span>
 
-<span class="sd">.. _`btOOL`: http://www.gerg.ca/software/btOOL/doc/btparse.html</span>
-<span class="sd">.. _`btparse`: http://www.gerg.ca/software/btOOL/doc/btparse.html</span>
-<span class="sd">.. _`license.txt`: ./license.txt</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
 <span class="n">__authors__</span>  <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Dylan W. Schwilk&quot;</span><span class="p">,</span> <span class="s">&quot;Alan G. Isaac&quot;</span><span class="p">]</span>
@@ -218,9 +208,10 @@
 	<span class="n">fields</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_fields</span><span class="p">,</span> <span class="n">set_fields</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&quot;property: &#39;fields&#39;&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BibEntry.search_fields"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibfile.BibEntry.search_fields">[docs]</a>	<span class="k">def</span> <span class="nf">search_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string_or_compiled</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Return MatchObject if string_or_compiled found in entry else None. Find</span>
-<span class="sd">		regular expression in entry. If field is omitted, search is through all</span>
-<span class="sd">		fields.</span>
+		<span class="sd">&quot;&quot;&quot;Find regular expression in entry. </span>
+
+<span class="sd">		Return MatchObject if string_or_compiled found in entry else None. If</span>
+<span class="sd">		field is omitted, search is through all fields.</span>
 <span class="sd">		</span>
 <span class="sd">		:note: used by BibFile&#39;s find_re method, which is used in turn by bibsearch.py</span>
 <span class="sd">		:Parameters:</span>
@@ -348,22 +339,37 @@
 <span class="sd">		This is not integrated with the citation styles in bibstuff.bibstyles;</span>
 <span class="sd">		but it serves a very different purpose. This is to create consistent</span>
 <span class="sd">		citation keys that are easy to type and guess and that are valid BibTeX</span>
-<span class="sd">		citation keys. The format of the citetekey is determined by a</span>
-<span class="sd">		`label_style`: simply a Dict() with the following fields:</span>
+<span class="sd">		citation keys. </span>
 
-<span class="sd">	citekey_label_style1 = dict(</span>
-<span class="sd">		name_template = &#39;v{_}_|l{}&#39;, # see NameFormatter class</span>
-<span class="sd">		max_names = 2,</span>
-<span class="sd">		name_name_sep = &quot;+&quot;,</span>
-<span class="sd">		etal = &#39;etal&#39;,</span>
-<span class="sd">		anonymous = &#39;anon&#39;,</span>
-<span class="sd">		lower_name = False,</span>
-<span class="sd">		article = &quot;%(names)s-%(year)s&quot;,</span>
-<span class="sd">		book = &quot;%(names)s-%(year)s&quot;,</span>
-<span class="sd">		misc = &quot;%(names)s-%(year)s&quot;,</span>
-<span class="sd">		default_type = &quot;%(names)s-%(year)s&quot;,</span>
-<span class="sd">	)</span>
-<span class="sd">		:TODO: Strip LaTeX accent characters from names when making label&quot;&quot;&quot;</span>
+<span class="sd">		:Parameters:</span>
+<span class="sd">			- used_citekeys : list</span>
+<span class="sd">				a list of the already taken citation keys</span>
+<span class="sd">				so that the function can avoid duplicates (by adding a,b,c,d... etc)</span>
+<span class="sd">			- style : str</span>
+<span class="sd">				The format of the citetekey is determined by a `label_style` (see below)</span>
+
+<span class="sd">		:Returns: string</span>
+<span class="sd">			the citation key (label)</span>
+
+<span class="sd">		Example:</span>
+<span class="sd">		    The label style is a dict with the following fields::</span>
+
+<span class="sd">			   citekey_label_style1 = dict(</span>
+<span class="sd">			   name_template = &#39;v{_}_|l{}&#39;, # see NameFormatter class</span>
+<span class="sd">			   max_names = 2,</span>
+<span class="sd">			   name_name_sep = &quot;+&quot;,</span>
+<span class="sd">			   etal = &#39;etal&#39;,</span>
+<span class="sd">			   anonymous = &#39;anon&#39;,</span>
+<span class="sd">			   lower_name = False,</span>
+<span class="sd">			   article = &quot;%(names)s-%(year)s&quot;,</span>
+<span class="sd">			   book = &quot;%(names)s-%(year)s&quot;,</span>
+<span class="sd">			   misc = &quot;%(names)s-%(year)s&quot;,</span>
+<span class="sd">			   default_type = &quot;%(names)s-%(year)s&quot;)</span>
+<span class="sd">		</span>
+
+<span class="sd">		:TODO: Strip LaTeX accent characters from names when making label</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
 
 		<span class="kn">from</span> <span class="nn">.bibstyles.shared</span> <span class="kn">import</span> <span class="n">NameFormatter</span>
 		<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">ascii_lowercase</span>
@@ -563,10 +569,10 @@
 <span class="sd">		</span>
 <span class="sd">		:note: used by bibsearch.py</span>
 <span class="sd">		:Parameters:</span>
-<span class="sd">		  `string_or_compiled` : string to compile or compiled regex</span>
+<span class="sd">		  - `string_or_compiled` : string to compile or compiled regex</span>
 <span class="sd">		    pattern for searching</span>
-<span class="sd">		  `field` : string</span>
-<span class="sd">		    field to search in self (default: search all fields)</span>
+<span class="sd">		  - `field` : string</span>
+<span class="sd">		      field to search in self (default: search all fields)</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string_or_compiled</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 			<span class="k">if</span> <span class="n">ignore_case</span><span class="p">:</span>

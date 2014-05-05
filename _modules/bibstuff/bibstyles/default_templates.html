@@ -50,8 +50,10 @@
   <h1>Source code for bibstuff.bibstyles.default_templates</h1><div class="highlight"><pre>
 <span class="c">#File: default_templates.py</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Provides default templates for style writers.</span>
-<span class="sd">Used by the default style (default.py).</span>
+<span class="sd">:mod:`bibstuff.bibstyles.default_templates`</span>
+<span class="sd">-------------------------------------------</span>
+
+<span class="sd">Provides default templates for style writers. Used by the default style (default.py).</span>
 
 <span class="sd">CITATION TEMPLATE</span>
 <span class="sd">-----------------</span>
@@ -79,17 +81,14 @@
 <span class="sd">`indent_left` : int</span>
 <span class="sd">	left indent for citation definitions</span>
 <span class="sd">`citation_sep` : str</span>
-<span class="sd">	separator between citations (e.g.,  &quot;\n\n&quot;)</span>
+<span class="sd">	separator between citations (e.g.,  &quot;\\\\n\\\\n&quot;)</span>
 <span class="sd">`names_details_sep` : str</span>
 <span class="sd">	separator between the names and the details in a citation definition (e.g., &#39;. &#39;)</span>
-<span class="sd">	</span>
-<span class="sd">:author: Alan G Isaac</span>
-<span class="sd">:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</span>
+
 <span class="sd">:copyright: 2006 by Alan G Isaac</span>
-<span class="sd">:license: MIT (see `license.txt`_)</span>
+<span class="sd">:license: `MIT &lt;http://opensource.org/licenses/MIT&gt;`_</span>
 <span class="sd">:since: 2006-08-19</span>
 
-<span class="sd">.. _`license.txt`: ../../license.txt</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -117,12 +116,6 @@
 <span class="n">max_cite_names</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
 <span class="n">citeref_sep</span> <span class="o">=</span> <span class="s">&quot;, &quot;</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">initials</span>
-<span class="sd">	string containing none, any, or all of f,v,l,j</span>
-<span class="sd">:TODO: add separate editor handling</span>
-<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">DEFAULT_CITATION_TEMPLATE</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
 <span class="n">book</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%(year)s</span><span class="s">) *</span><span class="si">%(title)s</span><span class="s">*. </span><span class="si">%(address)s</span><span class="s">: </span><span class="si">%(publisher)s</span><span class="s">.&#39;</span><span class="p">,</span>

@@ -47,20 +47,14 @@
           <div class="body">
             
   <h1>Source code for bibstuff.bibadd</h1><div class="highlight"><pre>
-<span class="c">#! /usr/bin/env python</span>
 <span class="c"># -*- coding: latin-1 -*-</span>
-<span class="c"># File: bibadd.py</span>
-<span class="sd">&#39;&#39;&#39;:mod:`bibstuff.bibadd` --- Add entries to .bib File</span>
-<span class="sd">===================================================</span>
-
-<span class="sd">Add entry/entries to .bib file.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">:mod:`bibstuff.bibadd`: Add entries to .bib file</span>
+<span class="sd">------------------------------------------------</span>
 
 <span class="sd">:WARNING: works but currently *very* crude and rough!  (no special characters; macros alpha-lower only)</span>
-<span class="sd">:author: Alan G Isaac</span>
-<span class="sd">:contact: http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</span>
-<span class="sd">:copyright: 2006 by Alan Isaac</span>
-<span class="sd">:license: MIT (see `license.txt`_)</span>
-<span class="sd">:date: 2006-09-25</span>
+<span class="sd">:copyright: 2006 by Alan Isaac, see AUTHORS</span>
+<span class="sd">:license: MIT, see LICENSE</span>
 <span class="sd">:TODO: add checking for unique key</span>
 <span class="sd">:TODO: allow multiple entries</span>
 <span class="sd">:TODO: allow correcting entries</span>
@@ -70,7 +64,6 @@
 <span class="sd">:TODO: add crossreferencing as option for inbook and incollection</span>
 <span class="sd">:TODO: change default format to legal HTML names</span>
 
-<span class="sd">.. _license.txt: ../license.txt</span>
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="n">__docformat__</span> <span class="o">=</span> <span class="s">&quot;restructuredtext en&quot;</span>
 <span class="n">__authors__</span>  <span class="o">=</span>    <span class="p">[</span><span class="s">&#39;Alan G. Isaac&#39;</span><span class="p">,</span> <span class="s">&#39;Dylan W. Schwilk&#39;</span><span class="p">]</span>
@@ -171,9 +164,9 @@
 <span class="p">)</span>
 
 <div class="viewcode-block" id="make_entry"><a class="viewcode-back" href="../../bibstuff.html#bibstuff.bibadd.make_entry">[docs]</a><span class="k">def</span> <span class="nf">make_entry</span><span class="p">(</span><span class="n">choosetype</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">extras</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="nb">raw_input</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	:author: Alan G. Isaac</span>
-<span class="sd">	:date: 2006-08-11</span>
+	<span class="sd">&quot;&quot;&quot; Create a bibtex entry by prompting the user for input</span>
+
+<span class="sd">	:todo: Should this be moved to a script?  </span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">entry</span> <span class="o">=</span> <span class="n">bibfile</span><span class="o">.</span><span class="n">BibEntry</span><span class="p">()</span>
 	<span class="k">while</span> <span class="ow">not</span> <span class="n">choosetype</span> <span class="ow">in</span> <span class="n">entry_types</span><span class="p">:</span>

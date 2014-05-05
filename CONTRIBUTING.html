@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Contributing to bibstuff &mdash; bibstuff 1.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="bibstuff 1.3.1 documentation" href="index.html" />
+    <link rel="next" title="License" href="LICENSE.html" />
+    <link rel="prev" title="README: BibStuff" href="README.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="LICENSE.html" title="License"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="README.html" title="README: BibStuff"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">bibstuff 1.3.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="contributing-to-bibstuff">
+<h1>Contributing to bibstuff<a class="headerlink" href="#contributing-to-bibstuff" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="using-the-issue-tracker">
+<h2>Using the issue tracker<a class="headerlink" href="#using-the-issue-tracker" title="Permalink to this headline">¶</a></h2>
+<p>The issue tracker is the preferred channel for bug reports,
+features requests and pull requests.</p>
+</div>
+<div class="section" id="bug-reports">
+<h2>Bug reports<a class="headerlink" href="#bug-reports" title="Permalink to this headline">¶</a></h2>
+<p>A bug is a <em>demonstrable problem</em> that is caused by the code in the
+repository. Good bug reports are extremely helpful - thank you!</p>
+<dl class="docutils">
+<dt>Guidelines for bug reports:</dt>
+<dd><ul class="first last simple">
+<li><strong>Use the GitHub issue search</strong> — check if the issue has already
+been reported.</li>
+<li><strong>Check if the issue has been fixed</strong> — try to reproduce it using
+the latest <tt class="docutils literal"><span class="pre">master</span></tt> or development branch in the repository.</li>
+<li><strong>Isolate the problem</strong> — create a reduced test case and a live
+example.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="feature-requests">
+<h2>Feature requests<a class="headerlink" href="#feature-requests" title="Permalink to this headline">¶</a></h2>
+<p>Feature requests are welcome.</p>
+<p>[TODO]</p>
+</div>
+<div class="section" id="pull-requests">
+<h2>Pull requests<a class="headerlink" href="#pull-requests" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="coding-conventions">
+<h3>Coding conventions<a class="headerlink" href="#coding-conventions" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Python code in bibstuff is indented with tabs.</li>
+<li>Use the numpy reStructured text format for docstrings: <a class="reference external" href="https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt">https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt</a></li>
+</ol>
+</div>
+<div class="section" id="contributing-via-a-pull-request">
+<h3>Contributing via a pull request<a class="headerlink" href="#contributing-via-a-pull-request" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first"><a class="reference external" href="http://help.github.com/fork-a-repo/">Fork</a> the project, clone your fork,
+and configure the remotes:</p>
+<div class="highlight-python"><div class="highlight"><pre># Clone your fork of the repo into the current directory
+git clone https://github.com/&lt;your-username&gt;/bibstuff
+# Navigate to the newly cloned directory
+cd bibstuff
+# Assign the original repo to a remote called &quot;upstream&quot;
+git remote add upstream https://github.com/dschwilk/bibstuff
+</pre></div>
+</div>
+</li>
+<li><p class="first">If you cloned a while ago, get the latest changes from upstream:</p>
+<div class="highlight-python"><div class="highlight"><pre>git checkout &lt;dev-branch&gt;
+git pull upstream &lt;dev-branch&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a new topic branch (off the main project development branch) to
+contain your feature, change, or fix:</p>
+<div class="highlight-python"><div class="highlight"><pre>git checkout -b &lt;topic-branch-name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="first">Commit your changes in logical chunks. Use Git&#8217;s
+<a class="reference external" href="https://help.github.com/articles/interactive-rebase">interactive rebase</a>
+feature to tidy up your commits before making them public. The commit message
+should conform to the description at
+<a class="reference external" href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html</a></p>
+</li>
+<li><p class="first">Test your code, add tests to the /tests folder</p>
+</li>
+</ol>
+<ol class="arabic" start="5">
+<li><p class="first">Locally merge (or rebase) the upstream development branch into your
+topic branch:</p>
+<div class="highlight-python"><div class="highlight"><pre>git pull [--rebase] upstream &lt;dev-branch&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="first">Push your topic branch up to your fork:</p>
+<div class="highlight-python"><div class="highlight"><pre>git push origin &lt;topic-branch-name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="https://help.github.com/articles/using-pull-requests/">Open a Pull Request</a>
+with a clear title and description.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Contributing to bibstuff</a><ul>
+<li><a class="reference internal" href="#using-the-issue-tracker">Using the issue tracker</a></li>
+<li><a class="reference internal" href="#bug-reports">Bug reports</a></li>
+<li><a class="reference internal" href="#feature-requests">Feature requests</a></li>
+<li><a class="reference internal" href="#pull-requests">Pull requests</a><ul>
+<li><a class="reference internal" href="#coding-conventions">Coding conventions</a></li>
+<li><a class="reference internal" href="#contributing-via-a-pull-request">Contributing via a pull request</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="README.html"
+                        title="previous chapter">README: BibStuff</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="LICENSE.html"
+                        title="next chapter">License</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/CONTRIBUTING.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="LICENSE.html" title="License"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="README.html" title="README: BibStuff"
+             >previous</a> |</li>
+        <li><a href="index.html">bibstuff 1.3.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Dylan W. Schwilk and Alan G. Isaac.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

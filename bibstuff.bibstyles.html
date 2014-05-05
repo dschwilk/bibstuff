@@ -55,8 +55,9 @@
 </div>
 <div class="section" id="module-bibstuff.bibstyles.default">
 <span id="bibstuff-bibstyles-default-module"></span><h2>bibstuff.bibstyles.default module<a class="headerlink" href="#module-bibstuff.bibstyles.default" title="Permalink to this headline">¶</a></h2>
-<p>Provides a default style for bib4txt.py
-Produces a list of citations that to be included in a reStructuredText document.
+<div class="section" id="bibstuff-bibstyles-default-default-citation-and-reference-style">
+<h3><a class="reference internal" href="#module-bibstuff.bibstyles.default" title="bibstuff.bibstyles.default"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibstyles.default</span></tt></a>: default citation and reference style<a class="headerlink" href="#bibstuff-bibstyles-default-default-citation-and-reference-style" title="Permalink to this headline">¶</a></h3>
+<p>Produces a list of citations that to be included in a reStructuredText document.
 (In very simple documents, can also provide citation reference formatting
 by substituting in the document text for the citation references.)</p>
 <p>A style includes:</p>
@@ -76,15 +77,9 @@ by substituting in the document text for the citation references.)</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">note:</th><td class="field-body">see the examples (e.g., example_numbered.py) of different styles</td>
 </tr>
-<tr class="field-even field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
+<tr class="field-even field"><th class="field-name">copyright:</th><td class="field-body">2006 Alan G Isaac, see AUTHORS</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">copyright:</th><td class="field-body">2006 by Alan G Isaac</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">MIT (see <a class="reference external" href="../../license.txt">license.txt</a>)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">date:</th><td class="field-body">2006-08-01</td>
+<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">MIT (see LICENSE)</td>
 </tr>
 </tbody>
 </table>
@@ -159,10 +154,13 @@ that the CiteRefProcessor will use to substitute inline for citation references.
 </dd></dl>
 
 </div>
+</div>
 <div class="section" id="module-bibstuff.bibstyles.default_templates">
 <span id="bibstuff-bibstyles-default-templates-module"></span><h2>bibstuff.bibstyles.default_templates module<a class="headerlink" href="#module-bibstuff.bibstyles.default_templates" title="Permalink to this headline">¶</a></h2>
-<p>Provides default templates for style writers.
-Used by the default style (default.py).</p>
+<div class="section" id="bibstuff-bibstyles-default-templates">
+<h3><a class="reference internal" href="#module-bibstuff.bibstyles.default_templates" title="bibstuff.bibstyles.default_templates"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibstyles.default_templates</span></tt></a><a class="headerlink" href="#bibstuff-bibstyles-default-templates" title="Permalink to this headline">¶</a></h3>
+<p>Provides default templates for style writers. Used by the default style (default.py).</p>
+</div>
 <div class="section" id="citation-template">
 <h3>CITATION TEMPLATE<a class="headerlink" href="#citation-template" title="Permalink to this headline">¶</a></h3>
 <p>book = &#8216;%(year)s. %(title)s.&#8217;,
@@ -188,45 +186,22 @@ second element separates penultimate name from ultimate</dd>
 <dt><cite>indent_left</cite> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd>left indent for citation definitions</dd>
 <dt><cite>citation_sep</cite> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>separator between citations (e.g.,  &#8220;</dd>
+<dd>separator between citations (e.g.,  &#8220;\n\n&#8221;)</dd>
+<dt><cite>names_details_sep</cite> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>separator between the names and the details in a citation definition (e.g., &#8216;. &#8216;)</dd>
 </dl>
-<p>&#8221;)
-<cite>names_details_sep</cite> : str</p>
-<blockquote>
-<div>separator between the names and the details in a citation definition (e.g., &#8216;. &#8216;)</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
-</tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
-</tr>
 <tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2006 by Alan G Isaac</td>
 </tr>
-<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see <a class="reference external" href="../../license.txt">license.txt</a>)</td>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body"><a class="reference external" href="http://opensource.org/licenses/MIT">MIT</a></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">since:</th><td class="field-body">2006-08-19</td>
 </tr>
 </tbody>
 </table>
-<dl class="data">
-<dt id="bibstuff.bibstyles.default_templates.DEFAULT_CITEREF_TEMPLATE">
-<tt class="descclassname">bibstuff.bibstyles.default_templates.</tt><tt class="descname">DEFAULT_CITEREF_TEMPLATE</tt><em class="property"> = {'citeref_sep': ', ', 'max_cite_names': 2}</em><a class="headerlink" href="#bibstuff.bibstyles.default_templates.DEFAULT_CITEREF_TEMPLATE" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>initials</dt>
-<dd>string containing none, any, or all of f,v,l,j</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">add separate editor handling</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="function">
 <dt id="bibstuff.bibstyles.default_templates.default_post_processor">
 <tt class="descclassname">bibstuff.bibstyles.default_templates.</tt><tt class="descname">default_post_processor</tt><big>(</big><em>citations_as_string</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/default_templates.html#default_post_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.default_templates.default_post_processor" title="Permalink to this definition">¶</a></dt>
@@ -236,6 +211,8 @@ second element separates penultimate name from ultimate</dd>
 </div>
 <div class="section" id="module-bibstuff.bibstyles.example_numbered">
 <span id="bibstuff-bibstyles-example-numbered-module"></span><h2>bibstuff.bibstyles.example_numbered module<a class="headerlink" href="#module-bibstuff.bibstyles.example_numbered" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bibstuff-bibstyles-example-numbered">
+<h3><a class="reference internal" href="#module-bibstuff.bibstyles.example_numbered" title="bibstuff.bibstyles.example_numbered"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibstyles.example_numbered</span></tt></a><a class="headerlink" href="#bibstuff-bibstyles-example-numbered" title="Permalink to this headline">¶</a></h3>
 <p>Provides an examle of how to easily modify an existing style:
 Just import everything from that style, and then override
 what you wish to change.  In this case, we import from
@@ -254,15 +231,9 @@ Citations are numbered like this:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2006 Alan G Isaac, see AUTHORS</td>
 </tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2006 by Alan G Isaac</td>
-</tr>
-<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see <a class="reference external" href="../../license.txt">license.txt</a>)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">date:</th><td class="field-body">2006-08-01</td>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see LICENSE)</td>
 </tr>
 </tbody>
 </table>
@@ -272,7 +243,7 @@ Citations are numbered like this:</p>
 <dd><p>Bases: <a class="reference internal" href="#bibstuff.bibstyles.shared.CitationManager" title="bibstuff.bibstyles.shared.CitationManager"><tt class="xref py py-class docutils literal"><span class="pre">bibstuff.bibstyles.shared.CitationManager</span></tt></a></p>
 <dl class="attribute">
 <dt id="bibstuff.bibstyles.example_numbered.CitationManager.default_citation_template">
-<tt class="descname">default_citation_template</tt><em class="property"> = {'name_first': 'f{. }. |v |l|, j', 'misc': '%(year)s.  %(title)s.', 'default_type': '  %(year)s. %(title)s.', 'max_citation_names': 3, 'article': '%(year)s. %(title)s. *%(journal)s* %(volume)s, %(pages)s.', 'indent_left': 0, 'citation_sep': '\n\n', 'post_processor': &lt;function default_post_processor at 0x2acc42097e60&gt;, 'inproceedings': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'name_other': 'f{. }. |v |l|, j', 'incollection': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'techreport': '(%(year)s) &quot;%(title)s&quot;. %(institution)s %(type)s %(number)s. %(url)s', 'book': '(%(year)s) *%(title)s*. %(address)s: %(publisher)s.', 'etal': ', et al.', 'name_name_sep': (', ', ' and '), 'initials': 'f', 'names_details_sep': '. '}</em><a class="headerlink" href="#bibstuff.bibstyles.example_numbered.CitationManager.default_citation_template" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">default_citation_template</tt><em class="property"> = {'name_first': 'f{. }. |v |l|, j', 'misc': '%(year)s.  %(title)s.', 'default_type': '  %(year)s. %(title)s.', 'max_citation_names': 3, 'article': '%(year)s. %(title)s. *%(journal)s* %(volume)s, %(pages)s.', 'indent_left': 0, 'citation_sep': '\n\n', 'post_processor': &lt;function default_post_processor at 0x2b92ac450500&gt;, 'inproceedings': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'name_other': 'f{. }. |v |l|, j', 'incollection': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'techreport': '(%(year)s) &quot;%(title)s&quot;. %(institution)s %(type)s %(number)s. %(url)s', 'book': '(%(year)s) *%(title)s*. %(address)s: %(publisher)s.', 'etal': ', et al.', 'name_name_sep': (', ', ' and '), 'initials': 'f', 'names_details_sep': '. '}</em><a class="headerlink" href="#bibstuff.bibstyles.example_numbered.CitationManager.default_citation_template" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -298,13 +269,14 @@ Citations are numbered like this:</p>
 <dd></dd></dl>
 
 </div>
+</div>
 <div class="section" id="module-bibstuff.bibstyles.jasss_style">
 <span id="bibstuff-bibstyles-jasss-style-module"></span><h2>bibstuff.bibstyles.jasss_style module<a class="headerlink" href="#module-bibstuff.bibstyles.jasss_style" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bibstuff-bibstyles-jasss-style">
+<h3><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibstyles.JASSS_style</span></tt><a class="headerlink" href="#bibstuff-bibstyles-jasss-style" title="Permalink to this headline">¶</a></h3>
 <p>Style for the Journal of Artificial Societies and Social Simulation
-The JASSS page for <a href="#id5"><span class="problematic" id="id6">authors__</span></a> claims they use the <a href="#id5"><span class="problematic" id="id7">`Oxford style`__</span></a>,
+The JASSS page for <a class="reference external" href="http://jasss.soc.surrey.ac.uk/admin/submit.html">authors</a> claims they use the <a class="reference external" href="http://www.usq.edu.au/library/help/ehelp/ref_guides/oxford.htm">Oxford style</a>,
 but these are clearly different.</p>
-<p>__http://jasss.soc.surrey.ac.uk/admin/submit.html
-__http://www.usq.edu.au/library/help/ehelp/ref_guides/oxford.htm</p>
 <p>Examples (from the journal website) inconsistent in use of commas, quotes, ...</p>
 <blockquote>
 <div><p>HASTIE, R (1986) &#8220;Experimental evidence on group accuracy&#8221;.
@@ -323,13 +295,9 @@ Journal of Artificial Societies and Social Simulation 9(1) <a class="reference e
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2006 Alan G Isaac, see AUTHORS</td>
 </tr>
-<tr class="field-even field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">MIT (see <a class="reference external" href="../../license.txt">license.txt</a>)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">date:</th><td class="field-body">2006-08-01</td>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see LICENSE)</td>
 </tr>
 </tbody>
 </table>
@@ -339,7 +307,7 @@ Journal of Artificial Societies and Social Simulation 9(1) <a class="reference e
 <dd><p>Bases: <a class="reference internal" href="#bibstuff.bibstyles.shared.CitationManager" title="bibstuff.bibstyles.shared.CitationManager"><tt class="xref py py-class docutils literal"><span class="pre">bibstuff.bibstyles.shared.CitationManager</span></tt></a></p>
 <dl class="attribute">
 <dt id="bibstuff.bibstyles.jasss_style.CitationManager.default_citation_manager">
-<tt class="descname">default_citation_manager</tt><em class="property"> = {'name_first': 'V |L |f', 'misc': '%(year)s.  %(title)s.', 'default_type': '  %(year)s. %(title)s.', 'max_citation_names': 5, 'article': '(%(year)s) &quot;%(title)s&quot;. *%(journal)s* %(volume)s, %(month)s %(year)s. pp. %(pages)s. %(url)s', 'indent_left': 3, 'citation_sep': '\n\n', 'post_processor': &lt;function default_post_processor at 0x2acc42097e60&gt;, 'inproceedings': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publishers)s', 'name_other': 'v |l |f', 'incollection': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publishers)s', 'techreport': '(%(year)s) &quot;%(title)s&quot;. %(institution)s %(type)s %(number)s. %(url)s', 'book': '(%(year)s) *%(title)s*. %(address)s: %(publisher)s.', 'etal': ', et al.', 'name_name_sep': (', ', ' and '), 'initials': 'f', 'names_details_sep': ' '}</em><a class="headerlink" href="#bibstuff.bibstyles.jasss_style.CitationManager.default_citation_manager" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">default_citation_manager</tt><em class="property"> = {'name_first': 'V |L |f', 'misc': '%(year)s.  %(title)s.', 'default_type': '  %(year)s. %(title)s.', 'max_citation_names': 5, 'article': '(%(year)s) &quot;%(title)s&quot;. *%(journal)s* %(volume)s, %(month)s %(year)s. pp. %(pages)s. %(url)s', 'indent_left': 3, 'citation_sep': '\n\n', 'post_processor': &lt;function default_post_processor at 0x2b92ac450500&gt;, 'inproceedings': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publishers)s', 'name_other': 'v |l |f', 'incollection': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publishers)s', 'techreport': '(%(year)s) &quot;%(title)s&quot;. %(institution)s %(type)s %(number)s. %(url)s', 'book': '(%(year)s) *%(title)s*. %(address)s: %(publisher)s.', 'etal': ', et al.', 'name_name_sep': (', ', ' and '), 'initials': 'f', 'names_details_sep': ' '}</em><a class="headerlink" href="#bibstuff.bibstyles.jasss_style.CitationManager.default_citation_manager" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -360,25 +328,20 @@ Journal of Artificial Societies and Social Simulation 9(1) <a class="reference e
 </dd></dl>
 
 </div>
+</div>
 <div class="section" id="module-bibstuff.bibstyles.shared">
 <span id="bibstuff-bibstyles-shared-module"></span><h2>bibstuff.bibstyles.shared module<a class="headerlink" href="#module-bibstuff.bibstyles.shared" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bibstuff-bibstyles-shared-utilities-and-formatting-classes">
+<h3><a class="reference internal" href="#module-bibstuff.bibstyles.shared" title="bibstuff.bibstyles.shared"><tt class="xref py py-mod docutils literal"><span class="pre">bibstuff.bibstyles.shared</span></tt></a>: Utilities and formatting classes<a class="headerlink" href="#bibstuff-bibstyles-shared-utilities-and-formatting-classes" title="Permalink to this headline">¶</a></h3>
 <p>Utilities and formatting classes for BibStuff,
 especially for bib4txt.py.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Alan G Isaac</td>
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2008 Alan G Isaac, see AUTHORS</td>
 </tr>
-<tr class="field-even field"><th class="field-name">contact:</th><td class="field-body"><a class="reference external" href="http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm">http://www.american.edu/cas/econ/faculty/isaac/isaac1.htm</a></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2008 by Alan G. Isaac</td>
-</tr>
-<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see <a class="reference external" href="../../license.txt">license.txt</a>)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">since:</th><td class="field-body">2006-08-01</td>
-</tr>
-<tr class="field-even field"><th class="field-name">date:</th><td class="field-body">2008-10-14</td>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT (see LICENSE)</td>
 </tr>
 </tbody>
 </table>
@@ -402,7 +365,7 @@ especially for bib4txt.py.</p>
 
 <dl class="attribute">
 <dt id="bibstuff.bibstyles.shared.CitationManager.default_citation_template">
-<tt class="descname">default_citation_template</tt><em class="property"> = {'name_first': 'v |l,| j,| f', 'misc': '%(year)s.  %(title)s.', 'default_type': '  %(year)s. %(title)s.', 'max_citation_names': 3, 'article': '%(year)s. %(title)s. *%(journal)s* %(volume)s, %(pages)s.', 'indent_left': 3, 'citation_sep': '\n\n', 'post_processor': &lt;function default_post_processor at 0x2acc42097e60&gt;, 'inproceedings': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'name_other': 'f |v |l|, j', 'incollection': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'techreport': '(%(year)s) &quot;%(title)s&quot;. %(institution)s %(type)s %(number)s. %(url)s', 'book': '(%(year)s) *%(title)s*. %(address)s: %(publisher)s.', 'etal': ', et al.', 'name_name_sep': (', ', ', and '), 'names_details_sep': '. ', 'initials': ''}</em><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.default_citation_template" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">default_citation_template</tt><em class="property"> = {'name_first': 'v |l,| j,| f', 'misc': '%(year)s.  %(title)s.', 'default_type': '  %(year)s. %(title)s.', 'max_citation_names': 3, 'article': '%(year)s. %(title)s. *%(journal)s* %(volume)s, %(pages)s.', 'indent_left': 3, 'citation_sep': '\n\n', 'post_processor': &lt;function default_post_processor at 0x2b92ac450500&gt;, 'inproceedings': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'name_other': 'f |v |l|, j', 'incollection': '(%(year)s) &quot;%(title)s&quot;. In %(editor)s (Eds.) *%(booktitle)s*, %(address)s: %(publisher)s.', 'techreport': '(%(year)s) &quot;%(title)s&quot;. %(institution)s %(type)s %(number)s. %(url)s', 'book': '(%(year)s) *%(title)s*. %(address)s: %(publisher)s.', 'etal': ', et al.', 'name_name_sep': (', ', ', and '), 'names_details_sep': '. ', 'initials': ''}</em><a class="headerlink" href="#bibstuff.bibstyles.shared.CitationManager.default_citation_template" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -619,22 +582,22 @@ Note that a BibEntry object acts like a dict for Bib fields
 <em class="property">class </em><tt class="descclassname">bibstuff.bibstyles.shared.</tt><tt class="descname">NameFormatter</tt><big>(</big><em>template</em>, <em>initials=''</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#NameFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.NameFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Create a NameFormatter object based on a template string.</p>
+<p>NAME FORMATTING TEMPLATES</p>
 <p>The name template takes some explanation.</p>
-<p>Name parts are referred to by part-designator, which is just the part&#8217;s first letter:
-(v)on, (l)last, (j)r or (f)irst.
-The designator may be capitalized for force upper-casing the entire part.</p>
-<p>Each name part may have one associated section in a name formatting template.
-Sections are separated by &#8216;|&#8217; and <em>must</em> include a part-designator (one of &#8216;FVLJfvlj&#8217;).
-The presumption is that part-designators will be the only alphabetic characters in a name template.</p>
+<p>Name parts are referred to by part-designator, which is just the part&#8217;s
+first letter: (v)on, (l)last, (j)r or (f)irst. The designator may be
+capitalized for force upper-casing the entire part.</p>
+<p>Each name part may have one associated section in a name formatting
+template. Sections are separated by &#8216;|&#8217; and <em>must</em> include a
+part-designator (one of &#8216;FVLJfvlj&#8217;). The presumption is that
+part-designators will be the only alphabetic characters in a name template.</p>
 <p>A section will generate output iff the name part for that section exists.
-Each section may have a partsep
-(in curly braces, immediately following the part-designator)
-and other characters
-(which may not be any of &#8216;fvljFVLJ&#8217;).
+Each section may have a partsep (in curly braces, immediately following the
+part-designator) and other characters (which may not be any of &#8216;fvljFVLJ&#8217;).
 The partsep indicates what should separate multiple tokens of the same part
-(e.g., two part last names, or &#8216;van der&#8217; for the (v)on part).
-A part separator will replace the default space to separate multiple tokens in a part.
-Any other characters are included as is.</p>
+(e.g., two part last names, or &#8216;van der&#8217; for the (v)on part). A part
+separator will replace the default space to separate multiple tokens in a
+part. Any other characters are included as is.</p>
 <p>For example:</p>
 <div class="highlight-python"><div class="highlight"><pre>&quot;v{~}~|l,| j,| f{. }.&quot; with initials=&#39;f&#39; produces:
 &quot;McFeely, J. W.&quot; or &quot;van~der~Stadt, Jr, C. M.&quot;
@@ -768,10 +731,22 @@ Any other characters are included as is.</p>
 <dl class="function">
 <dt id="bibstuff.bibstyles.shared.append_sep">
 <tt class="descclassname">bibstuff.bibstyles.shared.</tt><tt class="descname">append_sep</tt><big>(</big><em>s</em>, <em>sep</em><big>)</big><a class="reference internal" href="_modules/bibstuff/bibstyles/shared.html#append_sep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bibstuff.bibstyles.shared.append_sep" title="Permalink to this definition">¶</a></dt>
-<dd><p>return s+sep after removing duplicate punctuation at the join
-<cite>s</cite>: string
-<cite>sep</cite>: string
-TODO? restrict characters removed</p>
+<dd><p>return s+sep after removing duplicate punctuation at the join</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><cite>s</cite>: string</li>
+<li><cite>sep</cite>: string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body"><p class="first last">restrict characters removed?</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -784,6 +759,7 @@ of left and right margins, and of justification style
 :see:  Mertz, David,  <em>Text Processing in Python</em> (TPiP)</p>
 </dd></dl>
 
+</div>
 </div>
 <div class="section" id="module-bibstuff.bibstyles">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bibstuff.bibstyles" title="Permalink to this headline">¶</a></h2>
@@ -807,14 +783,27 @@ of left and right margins, and of justification style
   <ul>
 <li><a class="reference internal" href="#">bibstuff.bibstyles package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-bibstuff.bibstyles.default">bibstuff.bibstyles.default module</a></li>
+<li><a class="reference internal" href="#module-bibstuff.bibstyles.default">bibstuff.bibstyles.default module</a><ul>
+<li><a class="reference internal" href="#bibstuff-bibstyles-default-default-citation-and-reference-style"><tt class="docutils literal"><span class="pre">bibstuff.bibstyles.default</span></tt>: default citation and reference style</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-bibstuff.bibstyles.default_templates">bibstuff.bibstyles.default_templates module</a><ul>
+<li><a class="reference internal" href="#bibstuff-bibstyles-default-templates"><tt class="docutils literal"><span class="pre">bibstuff.bibstyles.default_templates</span></tt></a></li>
 <li><a class="reference internal" href="#citation-template">CITATION TEMPLATE</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-bibstuff.bibstyles.example_numbered">bibstuff.bibstyles.example_numbered module</a></li>
-<li><a class="reference internal" href="#module-bibstuff.bibstyles.jasss_style">bibstuff.bibstyles.jasss_style module</a></li>
-<li><a class="reference internal" href="#module-bibstuff.bibstyles.shared">bibstuff.bibstyles.shared module</a></li>
+<li><a class="reference internal" href="#module-bibstuff.bibstyles.example_numbered">bibstuff.bibstyles.example_numbered module</a><ul>
+<li><a class="reference internal" href="#bibstuff-bibstyles-example-numbered"><tt class="docutils literal"><span class="pre">bibstuff.bibstyles.example_numbered</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bibstuff.bibstyles.jasss_style">bibstuff.bibstyles.jasss_style module</a><ul>
+<li><a class="reference internal" href="#bibstuff-bibstyles-jasss-style"><tt class="docutils literal"><span class="pre">bibstuff.bibstyles.JASSS_style</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bibstuff.bibstyles.shared">bibstuff.bibstyles.shared module</a><ul>
+<li><a class="reference internal" href="#bibstuff-bibstyles-shared-utilities-and-formatting-classes"><tt class="docutils literal"><span class="pre">bibstuff.bibstyles.shared</span></tt>: Utilities and formatting classes</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-bibstuff.bibstyles">Module contents</a></li>
 </ul>
 </li>
