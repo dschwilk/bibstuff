@@ -60,7 +60,7 @@ __needs__ = '2.5+'
 
 ###################  IMPORTS  ##################################################
 #import from standard library
-import os,sys
+import os, sys
 import logging
 logging.basicConfig(format='\n%(levelname)s:\n%(message)s\n')
 bib4txt_logger = logging.getLogger('bibstuff_logger')
@@ -69,7 +69,13 @@ bib4txt_logger = logging.getLogger('bibstuff_logger')
 import simpleparse
 
 #local imports
-from bibstuff import bibfile, bibgrammar, bibstyles, ebnf_sp
+try:
+	from bibstuff import bibfile, bibgrammar, bibstyles, ebnf_sp
+except ImportError: #allow user to run without installing
+	scriptdir = os.path.dirname(os.path.realpath(__file__))
+	bibdir = os.path.dirname(scriptdir)
+	sys.path.append(bibdir)
+	from bibstuff import bibfile, bibgrammar, bibstyles, ebnf_sp
 ################################################################################
 
 
