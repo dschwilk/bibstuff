@@ -16,12 +16,12 @@ and also from Greg Ward's `btOOL <http://www.gerg.ca/software/btOOL/>`_ document
 __docformat__ = "restructuredtext en"
 __needs__ = '2.4'
 __version__ = "1.7"
-__author__  =    ["Dylan W. Schwilk", "Alan G Isaac"]
+__author__  =    ["Dylan W. Schwilk", "Alan G. Isaac"]
 
 
 ###################  IMPORTS  ##################################################
 #import from standard library
-# (some if  run as main; see below)
+# (more imports if  run as main; see below)
 
 #import dependencies
 from simpleparse.parser import Parser
