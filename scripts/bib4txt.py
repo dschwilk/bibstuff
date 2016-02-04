@@ -54,7 +54,7 @@ How it works:
 """
 from __future__ import with_statement
 __docformat__ = "restructuredtext en"
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 __needs__ = '2.5+'
 
 
@@ -107,14 +107,15 @@ def make_text_output(src_as_string,
 											citekeys=None,
 											citation_template=style.CITATION_TEMPLATE)
 	#second: create CiteRefProcessor object to process cites during src parsing
-	#        (associate with the citation_manager)
+	#        (and associate it with the citation_manager)
 	bib4txt_logger.debug('create cite processor')
 	cite_processor = bibstyles.shared.CiteRefProcessor(citation_manager)
-	#third: parse the text (taglist is a dummy container)
+	#third: parse the text (ignore `taglist`; it is a dummy container)
 	bib4txt_logger.info('fill cite processor with keys')
 	taglist = src_parser.parse(src_as_string, processor=cite_processor)
-	"""cite_processor.all_citekeys now holds the cite keys and
-	is associated with citation_manager which holds the bibliography,
+	"""
+	:note: Now cite_processor.all_citekeys holds the cite keys.
+	It is also associated with citation_manager which holds the bibliography,
 	so we can make a sorted entry list.  To do so need:
 		- the keys for the citations referenced
 		- a sort-key on which to base the sorting
@@ -154,17 +155,17 @@ def main():
 	"""
 
 	#set default input and output
-	input = sys.stdin
-	output = sys.stdout
+	_infile = sys.stdin
+	_outfile = sys.stdout
 	
 	from optparse import OptionParser
 	
-	usage = """
+	_usage = """
 	usage: %prog [options] BIB_DATABASE
 	standard usage: %prog -i reST_FILE  -n -o refs_FILE BIB_DATABASE
 	"""
 
-	parser = OptionParser(usage=usage, version ="%prog " + __version__)
+	parser = OptionParser(usage=_usage, version ="%prog " + __version__)
 
 	parser.add_option("-i", "--infile", action="store", type="string", dest="infile",
 					  help="Parse FILE for citation references.", metavar="FILE")
@@ -193,18 +194,26 @@ def main():
 	elif options.verbose:
 		bib4txt_logger.setLevel(logging.INFO)
 	bib4txt_logger.info(
-			"Script running.\nargs=%s\ninfile=%s\noutfile=%s\nstyle file=%s"
-			%(args, options.infile, options.outfile,options.stylefile)
+			"\n".join([
+			"Script running:",
+			" args=%s",
+			" infile=%s",
+			" outfile=%s",
+			" style file=%s"
+			])%(args, options.infile, options.outfile,options.stylefile)
 			)
 	exec("import bibstuff.bibstyles.%s as style"%os.path.splitext(options.stylefile)[0])
 
 	# open output file for writing (default: stdout)
 	if options.outfile:
 		if os.path.exists(options.outfile) and not options.overwrite:
-			print "File %s exists:  use -n option to nuke (overwrite) this file."%(options.outfile)
-			print "PLEASE CHECK FILE NAME CAREFULLY!"
+			_msg = """ABORTED because output file %s already exists:
+			Use -n option to nuke (overwrite) this file.
+			PLEASE CHECK FILE NAME CAREFULLY!
+			"""%(options.outfile)
+			print(_msg)
 			sys.exit(1)
-		output = open(options.outfile,'w')
+		_outfile = open(options.outfile,'w')
 
 	# read database (.bib) files
 	bibfile_names = args
@@ -217,12 +226,11 @@ def main():
 	# read input file (default: stdin)
 	if options.infile:
 		try:
-			input = open(options.infile,'r')
+			_infile = open(options.infile,'r')
 		except:
 			print "Cannot open: "+options.infile
 			sys.exit(1)
-		
-		
+
 	if options.entire_doc:
 		ebnf_dec = ebnf_sp.cites_rest
 	else:
@@ -240,15 +248,15 @@ def main():
 	bib4txt_logger.info('bib file parsed.')
 
 	result = make_text_output(
-		input.read(),
+		_infile.read(),
 		cite_parser,
 		bibfile_processor,
 		style,
 		citations_only = not options.entire_doc)
 
-	output.write(result)        
-	output.close()
-	input.close()
+	_outfile.write(result)        
+	_outfile.close()
+	_infile.close()
 
 
 
