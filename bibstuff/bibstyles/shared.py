@@ -32,7 +32,8 @@ from .default_templates import DEFAULT_CITATION_TEMPLATE
 CITE_SEP = ','
 
 def append_sep(s,sep):
-	"""return s+sep after removing duplicate punctuation at the join
+	"""Return string, s+sep (string `s` with appended separator).
+	If needed, remove duplicate punctuation at the join.
 
 	:Parameters:
 		- `s`: string
@@ -45,42 +46,58 @@ def append_sep(s,sep):
 	return s+sep
 
 def reformat_para(para='', left=0, right=72, just='LEFT'):
-	"""Simple paragraph reformatter.  Allows specification
-	of left and right margins, and of justification style
-	(using constants defined in module).
-	:note: Adopted by Schwilk from David Mertz's example in TPiP
+	"""Return str, a formated paragraph.
+	left (int) : left margin offset
+	right (int) : right margin start
+	just (str) : justification (LEFT | RIGHT | CENTER)
+	:note: very long words get their own line (unsplit)
+	:note: adapted by Schwilk and Isaac from David Mertz's example in TPiP
 	:see:  Mertz, David,  *Text Processing in Python* (TPiP)
 	"""
-	LEFT, RIGHT, CENTER = 'LEFT', 'RIGHT', 'CENTER'
-	words = para.split()
 	lines = []
-	line  = ''
+	newline  = ""
+	lwidth = right - left
+	for word in para.split():
+		if newline == "":
+			newline = word
+		elif lwidth - len(newline) > len(word):
+			newline += " " + word
+		else:
+			lines.append(newline)
+			newline = word  #this wi
+	if len(newline) > 0:
+		lines.append(newline)
+	"""OLD VERSION:
 	word = 0
 	end_words = 0
+	words = para.split()
 	while not end_words:
 		if len(words[word]) > right-left: # Handle very long words
-			line = words[word]
+			newline = words[word]
 			word +=1
 			if word >= len(words):
 				end_words = 1
 		else:							 # Compose line of words
-			while len(line)+len(words[word]) <= right-left:
-				line += words[word]+' '
+			while len(newline)+len(words[word]) <= right-left:
+				newline += words[word]+' '
 				word += 1
 				if word >= len(words):
 					end_words = 1
 					break
-		lines.append(line)
-		line = ''
-	if just.upper() == CENTER:
-		r, l = right, left
-		return '\n'.join([' '*left+ln.center(r-l) for ln in lines])
-	elif just.upper() == RIGHT:
-		return '\n'.join([line.rjust(right) for ln in lines])
-	elif just.upper() == LEFT:
-		return '\n'.join([' '*left+line for ln in lines])
+		lines.append(newline)
+		newline = ''
+	"""
+	if just.upper() == "CENTER":
+		result = '\n'.join([' '*left+ln.center(lwidth) for ln in lines])
+	elif just.upper() == "RIGHT":
+		result = '\n'.join([ln.rjust(right) for ln in lines])
+	elif just.upper() == "LEFT":
+		result = '\n'.join([' '*left+ln for ln in lines])
 	else:
 		shared_logger.error("Unrecognized justification style: %s", just)
+		#default left justifcation
+		result = '\n'.join([' '*left+ln for ln in lines])
+	return result
 
 
 class NamesFormatter(object):
@@ -481,7 +498,7 @@ class CitationManager(object):
 			citation_template = self.citation_template
 		citation_sep = citation_template['citation_sep']
 		#:note: in 2.4 join will accept generators; why is the list necessary?
-		result = citation_sep.join( [self.format_citation(entry)  for entry in entries] )
+		result = citation_sep.join( [self.format_citation(entry) for entry in entries] )
 		shared_logger.debug("Exiting make_citations.")
 		return result
 
