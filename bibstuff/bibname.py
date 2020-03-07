@@ -105,118 +105,123 @@ bibnamelist_parser = simpleparse.parser.Parser(ebnf_bibname, 'namelist')
 # Parser processor for bibtex names
 # ----------------------------------------------------------
 class BibName( simpleparse.dispatchprocessor.DispatchProcessor ):
-	"""Processes a bibtex names entry (author, editor, etc) and
-	stores the resulting raw_names_parts.
-	
-	:note: a BibName object should be bibstyle independent.
-	"""
-	def __init__(self, raw_names=None, from_field=None) :  #:note: 2006-07-25 add initialization based on raw name
-		"""initialize a BibName instance
-		
-		:Parameters:
-			`raw_names` : str
-				the raw names (e.g., unparsed author field of a BibEntry instance)
-			`from_field` : str
-				the entry field for the raw name
+    """Processes a bibtex names entry (author, editor, etc) and
+    stores the resulting raw_names_parts.
+    
+    :note: a BibName object should be bibstyle independent.
+    """
+    def __init__(self, raw_names=None, from_field=None) :  #:note: 2006-07-25 add initialization based on raw name
+        """initialize a BibName instance
+        
+        :Parameters:
+            `raw_names` : str
+                the raw names (e.g., unparsed author field of a BibEntry instance)
+            `from_field` : str
+                the entry field for the raw name
 
-		:note: 2006-08-02 add `from_field` argument (set by `BibEntry.make_names`)
-		"""
-		self.from_field = from_field
-		self.raw_names = raw_names
-		self.names_dicts = []
-		#populate self.names_dicts from raw_names
-		if raw_names:
-			self.parse_raw_names(raw_names)
+        :note: 2006-08-02 add `from_field` argument (set by `BibEntry.make_names`)
+        """
+        self.from_field = from_field
+        self.raw_names = raw_names
+        self.names_dicts = []
+        #populate self.names_dicts from raw_names
+        if raw_names:
+            self.parse_raw_names(raw_names)
 
-	###############  PRODUCTION FUNCTIONS  #######################
-	# Handle each name by adding new dict to list "names_dicts", then
-	# handle each name part by adding to last dict in names_dict list.
+    ###############  PRODUCTION FUNCTIONS  #######################
+    # Handle each name by adding new dict to list "names_dicts", then
+    # handle each name part by adding to last dict in names_dict list.
 
-	def name(self, (tag,start,stop,subtags), buffer):
-		"""Prduction function to process a single name in a nameslist"""
-		self.names_dicts.append({}) # add new dict to list
-		for part in subtags:
-			dispatch(self, part, buffer)
-		# Create empty lists for missing parts
-		for p in nameparts:
-			if not self.names_dicts[-1].has_key(p):
-				self.names_dicts[-1][p] = []
+    def name(self, tuple4, buffer):
+        """Prduction function to process a single name in a nameslist"""
+        tag, start, stop, subtags = tuple4
+        self.names_dicts.append({}) # add new dict to list
+        for part in subtags:
+            dispatch(self, part, buffer)
+        # Create empty lists for missing parts
+        for p in nameparts:
+            if not self.names_dicts[-1].has_key(p):
+                self.names_dicts[-1][p] = []
 
-	def last(self, (tag,start,stop,subtags), buffer ):
-		"""Processes last name part in a single name of a bibtex names field"""
-		if self.names_dicts[-1].has_key("last"):
-			self.names_dicts[-1]["last"].append(buffer[start:stop])
-		else:
-			self.names_dicts[-1]["last"] = [buffer[start:stop],]
+    def last(self, tuple4, buffer ):
+        """Processes last name part in a single name of a bibtex names field"""
+        tag, start, stop, subtags = tuple4
+        if self.names_dicts[-1].has_key("last"):
+            self.names_dicts[-1]["last"].append(buffer[start:stop])
+        else:
+            self.names_dicts[-1]["last"] = [buffer[start:stop],]
 
-	def first(self, (tag,start,stop,subtags), buffer ):
-		"""Processes first name part in a single name of a bibtex names field"""
-		if self.names_dicts[-1].has_key("first"):
-			self.names_dicts[-1]["first"].append(buffer[start:stop])
-		else:
-			self.names_dicts[-1]["first"] = [buffer[start:stop],]
+    def first(self, tuple4, buffer ):
+        """Processes first name part in a single name of a bibtex names field"""
+        tag, start, stop, subtags = tuple4
+        if self.names_dicts[-1].has_key("first"):
+            self.names_dicts[-1]["first"].append(buffer[start:stop])
+        else:
+            self.names_dicts[-1]["first"] = [buffer[start:stop],]
 
-	def von(self, (tag,start,stop,subtags), buffer ): 
-		"""Processes von name part in a single name of a bibtex names field"""
-		if self.names_dicts[-1].has_key("von"):
-			self.names_dicts[-1]["von"].append(buffer[start:stop])
-		else:
-			self.names_dicts[-1]["von"] = [buffer[start:stop],]
+    def von(self, tuple4, buffer ): 
+        """Processes von name part in a single name of a bibtex names field"""
+        tag, start, stop, subtags = tuple4
+        if self.names_dicts[-1].has_key("von"):
+            self.names_dicts[-1]["von"].append(buffer[start:stop])
+        else:
+            self.names_dicts[-1]["von"] = [buffer[start:stop],]
 
-	def jr(self, (tag,start,stop,subtags), buffer ):
-		"""Processes jr name part in a single name of a bibtex names field"""
-		# Just on jr part so simple add list with one item
-		self.names_dicts[-1]["jr"] = [ buffer[start:stop],]
-		
-	##############  HELPER FUNCTIONS  ######################
+    def jr(self, tuple4, buffer ):
+        """Processes jr name part in a single name of a bibtex names field"""
+        tag, start, stop, subtags = tuple4
+        # Just on jr part so simple add list with one item
+        self.names_dicts[-1]["jr"] = [ buffer[start:stop],]
+        
+    ##############  HELPER FUNCTIONS  ######################
 
-	def parse_raw_names(self, raw_name):
-		"""This function can be used to populate an empty BibName
-		instance or replace all the name values currently contained in
-		an instance. It parses the names field with the bibname grammar"""
-		self.names_dicts = []  # Replace extant list of  names
-		bibnamelist_parser.parse(raw_name,  processor =  self)
+    def parse_raw_names(self, raw_name):
+        """This function can be used to populate an empty BibName
+        instance or replace all the name values currently contained in
+        an instance. It parses the names field with the bibname grammar"""
+        self.names_dicts = []  # Replace extant list of  names
+        bibnamelist_parser.parse(raw_name,  processor =  self)
 
-	def get_names_dicts(self):  #:note: renamed
-		"""
-		Return a list of name dicts,
-		one dict per name,
-		having the fields: first , von, last, jr
-		"""
-		return self.names_dicts
+    def get_names_dicts(self):  #:note: renamed
+        """
+        Return a list of name dicts,
+        one dict per name,
+        having the fields: first , von, last, jr
+        """
+        return self.names_dicts
 
-	
-	#ai: method to get last names, which is needed by bibstyle.py and by
-	#some style sortkeys
-	def get_last_names(self):
-		"""Return list of strings, where each string is a last name.
-		
-		:TODO: graceful handling of missing names parts
-		"""
-		result = list(' '.join(name_dict['last']) for name_dict in self.names_dicts)
-		#bibname_logger.debug("BibName.get_last_names result: "+str(result))
-		return result
+    
+    #ai: method to get last names, which is needed by bibstyle.py and by
+    #some style sortkeys
+    def get_last_names(self):
+        """Return list of strings, where each string is a last name.
+        
+        :TODO: graceful handling of missing names parts
+        """
+        result = list(' '.join(name_dict['last']) for name_dict in self.names_dicts)
+        #bibname_logger.debug("BibName.get_last_names result: "+str(result))
+        return result
 
-	def format(self, names_formatter):
-		"""
-		format a BibName object into a string useful for citations
+    def format(self, names_formatter):
+        """
+        format a BibName object into a string useful for citations
 
-		:note: called by the BibEntry class in bibfile.py when entry formatting
-			is requested
-		"""
-		return names_formatter.format_names(self)
+        :note: called by the BibEntry class in bibfile.py when entry formatting
+            is requested
+        """
+        return names_formatter.format_names(self)
 
 
 def getNames(src) :
-	"""Returns list of name dicts. Each dict has keys "first", "last",
-	"von", "jr". `src` is a string is in bibtex name format.
-	"""
-	try :
-		p = BibName(src)  #:note: 2006-07-25 allow initialization w src
-		return p.get_names_dicts()  #:note: 2006-07-25 renamed
-	except :
-		bibname_logger.error('Error in name %s' % src)
-		raise
+    """Returns list of name dicts. Each dict has keys "first", "last",
+    "von", "jr". `src` is a string is in bibtex name format.
+    """
+    try :
+        p = BibName(src)  #:note: 2006-07-25 allow initialization w src
+        return p.get_names_dicts()  #:note: 2006-07-25 renamed
+    except :
+        bibname_logger.error('Error in name %s' % src)
+        raise
 
 
 # command-line version
@@ -224,56 +229,56 @@ def getNames(src) :
 ## TODO: move this to script
 
 if __name__ =="__main__":
-	import sys
-	from optparse import OptionParser
-	from bibstyles.default import DEFAULT_CITATION_TEMPLATE
+    import sys
+    from optparse import OptionParser
+    from bibstyles.default import DEFAULT_CITATION_TEMPLATE
 
-	defaultformat = DEFAULT_CITATION_TEMPLATE['name_first']
-	usage = "usage: %prog [options] filenames"
+    defaultformat = DEFAULT_CITATION_TEMPLATE['name_first']
+    usage = "usage: %prog [options] filenames"
 
-	parser = OptionParser(usage=usage, version ="%prog " + __version__)
-	parser.add_option("-t", "--template", action="store", type="string", \
-					  dest="template", default = defaultformat, help="Name format template")
-	parser.add_option("-i", "--initials", action="store_true", dest="initials", \
-					  default = True, help="Initialize first names")
-	parser.add_option("-I", "--no-initials", action="store_false", dest="initials", \
-					  default = True, help="do not initialize first names")
-	parser.add_option("-l", "--last-names", action="store_true", dest="last_names", \
-					  default = False, help="Print last names only.")
-	parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False,
-					  help="Print INFO messages to stdout, default=%default")
+    parser = OptionParser(usage=usage, version ="%prog " + __version__)
+    parser.add_option("-t", "--template", action="store", type="string", \
+                      dest="template", default = defaultformat, help="Name format template")
+    parser.add_option("-i", "--initials", action="store_true", dest="initials", \
+                      default = True, help="Initialize first names")
+    parser.add_option("-I", "--no-initials", action="store_false", dest="initials", \
+                      default = True, help="do not initialize first names")
+    parser.add_option("-l", "--last-names", action="store_true", dest="last_names", \
+                      default = False, help="Print last names only.")
+    parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False,
+                      help="Print INFO messages to stdout, default=%default")
 
-	# get options
-	(options, args) = parser.parse_args()
-	if options.verbose:
-		bibname_logger.setLevel(logging.INFO)
-	if options.last_names:
-		options.template = 'l'
-	if options.initials :
-		initials = 'f'  # only first names.  Does any style ever use initials for anything else?
-	else :
-		initials = ''
+    # get options
+    (options, args) = parser.parse_args()
+    if options.verbose:
+        bibname_logger.setLevel(logging.INFO)
+    if options.last_names:
+        options.template = 'l'
+    if options.initials :
+        initials = 'f'  # only first names.  Does any style ever use initials for anything else?
+    else :
+        initials = ''
 
-	if len(args) == 0 :
-		src = sys.stdin.read()
-	else :
-		flist = list()
-		for fname in args:
-			try:
-				flist.append(open(fname,'r'))
-			except IOError :
-				bibname_logger.warn('Error in filelist: %s.'%fname)
-		src = '\n'.join(f.read() for f in flist)
-		map(lambda f: f.close(), flist)
+    if len(args) == 0 :
+        src = sys.stdin.read()
+    else :
+        flist = list()
+        for fname in args:
+            try:
+                flist.append(open(fname,'r'))
+            except IOError :
+                bibname_logger.warn('Error in filelist: %s.'%fname)
+        src = '\n'.join(f.read() for f in flist)
+        map(lambda f: f.close(), flist)
 
-	if not src:
-		bibname_logger.error("No bibtex source database found")
-		sys.exit(1)
-	else:
-		bfile = bibfile.BibFile()
-		bibgrammar.Parse(src, bfile)
+    if not src:
+        bibname_logger.error("No bibtex source database found")
+        sys.exit(1)
+    else:
+        bfile = bibfile.BibFile()
+        bibgrammar.Parse(src, bfile)
 
-	names_formatter = bibstyles.shared.NamesFormatter(template_list=[options.template]*2,initials=initials)
-	for entry in bfile.entries:
-		print entry.format_names(names_formatter)
+    names_formatter = bibstyles.shared.NamesFormatter(template_list=[options.template]*2,initials=initials)
+    for entry in bfile.entries:
+        print entry.format_names(names_formatter)
 
