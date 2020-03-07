@@ -54,8 +54,8 @@ How it works:
 """
 from __future__ import with_statement
 __docformat__ = "restructuredtext en"
-__version__ = "1.1.2"
-__needs__ = '2.5+'
+__version__ = "1.1.3"
+__needs__ = '2.7+'
 
 
 ###################  IMPORTS  ##################################################
@@ -202,7 +202,12 @@ def main():
             " style file=%s"
             ])%(args, options.infile, options.outfile,options.stylefile)
             )
-    exec("import bibstuff.bibstyles.%s as style"%os.path.splitext(options.stylefile)[0])
+    #import bibstuff.bibstyles.default as style
+    str2exec = "import bibstuff.bibstyles.%s as style"%os.path.splitext(options.stylefile)[0]
+    workaround = {}  #work around Python 2 exec vs Python 3 exec
+    exec(str2exec, {}, workaround)
+    style = workaround['style']
+    #exec("import bibstuff.bibstyles.%s as style"%os.path.splitext(options.stylefile)[0])
 
     # open output file for writing (default: stdout)
     if options.outfile:
@@ -226,7 +231,7 @@ def main():
     # read input file (default: stdin)
     if options.infile:
         try:
-            _infile = open(options.infile,'r')
+            _infile = open(options.infile,'r', encoding='utf-8')
         except:
             print("Cannot open: "+options.infile)
             sys.exit(1)
