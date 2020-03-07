@@ -140,13 +140,13 @@ class BibName( simpleparse.dispatchprocessor.DispatchProcessor ):
             dispatch(self, part, buffer)
         # Create empty lists for missing parts
         for p in nameparts:
-            if not self.names_dicts[-1].has_key(p):
+            if p not in self.names_dicts[-1]:
                 self.names_dicts[-1][p] = []
 
     def last(self, tuple4, buffer ):
         """Processes last name part in a single name of a bibtex names field"""
         tag, start, stop, subtags = tuple4
-        if self.names_dicts[-1].has_key("last"):
+        if 'last' in self.names_dicts[-1]:
             self.names_dicts[-1]["last"].append(buffer[start:stop])
         else:
             self.names_dicts[-1]["last"] = [buffer[start:stop],]
@@ -154,7 +154,7 @@ class BibName( simpleparse.dispatchprocessor.DispatchProcessor ):
     def first(self, tuple4, buffer ):
         """Processes first name part in a single name of a bibtex names field"""
         tag, start, stop, subtags = tuple4
-        if self.names_dicts[-1].has_key("first"):
+        if 'first' in self.names_dicts[-1]:
             self.names_dicts[-1]["first"].append(buffer[start:stop])
         else:
             self.names_dicts[-1]["first"] = [buffer[start:stop],]
@@ -162,7 +162,7 @@ class BibName( simpleparse.dispatchprocessor.DispatchProcessor ):
     def von(self, tuple4, buffer ): 
         """Processes von name part in a single name of a bibtex names field"""
         tag, start, stop, subtags = tuple4
-        if self.names_dicts[-1].has_key("von"):
+        if 'von' in self.names_dicts[-1]:
             self.names_dicts[-1]["von"].append(buffer[start:stop])
         else:
             self.names_dicts[-1]["von"] = [buffer[start:stop],]
@@ -280,5 +280,5 @@ if __name__ =="__main__":
 
     names_formatter = bibstyles.shared.NamesFormatter(template_list=[options.template]*2,initials=initials)
     for entry in bfile.entries:
-        print entry.format_names(names_formatter)
+        print(entry.format_names(names_formatter))
 
