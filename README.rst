@@ -11,16 +11,22 @@ This project contains the bibstuff python package which provides modules and cla
 
 The project also includes command-line scripts for searching and labeling BibTeX entries and a utility for replacing in-text citations in a reStructured text document.
 
+Recommended: Python 2.7+ or Python 3.6+.  (Python 2 support will eventually disappear.)
+
 Installation
 ============
 
-  1. clone repository::
+1. Install ``simpleparse`` version 2.2.2 or above::
 
-       git clone https://github.com/dschwilk/bibstuff
+     python -m pip install simpleparse
 
-  2. In the cloned directory run::
+2. clone the bibstuff repository::
 
-       python setup.py install
+     git clone https://github.com/dschwilk/bibstuff
+
+3. In the cloned directory run::
+
+     python setup.py install
 
 bibstuff module
 ===============
