@@ -3,7 +3,7 @@
 """
 Creates formatted references for a text document.
 Uuseful for reStructuredText documents.
-Interacts with a Bibtex style database file
+Interacts with a Bibtex-style database file
 (without using LaTeX or bibtex).
 
 Dependencies:
@@ -60,7 +60,7 @@ __needs__ = '2.7+'
 
 ###################  IMPORTS  ##################################################
 #import from standard library
-import os, sys
+import importlib, os, sys
 import logging
 logging.basicConfig(format='\n%(levelname)s:\n%(message)s\n')
 bib4txt_logger = logging.getLogger('bibstuff_logger')
@@ -71,7 +71,7 @@ import simpleparse
 #local imports
 try:
     from bibstuff import bibfile, bibgrammar, bibstyles, ebnf_sp
-except ImportError: #allow user to run without installing
+except ImportError: #hack to allow user to run without installing
     scriptdir = os.path.dirname(os.path.realpath(__file__))
     bibdir = os.path.dirname(scriptdir)
     sys.path.insert(0, bibdir)
@@ -98,7 +98,7 @@ except ImportError: #allow user to run without installing
 def make_text_output(src_as_string,
                      src_parser,
                      parsed_bibfile,
-                     style,
+                     style,   # imported style module
                      citations_only=True):
     """Create intext citations and the bibliography"""
     #first: create a citation manager to handle the bibfile(s)
@@ -173,8 +173,10 @@ def main():
                       help="Write formatted references to FILE", metavar="FILE")
     parser.add_option("-n", "--nuke", action="store_true", dest="overwrite", default=False,
                       help="silently overwrite outfile, default=%default")
-    parser.add_option("-s", "--stylefile", action="store", dest="stylefile", default="default.py",
+    parser.add_option("-f", "--stylefile", action="store", dest="stylefile", default="default.py",
                       help="Specify user-chosen style file",metavar="FILE")
+    parser.add_option("-s", "--style", action="store", dest="style", default="default",
+                      help="Specify user-chosen style (by style name).")
     parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False,
                       help="Print INFO messages to stdout, default=%default")
     parser.add_option("-V", "--very-verbose", action="store_true", dest="very_verbose", default=False,
@@ -193,21 +195,33 @@ def main():
         bib4txt_logger.setLevel(logging.DEBUG)
     elif options.verbose:
         bib4txt_logger.setLevel(logging.INFO)
+
+    if options.stylefile != "default.py":
+        bib4txt_logger.info("It is currently recommended to pass styles with the -s option.")
+        stylename = os.path.splitext(options.stylefile)[0]
+    else:
+        stylename = options.style
+        if "." in stylename:
+            bib4txt_logger.warn("use the -f option to pass a style by filename")
+            stylename = os.path.splitext(stylename)[0]
     bib4txt_logger.info(
             "\n".join([
             "Script running:",
             " args=%s",
             " infile=%s",
             " outfile=%s",
-            " style file=%s"
-            ])%(args, options.infile, options.outfile,options.stylefile)
+            " style=%s"
+            ])%(args, options.infile, options.outfile, stylename)
             )
-    #import bibstuff.bibstyles.default as style
-    str2exec = "import bibstuff.bibstyles.%s as style"%os.path.splitext(options.stylefile)[0]
+    #import a bibliography style based on `stylefile` command-line option
+    style = importlib.import_module('bibstuff.bibstyles.%s'%stylename)
+    """
+    str2exec = "import bibstuff.bibstyles.%s as style"%stylename
     workaround = {}  #work around Python 2 exec vs Python 3 exec
     exec(str2exec, {}, workaround)
     style = workaround['style']
     #exec("import bibstuff.bibstyles.%s as style"%os.path.splitext(options.stylefile)[0])
+    """
 
     # open output file for writing (default: stdout)
     if options.outfile:
@@ -231,10 +245,11 @@ def main():
     # read input file (default: stdin)
     if options.infile:
         try:
-            _infile = open(options.infile,'r', encoding='utf-8')
+            _infile = open(options.infile, mode='r', encoding='utf-8')
+        except TypeError:  #Python 2 did not accept encoding arg
+            _infile = open(options.infile, mode='r')
         except:
-            print("Cannot open: "+options.infile)
-            sys.exit(1)
+            raise ValueError("Cannot open: "+options.infile)
 
     if options.entire_doc:
         ebnf_dec = ebnf_sp.cites_rest
