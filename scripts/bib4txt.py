@@ -45,16 +45,15 @@ How it works:
 :note: now allows multiple database (.bib) files
 :note: bib4txt supercedes addrefs.py, by Dylan Schwilk
 :note: Python 2.4 dependencies: sets, sorted
-:note: Python 2.5 dependencies: with
+:note: Python 2.6 dependencies: with
 :TODO: address the TODOs in the associate BibStuff files, especially in bibstyles/shared.py
 
 .. _EBNF: http://www.garshol.priv.no/download/text/bnf.html
 .. _SimpleParse: http://simpleparse.sourceforge.net/
 .. _`license.txt`: ../license.txt
 """
-from __future__ import with_statement
 __docformat__ = "restructuredtext en"
-__version__ = "1.1.3"
+__version__ = "1.1.4"
 __needs__ = '2.7+'
 
 
@@ -158,104 +157,110 @@ def main():
     _infile = sys.stdin
     _outfile = sys.stdout
     
-    from optparse import OptionParser
+    from argparse import ArgumentParser
     
     _usage = """
-    usage: %prog [options] BIB_DATABASE
-    standard usage: %prog -i reST_FILE  -n -o refs_FILE BIB_DATABASE
+    usage: %(prog)s [options] BIB_DATABASE
+    standard usage: %(prog)s -i reST_FILE  -n -o refs_FILE BIB_DATABASE
     """
 
-    parser = OptionParser(usage=_usage, version ="%prog " + __version__)
+    parser = ArgumentParser(usage=_usage)
 
-    parser.add_option("-i", "--infile", action="store", type="string", dest="infile",
+    parser.add_argument('--version', action='version', version=__version__)
+
+    parser.add_argument("-i", "--infile", action="store", dest="infile",
                       help="Parse FILE for citation references.", metavar="FILE")
-    parser.add_option("-o", "--outfile", action="store", type="string", dest="outfile",
+    parser.add_argument("-o", "--outfile", action="store", dest="outfile",
                       help="Write formatted references to FILE", metavar="FILE")
-    parser.add_option("-n", "--nuke", action="store_true", dest="overwrite", default=False,
+    parser.add_argument("-n", "--nuke", action="store_true", dest="overwrite", default=False,
                       help="silently overwrite outfile, default=%default")
-    parser.add_option("-f", "--stylefile", action="store", dest="stylefile", default="default.py",
+    parser.add_argument("-F", "--stylefile", action="store",
+                      dest="stylefile", default="default.py",
                       help="Specify user-chosen style file",metavar="FILE")
-    parser.add_option("-s", "--style", action="store", dest="style", default="default",
+    parser.add_argument("-s", "--style", action="store", 
+                      dest="style", default="default",
                       help="Specify user-chosen style (by style name).")
-    parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False,
-                      help="Print INFO messages to stdout, default=%default")
-    parser.add_option("-V", "--very-verbose", action="store_true", dest="very_verbose", default=False,
-                      help="Print DEBUG messages to stdout, default=%default")
-    parser.add_option("-a", "--all", action="store_true", dest="entire_doc",
-                      default=False, help="Output entire document, making citation reference substitutions, default=%default")
-    parser.add_option("-x", "--xp", action="store_true", dest="xp_parse",
+    #parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Print INFO messages to stdout, default=%default")
+    parser.add_argument("-V", "--verbosity", action="store", type=int, dest="verbosity", default=0,
+                      help="2: print DEBUG messages; 1: print INFO messages; default=%default")
+    parser.add_argument("-a", "--all", action="store_true", dest="entire_doc", default=False,
+                      help="Output entire document, making citation reference substitutions, default=%default")
+    parser.add_argument("-x", "--xp", action="store_true", dest="xp_parse",
                       default=False, help="Use experimental document parser, default=%default")
-    parser.add_option("-L", "--logger-level", action="store", type="int", dest="logger_level",
+    parser.add_argument("-L", "--logger-level", action="store", type=int, dest="logger_level",
                       help="Set logging level to integer value.")
+    parser.add_argument("bibfiles", action="store", nargs='*',
+                      help="The .bib files for the references.")
 
-    (options, args) = parser.parse_args()
-    if options.logger_level:
-        bib4txt_logger.setLevel(options.logger_level)
-    elif options.very_verbose:
+    args = parser.parse_args()
+    if args.logger_level:
+        bib4txt_logger.setLevel(args.logger_level)
+    elif 2==args.verbosity:
         bib4txt_logger.setLevel(logging.DEBUG)
-    elif options.verbose:
+    elif 1==args.verbosity:
         bib4txt_logger.setLevel(logging.INFO)
 
-    if options.stylefile != "default.py":
+    if args.stylefile != "default.py":
         bib4txt_logger.info("It is currently recommended to pass styles with the -s option.")
-        stylename = os.path.splitext(options.stylefile)[0]
+        stylename = os.path.splitext(args.stylefile)[0]
     else:
-        stylename = options.style
+        stylename = args.style
         if "." in stylename:
             bib4txt_logger.warn("use the -f option to pass a style by filename")
             stylename = os.path.splitext(stylename)[0]
+
     bib4txt_logger.info(
             "\n".join([
             "Script running:",
-            " args=%s",
+            " bibfiles=%s",
             " infile=%s",
             " outfile=%s",
             " style=%s"
-            ])%(args, options.infile, options.outfile, stylename)
+            ])%(args.bibfiles, args.infile, args.outfile, stylename)
             )
     #import a bibliography style based on `stylefile` command-line option
+    #TODO: add error handling for unknown styles
     style = importlib.import_module('bibstuff.bibstyles.%s'%stylename)
     """
     str2exec = "import bibstuff.bibstyles.%s as style"%stylename
     workaround = {}  #work around Python 2 exec vs Python 3 exec
     exec(str2exec, {}, workaround)
     style = workaround['style']
-    #exec("import bibstuff.bibstyles.%s as style"%os.path.splitext(options.stylefile)[0])
+    #exec("import bibstuff.bibstyles.%s as style"%os.path.splitext(args.stylefile)[0])
     """
 
     # open output file for writing (default: stdout)
-    if options.outfile:
-        if os.path.exists(options.outfile) and not options.overwrite:
+    if args.outfile:
+        if os.path.exists(args.outfile) and not args.overwrite:
             _msg = """ABORTED because output file %s already exists:
             Use -n option to nuke (overwrite) this file.
             PLEASE CHECK FILE NAME CAREFULLY!
-            """%(options.outfile)
+            """%(args.outfile)
             print(_msg)
             sys.exit(1)
-        _outfile = open(options.outfile,'w')
+        _outfile = open(args.outfile,'w')
 
     # read database (.bib) files
-    bibfile_names = args
+    bibfile_names = args.bibfiles
     bibfile_as_string = bibfiles2string(bibfile_names)
     if not bibfile_as_string:
         bib4txt_logger.warning("No BibTeX databases found.")
         sys.exit(1)
 
-
     # read input file (default: stdin)
-    if options.infile:
+    if args.infile:
         try:
-            _infile = open(options.infile, mode='r', encoding='utf-8')
+            _infile = open(args.infile, mode='r', encoding='utf-8')
         except TypeError:  #Python 2 did not accept encoding arg
-            _infile = open(options.infile, mode='r')
+            _infile = open(args.infile, mode='r')
         except:
-            raise ValueError("Cannot open: "+options.infile)
+            raise ValueError("Cannot open: "+args.infile)
 
-    if options.entire_doc:
+    if args.entire_doc:
         ebnf_dec = ebnf_sp.cites_rest
     else:
         ebnf_dec = ebnf_sp.cites_only_rest
-    if options.xp_parse:
+    if args.xp_parse:
         ebnf_dec = ebnf_sp.cites_xp
     # Create a simpleparse.parser Parser based on the chosen grammar
     cite_parser = simpleparse.parser.Parser(ebnf_dec, root='src')
@@ -272,7 +277,7 @@ def main():
         cite_parser,
         bibfile_processor,
         style,
-        citations_only = not options.entire_doc)
+        citations_only = not args.entire_doc)
 
     _outfile.write(result)        
     _outfile.close()

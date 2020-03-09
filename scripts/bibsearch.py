@@ -34,13 +34,13 @@ Example::
 """
 __docformat__ = "restructuredtext en"
 __authors__  =    ["Dylan W. Schwilk", "Alan G. Isaac"]
-__version__ = "1.8.2"
-__needs__ = '2.7'
+__version__ = "1.8.3"
+__needs__ = '2.7+'
 
 
 ###################  IMPORTS  ##################################################
 #imports from standard library
-import string, sys, os
+import importlib, string, sys, os
 import logging
 logging.basicConfig(format='\n%(levelname)s:\n%(message)s\n')
 bibsearch_logger = logging.getLogger('bibstuff_logger')
@@ -60,48 +60,60 @@ def main():
     """Command-line tool.
     See bibsearch.py -h for help.
     """
-
-    from optparse import OptionParser
+    #set default input and output
+    _infile = sys.stdin
+    _outfile = sys.stdout
     
-    usage = "usage: %prog [options] FILE [search strings]"
-    parser = OptionParser(usage=usage, version ="%prog " + __version__)
+    from argparse import ArgumentParser
+    _usage = "usage: %(prog)s [options] BIBTEX_FILE [search strings]"
+    #from optparse import OptionParser
+    #parser = OptionParser(usage=usage, version ="%prog " + __version__)
+    
+    parser = ArgumentParser(usage=_usage)
+    parser.add_argument('--version', action='version', version=__version__)
 
-    parser.add_option("-k", "--key", action="store_true", dest="citekey_output", 
+    parser.add_argument("-k", "--key", action="store_true", dest="citekey_output", 
                       default=False, help="Output citekey rather than reference")
-    parser.add_option("-l", "--long", action="store_true", dest="long_output", 
+    parser.add_argument("-l", "--long", action="store_true", dest="long_output", 
                       default=False, help="Output entire bibtex entry")
-    parser.add_option("-r", "--regex", action="store_true", dest="search_input", 
+    parser.add_argument("-r", "--regex", action="store_true", dest="search_input", 
                       default=False, help="Search for regular expression rather than key")
-    parser.add_option("-s", "--stylefile", action="store", dest="stylefile", default="default.py",
+    parser.add_argument("-F", "--stylefile", action="store", dest="stylefile", default="default.py",
                       help="Specify user-chosen style file",metavar="FILE")
-    parser.add_option("-f", "--field", action="store", type="string", dest="field",
+    parser.add_argument("-s", "--style", action="store", dest="style", default="default",
+                      help="Specify user-chosen style")
+    parser.add_argument("-f", "--field", action="store", dest="field",
                       default=None,
                       help="Search only FIELD; default=%default.",
                       metavar="FIELD")
-    parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False,
-                      help="Print INFO messages to stdout, default=%default")
-    parser.add_option("-V", "--very_verbose", action="store_true", dest="very_verbose", default=False,
+    #parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Print INFO messages to stdout, default=%default")
+    parser.add_argument("-V", "--verbosity", action="store", dest="verbosity",
+                      type=int, default=0,
                       help="Print DEBUG messages to stdout, default=%default")
+    parser.add_argument("bibtexFile", action="store",
+                      help="The bibtex file to search for the references.")
+    parser.add_argument("searchstrings", action="store", nargs='*',
+                      help="The strings to search for in the references.")
     
-    (options, args) = parser.parse_args()
-    if options.verbose:
+    args = parser.parse_args()
+    if 1 == args.verbosity:
         bibsearch_logger.setLevel(logging.INFO)
-    if options.very_verbose:
+    if 2 == args.verbosity:
         bibsearch_logger.setLevel(logging.DEBUG)
     bibsearch_logger.debug("Script running.\nargs=%s\nstyle file=%s"
-                 %(args, options.stylefile)
+                 %(args, args.stylefile)
                 )
 
     try:
-        src = open(args[0]).read()
+        src = open(args.bibtexFile).read()
     except :
         print("Error: No bibtex file found.")
         sys.exit(1)
     # If no search string was sepcified was specified, read search strings from stdin
-    if len(args) < 2 :
+    if 0 == len(args.searchstrings):
         searches = string.split(sys.stdin.read())
     else :
-        searches = args[1:]
+        searches = args.searchstrings
 
     # create object to store parsed .bib file
     parsed_bibfile = bibfile.BibFile()
@@ -110,10 +122,10 @@ def main():
 
     # list of entries
     entrylist = []
-    if options.field:
+    if args.field:
         for s in searches:
-            entrylist.extend( parsed_bibfile.search_entries(s, field=options.field) )
-    elif options.search_input:
+            entrylist.extend( parsed_bibfile.search_entries(s, field=args.field) )
+    elif args.search_input:
         for s in searches:
             entrylist.extend(parsed_bibfile.search_entries(s))
     else:
@@ -121,13 +133,21 @@ def main():
 
     if entrylist:  #found some matches -> output the list in desired format
         result = ""
-        if options.citekey_output:
+        if args.citekey_output:
             result = "\n".join(e.citekey for e in entrylist )
-        elif options.long_output :
+        elif args.long_output :
             result = "\n".join(str(e) for e in entrylist)
         else :
-            #import a formatting style based on `stylefile` command-line option
-            str2exec = "import bibstuff.bibstyles.%s as style"%os.path.splitext(options.stylefile)[0]
+            #import a formatting style based on `style` command-line option
+            style = importlib.import_module('bibstuff.bibstyles.%s'%args.style)
+            """
+            str2exec = "import bibstuff.bibstyles.%s as style"%stylename
+            workaround = {}  #work around Python 2 exec vs Python 3 exec
+            exec(str2exec, {}, workaround)
+            style = workaround['style']
+            #exec("import bibstuff.bibstyles.%s as style"%os.path.splitext(args.stylefile)[0])
+            """
+            str2exec = "import bibstuff.bibstyles.%s as style"%os.path.splitext(args.stylefile)[0]
             workaround = {}  #work around Python 2 exec vs Python 3 exec
             exec(str2exec, {}, workaround)
             style = workaround['style']
