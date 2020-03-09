@@ -111,7 +111,7 @@ def main():
         sys.exit(1)
     # If no search string was sepcified was specified, read search strings from stdin
     if 0 == len(args.searchstrings):
-        searches = string.split(sys.stdin.read())
+        searches = str.split(sys.stdin.read())
     else :
         searches = args.searchstrings
 
