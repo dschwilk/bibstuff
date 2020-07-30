@@ -173,20 +173,20 @@ def main():
     parser.add_argument("-o", "--outfile", action="store", dest="outfile",
                       help="Write formatted references to FILE", metavar="FILE")
     parser.add_argument("-n", "--nuke", action="store_true", dest="overwrite", default=False,
-                      help="silently overwrite outfile, default=%default")
+                      help="silently overwrite outfile, default=%(default)s")
     parser.add_argument("-F", "--stylefile", action="store",
                       dest="stylefile", default="default.py",
                       help="Specify user-chosen style file",metavar="FILE")
     parser.add_argument("-s", "--style", action="store", 
                       dest="style", default="default",
                       help="Specify user-chosen style (by style name).")
-    #parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Print INFO messages to stdout, default=%default")
+    #parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Print INFO messages to stdout, default=%(default)s")
     parser.add_argument("-V", "--verbosity", action="store", type=int, dest="verbosity", default=0,
-                      help="2: print DEBUG messages; 1: print INFO messages; default=%default")
+                      help="2: print DEBUG messages; 1: print INFO messages; default=%(default)s")
     parser.add_argument("-a", "--all", action="store_true", dest="entire_doc", default=False,
-                      help="Output entire document, making citation reference substitutions, default=%default")
+                      help="Output entire document, making citation reference substitutions, default=%(default)s")
     parser.add_argument("-x", "--xp", action="store_true", dest="xp_parse",
-                      default=False, help="Use experimental document parser, default=%default")
+                      default=False, help="Use experimental document parser, default=%(default)s")
     parser.add_argument("-L", "--logger-level", action="store", type=int, dest="logger_level",
                       help="Set logging level to integer value.")
     parser.add_argument("bibfiles", action="store", nargs='*',
