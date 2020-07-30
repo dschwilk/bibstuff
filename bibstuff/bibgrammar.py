@@ -3,11 +3,12 @@
 
 """
 :mod:`bibstuff.bibgrammar`: BibTeX Parser
---------------------------------------------
+------------------------------------------------------------------------------
 
 Provides an EBNF description of the bibtex bibliography format. The grammar
-draws largely from the grammar description in Nelson Beebe's `Lex/Yacc parser <http://www.math.utah.edu/~beebe/>`_
-and also from Greg Ward's `btOOL <http://www.gerg.ca/software/btOOL/>`_ documentation.
+draws largely from the grammar description in
+Nelson Beebe's `Lex/Yacc parser <http://www.math.utah.edu/~beebe/>`_ and also
+from Greg Ward's `btOOL <http://www.gerg.ca/software/btOOL/>`_ documentation.
 
 :copyright: Dylan Schwilk and Alan G. Isaac, see AUTHORS
 :license: MIT (see LICENSE)
@@ -20,23 +21,15 @@ __author__  =    ["Dylan W. Schwilk", "Alan G. Isaac"]
 
 
 ###################  IMPORTS  ##################################################
-#import from standard library
-# (more imports if  run as main; see below)
+#import from standard library:
+# None for module, but more imports if  run as main (see below).
 
 #import dependencies
 from simpleparse.parser import Parser
 from simpleparse.common import numbers, strings, chartypes
 
-#local imports
 ################################################################################
 
-
-# EBNF description of a bibtex file
-
-# 2008-06-27: There may be a bug in simpleparse that sometimes causes certain entries to
-# not be recognized. The problem, however, can disapear if the order of entries
-# in a bibfile is changed! I do not believe it is a problem with the grammar
-# but is a bug in simpleparse itself.
 
 #modification 2009-01-01
 #  change `key` to `citekey`
@@ -48,6 +41,15 @@ from simpleparse.common import numbers, strings, chartypes
 #  change braces_string and esp. quotes_string def bec old def *very* slow
 #  also, gives better match to format described at
 #  http://artis.imag.fr/~Xavier.Decoret/resources/xdkbibtex/bibtex_summary.html
+
+# 2008-06-27: There may be a bug in simpleparse
+# that sometimes causes certain entries to not be recognized.
+# The problem, however, can disapear if the order of entries
+# in a bibfile is changed!
+# I currently do not believe it is a problem with the grammar
+# but is a bug in simpleparse itself. (?)
+
+# EBNF description of a bibtex file:
 
 dec = r"""
 bibfile              := entry_or_junk+
@@ -86,14 +88,14 @@ entry_parser = Parser(dec, 'entry')
 
 ## offer a default parse function
 def Parse(src, processor=None) :
-	'''Parse the bibtex string *src*, process with *processor*.'''
-	return parser.parse(src,  processor=processor)
+    '''Parse the bibtex string *src*, process with *processor*.'''
+    return parser.parse(src,  processor=processor)
 
 ## self-test
 if __name__ =="__main__":
-	import sys, pprint
-	if len(sys.argv) > 1 :
-		src = open(sys.argv[1]).read()
-		taglist = Parse(src)
-		pprint.pprint(taglist)
+    import sys, pprint
+    if len(sys.argv) > 1 :
+        src = open(sys.argv[1]).read()
+        taglist = Parse(src)
+        pprint.pprint(taglist)
 

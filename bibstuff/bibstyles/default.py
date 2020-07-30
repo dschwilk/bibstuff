@@ -56,7 +56,7 @@ CITEREF_TEMPLATE = default_templates.DEFAULT_CITEREF_TEMPLATE.copy()
 ##########################################################################
 """
 Every style must have a CITATION_TEMPLATE, a CitationManager, and a ref_list_sort_key.
-Crucial formatting decisions are made int the CITATION_TEMPLATE.
+Crucial formatting decisions are made in the CITATION_TEMPLATE.
 The CITATION_TEMPLATE provides default reference formatting (may also be used by BibStyle) 
 
 :TODO:

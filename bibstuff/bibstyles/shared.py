@@ -234,7 +234,7 @@ class NameFormatter(object):
         self.set_template(template)
 
     #get one name, formatted
-    def format_name(self,name_data):
+    def format_name(self, name_data):
         """Return one name (stored in `name_data`) as a formatted string.
 
         Formats `name_data` according to the `NameFormatter` template.
@@ -249,7 +249,7 @@ class NameFormatter(object):
         elif isinstance(name_data, dict):
             shared_logger.debug("Assume dict is a name_dict.")
             result = self.name_dict2formatted(name_data)
-        elif isinstance(name_data, basestring):
+        elif isinstance(name_data, str):
             result = name_data
         else:
             raise ValueError("Unrecognized name_data type.")
@@ -313,16 +313,17 @@ class NameFormatter(object):
 
     def get_template(self):
         return self._template
-    def set_template(self,template):
+
+    def set_template(self, template):
         """Return None.
 
         sets the name formatting template *and* sets the associated partdict used for actual formatting 
         """
         shared_logger.debug("NameFormatter.set_template args: "+str(template))
-        assert isinstance(template, basestring), "Provide a name-template string to make a NameFormatter object."
+        assert isinstance(template, str), "Provide a name-template string to make a NameFormatter object."
         self._template = template
         self.partdict = self.template2dict(template)
-    template = property(get_template,set_template,None,"template property")
+    template = property(get_template, set_template, None, "template property")
 
     def template2dict(self,template):
         """
