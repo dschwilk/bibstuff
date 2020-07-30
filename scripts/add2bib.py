@@ -17,129 +17,133 @@ from bibstuff.bibadd import (bibadd_logger, make_entry, html_format, text_format
 __docformat__ = "restructuredtext en"
 __authors__  =    ['Alan G. Isaac']
 __version__ =    '0.3.1'
-__needs__ = '2.4'
+__needs__ = '2.7'
 
 
 def main():
-	"""Command-line tool.
-	See bibsearch.py -h for help.
-	"""
+    """Command-line tool.
+    See bibsearch.py -h for help.
+    """
 
-	output = sys.stdout
-	
-	from optparse import OptionParser
-	
-	usage = """
-	%prog [options]
-	example: %prog -mt article -bo BIB_DATABASE
-	"""
+    output = sys.stdout
+    
+    from argparse import ArgumentParser
+    
+    usage = """
+    %(prog)s [options]
+    example: %(prog)s -mt article -bo BIB_DATABASE
+    """
 
 
-	parser = OptionParser(usage=usage, version ="%prog " + __version__)
-	parser.add_option("-f", "--format", action="store",
-	                  dest="format", default='b',
-					  help="set format(s) of output\nb: BibTeX\nh: HTML\nt: text", metavar="FORMAT")
-	parser.add_option("-m", "--more_fields", action="store_true",
-					  dest="more_fields", default = False, help="input less common fields")
-	parser.add_option("-M", "--MORE_FIELDS", action="store_true",
-					  dest="MORE_FIELDS", default = False, help="input all relevant fields")
-	parser.add_option("-v", "--verbose", action="store_true",
-	                  dest="verbose", default=False,
-					  help="Print INFO messages to stdout, default=%default")
-	parser.add_option("-V", "--very_verbose", action="store_true",
-	                  dest="very_verbose", default=False,
-					  help="Print DEBUG messages to stdout, default=%default")
-	parser.add_option("-t", "--type", action="store",
-	                  dest="entry_type", default='',
-					  help="set type of entry", metavar="ENTRYTYPE")
-	parser.add_option("-o", "--outfile", action="store", type="string", dest="outfile",
-					  help="Write formatted references to FILE", metavar="FILE")
-	parser.add_option("-n", "--nuke", action="store_true", dest="overwrite", default=False,
-					  help="CAUTION! silently overwrite outfile, default=%default")
-	parser.add_option("-b", "--backup", action="store_true", dest="backup", default=False,
-					  help="backup FILE to FILE.bak, default=%default")
+    parser = ArgumentParser(usage=usage)
+    parser.add_argument("-f", "--format", action="store",
+                      dest="format", default='b',
+                      help="set format(s) of output\nb: BibTeX\nh: HTML\nt: text", metavar="FORMAT")
+    parser.add_argument("-m", "--more_fields", action="store_true",
+                      dest="more_fields", default = False, help="input less common fields")
+    parser.add_argument("-M", "--MORE_FIELDS", action="store_true",
+                      dest="MORE_FIELDS", default = False, help="input all relevant fields")
+    #parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Print INFO messages to stdout, default=%(default)s")
+    #parser.add_argument("-V", "--very_verbose", action="store_true", dest="very_verbose", default=False, help="Print DEBUG messages to stdout, default=%(default)s")
+    parser.add_argument("-V", "--verbosity", action="store", type=int, dest="verbosity", default=0,
+                      help="2: print DEBUG messages; 1: print INFO messages; default=%(default)s")
+    parser.add_argument("-t", "--type", action="store",
+                      dest="entry_type", default='',
+                      help="set type of entry", metavar="ENTRYTYPE")
+    parser.add_argument("-o", "--outfile", action="store", type=str, dest="outfile",
+                      help="Write formatted references to FILE", metavar="FILE")
+    parser.add_argument("-n", "--nuke", action="store_true", dest="overwrite", default=False,
+                      help="CAUTION! silently overwrite outfile, default=%(default)s")
+    parser.add_argument("-b", "--backup", action="store_true", dest="backup", default=False,
+                      help="backup FILE to FILE.bak, default=%(default)s")
+    parser.add_argument("-L", "--logger-level", action="store", type=int, dest="logger_level",
+                      help="Set logging level to integer value.")
 
-	"""
-	#TODO:
-	parser.add_option("-I", "--ISBN", action="store", dest="ISBN", default=False,
-					  help="use pyaws to add one entry by ISBN, default=%default")
-	parser.add_option("-m", "--maxnames", action="store", type="int",
-					  dest="maxnames",  default = 2, help="Max names to add to key")
-	parser.add_option("-e", "--etal", action="store", type="string", \
-					  dest="etal",  default = 'etal',help="What to add after max names")
-	parser.add_option("-i", "--infile", action="store", type="string", dest="infile",
-					  help="Parse FILE for citation references.", metavar="FILE")
-	parser.add_option("-s", "--stylefile", action="store", dest="stylefile", default="default.py",
-					  help="Specify user-chosen style file",metavar="FILE")
-	"""
+    """
+    #TODO:
+    parser.add_argument("-I", "--ISBN", action="store", dest="ISBN", default=False,
+                      help="use pyaws to add one entry by ISBN, default=%(default)s")
+    parser.add_argument("-m", "--maxnames", action="store", type="int",
+                      dest="maxnames",  default = 2, help="Max names to add to key")
+    parser.add_argument("-e", "--etal", action="store", type=str, \
+                      dest="etal",  default = 'etal',help="What to add after max names")
+    parser.add_argument("-i", "--infile", action="store", type=str, dest="infile",
+                      help="Parse FILE for citation references.", metavar="FILE")
+    parser.add_argument("-s", "--stylefile", action="store", dest="stylefile", default="default.py",
+                      help="Specify user-chosen style file",metavar="FILE")
+    """
 
-	# get options
-	(options, args) = parser.parse_args()
-	if options.verbose:
-		bibadd_logger.setLevel(logging.INFO)
-	if options.very_verbose:
-		bibadd_logger.setLevel(logging.DEBUG)
-	bibadd_logger.info("Script running.\nargs=%s"%(args))
+    # get options
+    args = parser.parse_args()
+    if args.logger_level:
+        bibadd_logger.setLevel(args.logger_level)
+    elif 2==args.verbosity:
+        bibadd_logger.setLevel(logging.DEBUG)
+    elif 1==args.verbosity:
+        bibadd_logger.setLevel(logging.INFO)
+    bibadd_logger.info("Script running.\nargs=%s"%(args))
 
-	'''
-	#TODO: error check cite keys, insert (v. append), sort
-	# get database as text from .bib file(s) or stdin
-	if len(args) > 0 :
-		try :
-		   src = ''.join(open(f).read() for f in args)
-		except:
-			print 'Error in filelist'
-	else :
-		src = sys.stdin.read()
+    '''
+    #TODO: error check cite keys, insert (v. append), sort
+    # get database as text from .bib file(s) or stdin
+    if len(args) > 0 :
+        try :
+           src = ''.join(open(f).read() for f in args)
+        except:
+            print 'Error in filelist'
+    else :
+        src = sys.stdin.read()
 
-	 
-	bibfile_name = args[-1]
-	if (os.path.splitext(bibfile_name)[-1]).lower() != ".bib":
-		bib4txt_logger.warning(bibfile_name + " does not appear to be a .bib file")
-	try :
-		bibfile_as_string = open(bibfile_name,'r').read()
-	except :
-		print "Database file not found."
-		sys.exit(1)
+     
+    bibfile_name = args[-1]
+    if (os.path.splitext(bibfile_name)[-1]).lower() != ".bib":
+        bib4txt_logger.warning(bibfile_name + " does not appear to be a .bib file")
+    try :
+        bibfile_as_string = open(bibfile_name,'r').read()
+    except :
+        print "Database file not found."
+        sys.exit(1)
 
-	# read input file (default: stdin)
-	if options.infile:
-		try:
-			input = open(options.infile,'r')
-		except:
-			print "Cannot open: "+options.infile
-			sys.exit(1)
+    # read input file (default: stdin)
+    if args.infile:
+        try:
+            input = open(args.infile,'r')
+        except:
+            print "Cannot open: "+args.infile
+            sys.exit(1)
 
-	# create object to store parsed .bib file
-	bibfile_processor = bibfile.BibFile()
-	#store parsed .bib file in the bibfile_processor
-	#  TODO: allow multiple .bib files
-	bibgrammar.Parse(bibfile_as_string, bibfile_processor)
+    # create object to store parsed .bib file
+    bibfile_processor = bibfile.BibFile()
+    #store parsed .bib file in the bibfile_processor
+    #  TODO: allow multiple .bib files
+    bibgrammar.Parse(bibfile_as_string, bibfile_processor)
 
-	bfile = bibfile.BibFile()
-	bibgrammar.Parse(src, bfile)
-	used_citekeys = [] # stores created keys
-	'''
+    bfile = bibfile.BibFile()
+    bibgrammar.Parse(src, bfile)
+    used_citekeys = [] # stores created keys
+    '''
 
-	entry = make_entry(options.entry_type, options.more_fields, options.MORE_FIELDS)
+    entry = make_entry(args.entry_type, args.more_fields, args.MORE_FIELDS)
 
-	# open output file for writing (default: stdout)
-	if options.outfile:
-		if options.backup and os.path.exists(options.outfile):
-			shutil.copyfile(options.outfile, options.outfile+".bak")
-		if options.overwrite or not os.path.exists(options.outfile):
-			output = open(options.outfile,'w')
-		else:
-			bibadd_logger.info("Appending to %s.\n(Use -n option to nuke (overwrite) the old output file.)"
-			                     %options.outfile)
-			output = open(options.outfile,'a')
-	output.write(str(entry))
-	#print entry
-	if 'h' in options.format:
-		output.write( html_format(entry) )
-	if 't' in options.format:
-		output.write( text_format(entry) )
-	output.close()
+    # open output file for writing (default: stdout)
+    if args.outfile:
+        if args.backup and os.path.exists(args.outfile):
+            shutil.copyfile(args.outfile, args.outfile+".bak")
+        if args.overwrite or not os.path.exists(args.outfile):
+            output = open(args.outfile,'w')
+        else:
+            bibadd_logger.info("""
+            Appending to %s.
+            (Use -n option to nuke (overwrite) the old output file.)"""
+                                 %args.outfile)
+            output = open(args.outfile,'a')
+    output.write(str(entry))
+    #print entry
+    if 'h' in args.format:
+        output.write( html_format(entry) )
+    if 't' in args.format:
+        output.write( text_format(entry) )
+    output.close()
 
 if __name__ == '__main__':
-	main()
+    main()
