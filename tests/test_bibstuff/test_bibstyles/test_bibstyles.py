@@ -89,7 +89,7 @@ class TestBibEntryFormatter(unittest.TestCase):
 		test_entry = self.tbib.entries[0]
 		formatter = bibstyles.shared.EntryFormatter(self.default_citation_template)
 		res = formatter.format_entry(test_entry)
-		correct = "van Baer Wilgen, jr, Edward Charles. 1910. A vljf test. *Testing quarterly* 1, 21--30. "
+		correct = "van Baer Wilgen, jr, Edward Charles. (1910) A vljf test. *Testing quarterly* 1, 21--30.  "
 		self.assertEqual(res, correct)
 
 if __name__ == '__main__':
