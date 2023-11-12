@@ -43,7 +43,7 @@ from . import default_templates
 
 
 
-	
+    
 
 ##########################################################################
 ###################  CITEREF FORMATTING  #################################
@@ -61,9 +61,9 @@ The CITATION_TEMPLATE provides default reference formatting (may also be used by
 
 :TODO:
 
-	- provide graceful handling of missing fields
-	- allow different formatting of first and other names
-	- allow different initial line and subsequent line indenting
+    - provide graceful handling of missing fields
+    - allow different formatting of first and other names
+    - allow different initial line and subsequent line indenting
 """
 
 # here we simply use the default citation template
@@ -71,60 +71,60 @@ CITATION_TEMPLATE = shared.CitationManager.default_citation_template
 
 class CitationManager(shared.CitationManager):
 
-	################### CITEREF FORMATTING #########################
-	#we set the 'format_inline_cite' method equal to the below 'format_inline_cite' function
-	def format_inline_cite(self, cite_key_list):
-		"""
-		Usually you will need to write a 'format_inline_cite' function
-		that the CiteRefProcessor will use to substitute inline for citation references.
-		"""
-		style_logger.debug('default: enter CitationManager.format_inline_cite')
-		#:note: need entry to be None if cite_key not found, so discard=False
-		entry_list = self.find_entries(cite_key_list,discard=False)
-		"""
-		for entry in entry_list:
-			print entry
-		"""
-		return format_inline_cite(entry_list, self)
+    ################### CITEREF FORMATTING #########################
+    #we set the 'format_inline_cite' method equal to the below 'format_inline_cite' function
+    def format_inline_cite(self, cite_key_list):
+        """
+        Usually you will need to write a 'format_inline_cite' function
+        that the CiteRefProcessor will use to substitute inline for citation references.
+        """
+        style_logger.debug('default: enter CitationManager.format_inline_cite')
+        #:note: need entry to be None if cite_key not found, so discard=False
+        entry_list = self.find_entries(cite_key_list,discard=False)
+        """
+        for entry in entry_list:
+            print entry
+        """
+        return format_inline_cite(entry_list, self)
 
-	################### CITATION FORMATTING ########################
-	def get_citation_label(self,entry,citation_template=None):
-		return '.. [' + entry.citekey + ']\n'
+    ################### CITATION FORMATTING ########################
+    def get_citation_label(self,entry,citation_template=None):
+        return '.. [' + entry.citekey + ']\n'
 
-	#sort_key for sorting list of references
-	# (choice of field_list is a formatting decision)
-	def sortkey(self,bibentry):
-		return self.make_sort_key(bibentry,['Author','Year'])
+    #sort_key for sorting list of references
+    # (choice of field_list is a formatting decision)
+    def sortkey(self,bibentry):
+        return self.make_sort_key(bibentry,['Author','Year'])
 
 def format_inline_cite(entry_list, citation_manager):
-	"""Return string, formatted in-text citation (allows *multiple* citations).
+    """Return string, formatted in-text citation (allows *multiple* citations).
 
-	`entry_list` : list
-		entries to be formatted
-	`citation_manager` : CitationManager instance
-		handles name formatting
+    `entry_list` : list
+        entries to be formatted
+    `citation_manager` : CitationManager instance
+        handles name formatting
 
-	:note: need the entry formatter bc its determines the field of the names for the cite
-	:note: much of the following functionality was in the old Bibstyle's formatCitation() method
-	:TODO: rewrite
-	:TODO: ? entries shd be more featureful ? (conflicts with core goal of BibEntry class)
-	"""
-	style_logger.debug("default.py: Entering format_inline_cite.")
-	name_date_sep = ' '
-	formatted_list = []
-	for entry in entry_list:
-		if not entry: #None replaces missing entries
-			formatted_list.append('?')
-		else:
-			year = entry['year']
-			entry_formatter = citation_manager.entry_formatter
-			last_names = entry.get_names(entry_formatter).get_last_names() #:note: ignores "von" part
-			if len(last_names) < 3:
-				last_names = ' and '.join(last_names)
-			else:
-				last_names = last_names[0] + ' et al.'
-			formatted_list.append( ('%s' + name_date_sep +  '%s')%(last_names, year) )
-			#to cite by number can use this instead:
-			#formatted_list.append('%d'%entry.citation_rank)
-	style_logger.debug("Exiting format_inline_cite.")
-	return '(' + CITEREF_TEMPLATE['citeref_sep'].join(formatted_list)+')'
+    :note: need the entry formatter bc its determines the field of the names for the cite
+    :note: much of the following functionality was in the old Bibstyle's formatCitation() method
+    :TODO: rewrite
+    :TODO: ? entries shd be more featureful ? (conflicts with core goal of BibEntry class)
+    """
+    style_logger.debug("default.py: Entering format_inline_cite.")
+    name_date_sep = ' '
+    formatted_list = []
+    for entry in entry_list:
+        if not entry: #None replaces missing entries
+            formatted_list.append('?')
+        else:
+            year = entry['year']
+            entry_formatter = citation_manager.entry_formatter
+            last_names = entry.get_names(entry_formatter).get_last_names() #:note: ignores "von" part
+            if len(last_names) < 3:
+                last_names = ' and '.join(last_names)
+            else:
+                last_names = last_names[0] + ' et al.'
+            formatted_list.append( ('%s' + name_date_sep +  '%s')%(last_names, year) )
+            #to cite by number can use this instead:
+            #formatted_list.append('%d'%entry.citation_rank)
+    style_logger.debug("Exiting format_inline_cite.")
+    return '(' + CITEREF_TEMPLATE['citeref_sep'].join(formatted_list)+')'

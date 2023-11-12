@@ -1,4 +1,3 @@
-#File: shared.py
 """
 :mod:`bibstuff.bibstyles.shared`: Utilities and formatting classes
 ------------------------------------------------------------------
@@ -8,14 +7,15 @@ especially for bib4txt.py.
 
 :copyright: 2008 Alan G Isaac, see AUTHORS
 :license: MIT (see LICENSE)
-
+:requires: 3.8+
 """
 __docformat__ = "restructuredtext en"
-__version__ = "1.3"
+__version__ = "1.32"
 
 ###################  IMPORTS  ##################################################
 #import from standard library
 import logging
+from typing import List, Optional, Sequence
 #import dependencies
 import simpleparse
 # We need to import the dispatchprocessor
@@ -67,36 +67,16 @@ def reformat_para(para='', left=0, right=72, just='LEFT'):
             newline = word  #this wi
     if len(newline) > 0:
         lines.append(newline)
-    """OLD VERSION:
-    word = 0
-    end_words = 0
-    words = para.split()
-    while not end_words:
-        if len(words[word]) > right-left: # Handle very long words
-            newline = words[word]
-            word +=1
-            if word >= len(words):
-                end_words = 1
-        else:                             # Compose line of words
-            while len(newline)+len(words[word]) <= right-left:
-                newline += words[word]+' '
-                word += 1
-                if word >= len(words):
-                    end_words = 1
-                    break
-        lines.append(newline)
-        newline = ''
-    """
     if just.upper() == "CENTER":
-        result = '\n'.join([' '*left+ln.center(lwidth) for ln in lines])
+        result = '\n'.join([' '*left+line.center(lwidth) for line in lines])
     elif just.upper() == "RIGHT":
-        result = '\n'.join([ln.rjust(right) for ln in lines])
+        result = '\n'.join([line.rjust(right) for line in lines])
     elif just.upper() == "LEFT":
-        result = '\n'.join([' '*left+ln for ln in lines])
+        result = '\n'.join([' '*left + line for line in lines])
     else:
         shared_logger.error("Unrecognized justification style: %s", just)
         #default left justifcation
-        result = '\n'.join([' '*left+ln for ln in lines])
+        result = '\n'.join([' '*left+line for line in lines])
     return result
 
 
@@ -120,7 +100,7 @@ class NamesFormatter(object):
     """
     def __init__(self, citation_template=None, template_list=None, initials=''):
         """Create name formatters for each template."""
-        shared_logger.debug("NamesFormatter.__init__ args: "+str((citation_template,template_list,initials)))
+        shared_logger.debug(f"NamesFormatter.__init__ args: {((citation_template,template_list,initials))}")
         assert (template_list or citation_template), "Must provide formatting templates."
         if citation_template:
             self.citation_template = citation_template
@@ -138,10 +118,10 @@ class NamesFormatter(object):
         self.formatters = [ NameFormatter(template,self.initials) for template in self.template_list ]
 
     #get all names, formatted as a string
-    def format_names(self, names):
-        """Return string,
-        which represents the BibName instance `names`
-        formatted as determined by the `NamesFormatter` attributes.
+    def format_names(self,
+        names  #BibName
+        ) -> str:
+        """Format BibName as determined by the `NamesFormatter` attributes.
 
         `NAME FORMATTING TEMPLATES`_ are explained in some detail
         in the doc string for the NameFormatter class.  Briefly:
@@ -220,9 +200,7 @@ class NameFormatter(object):
            "v{~}~|l,| j,| f{. }." with initials='f' produces:
            "McFeely, J. W." or "van~der~Stadt, Jr, C. M."
 
-    :note: has a property -> must be new style class, inherit carefully
     :note: 20080331 allow capital part-designators (FVLJ) to force capitalization
-
     """
     def __init__(self, template, initials=''):
         shared_logger.debug("NameFormatter.__init__ args: "+str((template,initials)))
@@ -356,12 +334,17 @@ class NameFormatter(object):
 
 class CitationManager(object):
     """
-    :TODO: possibly useful for bibsearch.py
+    :TODO: possibly useful for bibsearch.py as well
     """
     default_citation_template = DEFAULT_CITATION_TEMPLATE.copy()
 
-    def __init__(self, biblist, citekeys=None, citation_template=None, sortkey=None):
-        self.biblist = biblist
+    def __init__(self,
+        bibs, #sequence of parsed bib files
+        citekeys=None,
+        citation_template=None,
+        sortkey=None
+        ):
+        self._bibs = bibs
         #:alert: set_citekeys -> self._entries created!
         self.set_citekeys(citekeys)
         if citation_template is None:
@@ -381,19 +364,20 @@ class CitationManager(object):
 
     def set_citeref_processor(self, processor):
         self.citeref_processor = processor
-    def format_inline_cite(self, cite_key_list):
+
+    def format_inline_cite(self, citekeys):
         """Returns a formatted inline citation reference.
         Usually used by a CiteRefProcessor object during processing. 
-        Usually styles need to override this method.
+        Typically, a style should to override this method.
         """
 
         #substitute formatted citation reference into document text
-        self.result.append( self.citation_manager.format_inline_cite(self.entry_list,cite_key_list) )
-        return '**[' + ','.join(cite_key_list) + ']_'
-
+        self.result.append( self.citation_manager.format_inline_cite(self.entry_list,citekeys) )
+        return '**[' + ','.join(citekeys) + ']_'
 
     def get_citekeys(self):
         return self._citekeys
+
     def set_citekeys(self, citekeys):
         """set self._citekeys to keys **and** make associated entries
         """
@@ -406,8 +390,10 @@ class CitationManager(object):
             self._entries = []
     citekeys = property(get_citekeys, set_citekeys, None, "citekeys property")
 
-
-    def find_entries(self, citekeys=None, discard=True):
+    def find_entries(self,
+        citekeys: Optional[Sequence] = None,
+        discard: bool = True
+        ):
         """return all entries if citekeys==None else matching entries
         discard=True -> discard keys that do not have a bib entry
         """
@@ -415,14 +401,16 @@ class CitationManager(object):
             citekeys = self.citekeys
         result = []
         #TODO: check for reuse of citekeys in different BibFile objects
-        for bib in self.biblist:
-            result.extend(bib.get_entrylist(citekeys,discard=discard))
+        for bib in self._bibs:
+            result.extend( bib.get_entrylist(citekeys, discard=discard) )
         return result
+
     def get_entries(self, citekeys=None):
         if not citekeys:
             return self._entries[:]
         else:
             return self.find_entries(citekeys)
+
     #note: citation_rank uses unit-based indexing!! (so styles don't have to offset it)
     def get_citation_rank(self, entry, citekeys=None):
         if citekeys is None:
@@ -515,14 +503,10 @@ class CitationManager(object):
 
 
 
-
-
 class CiteRefProcessor( simpleparse.dispatchprocessor.DispatchProcessor ):
     """Formats inline citations and substitutes them into text.
     Stores all cite keys in `all_citekeys` (a list, to record citation order).
     Can store `result` as original text with substituted citation references.
-
-    :note: based on the defunct 'addrefs.py' CitationFormatter class
     """
     def __init__(self, citation_manager):
         """
@@ -547,10 +531,11 @@ class CiteRefProcessor( simpleparse.dispatchprocessor.DispatchProcessor ):
     # define method for EACH production (see the help for DispatchProcessor)
 
     def cite(self, tuple4, buffer ):
-        """Return everything.
+        """Return formatted result.
 
-        Alternative default def:
+        Alternative default def would finish with
         self.result.append( buffer[start:stop])
+        and then wd return everything in the range.
         """
         tag,start,stop,subtags = tuple4
         self.log_msg("The following is parsed as cite:\n" + buffer[start:stop])
@@ -569,19 +554,19 @@ class CiteRefProcessor( simpleparse.dispatchprocessor.DispatchProcessor ):
         self.result.append( self.citation_manager.format_inline_cite(cite_key_list) )
 
     def inline_literal(self, tuple4, buffer):
-        "Return everything."
+        "Return everything in the range."
         tag,start,stop,subtags = tuple4
         self.result.append( buffer[start:stop] )
         self.log_msg("The following is parsed as inline_literal:\n" + buffer[start:stop])
 
     def fn(self, tuple4, buffer):
-        "Return everything."
+        "Return everything in the range."
         tag,start,stop,subtags = tuple4
         self.result.append( buffer[start:stop])
         self.log_msg("The following is parsed as fn:\n" + buffer[start:stop])
 
     def plain(self, tuple4, buffer):
-        "Return everything."
+        "Return everything in the range."
         tag,start,stop,subtags = tuple4
         self.result.append( buffer[start:stop])
         self.log_msg("The following is parsed as plain:\n" + buffer[start:stop])
@@ -592,14 +577,14 @@ class EntryFormatter(object):
         self.citation_template = citation_template
         self.names_formatter=NamesFormatter(citation_template)
 
-    def format_entry(self, entry, citation_template=None):
-        """Return string.
-        Format an entry (e.g., as a citation, i.e., a single bibliography reference).
+    def format_entry(self,
+        entry, #a BibEntry
+        citation_template=None #holds templates for entry types
+        ) -> str:
+        """Return formatted entry (e.g., as a citation, i.e., a single bibliography reference).
         Note that a BibEntry object acts like a dict for Bib fields
         *except* no KeyError (returns None instead).
-        `citation_template` holds templates for entry types
 
-        :note: something related to this method was formerly Bibstyle's formatRef method
         :note: called by make_citations (and currently nothing else)
         """
         shared_logger.debug("Entering format_citation.")
@@ -617,7 +602,11 @@ class EntryFormatter(object):
             result = post_processor(result)
         shared_logger.debug("EntryFormatter.format_citation: result = "+result)
         return result
-    def format_citation_names(self, entry, citation_template=None):
+
+    def format_citation_names(self,
+        entry,
+        citation_template=None
+        ) -> str:
         if citation_template is None:
             citation_template = self.citation_template
         #get the names from the entry (as a BibName object)
@@ -627,6 +616,7 @@ class EntryFormatter(object):
         #shared_logger.debug("name_name_sep: "+str(template['name_name_sep']))
         #shared_logger.debug("format_citation_names: result = "+result)
         return result
+
     #TODO: this deserves substantial enhancement, at the least for journal handling for articles
     def format_citation_details(self, entry, citation_template=None):
         """Return string."""
@@ -640,7 +630,11 @@ class EntryFormatter(object):
         #:note: entry will return None instead of KeyError
         result = type_template % entry
         return result
-    def pick_raw_names(self, entry, fields=None):
+
+    def pick_raw_names(self,
+        entry,
+        fields: Optional[List[str]] = None
+        ):
         """Return BibName-object if possible else string
         (from "raw" names).
         
@@ -672,7 +666,7 @@ class EntryFormatter(object):
                 if raw_names:
                     break
         if not raw_names:
-            shared_logger.warning("No raw names for bib citekey "+entry.citekey)
+            shared_logger.warning(f"No raw names for bib citekey {entry.citekey}")
             raw_names = "Anonymous"  #TODO: shd be a formatting choice (use None?)
             field = None
         #return  bibname.BibName(raw_names,from_field=field)  #names are in a BibName object

@@ -1,4 +1,4 @@
-# -*- coding: latin-1 -*-
+# -*- coding: utf-8 -*-
 """
 :mod:`bibstuff.bibadd`: Add entries to .bib file
 ------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ valid_fields = dict(
 )
 
 """
-author or editor (Æ), author(A), address(a), booktitle(b), chapter(c), crossref(x), edition(e), editor(E), howpublished(h), institution(I), isbn(i), journal(j), key(k), month(m), note(z), number(n), organization(O), pages(p), publisher(P), school(S), series(s), title(T), type(t), url(u), volume(v), year(y), unused(fgl)
+author or editor (Ã†), author(A), address(a), booktitle(b), chapter(c), crossref(x), edition(e), editor(E), howpublished(h), institution(I), isbn(i), journal(j), key(k), month(m), note(z), number(n), organization(O), pages(p), publisher(P), school(S), series(s), title(T), type(t), url(u), volume(v), year(y), unused(fgl)
 
 Currently will not provide the crossref field since crossrefs must be prepended. (Just warn?)
 """
@@ -51,7 +51,7 @@ optional2 = 'z',
 extras = 'kiu'
 )
 book = dict(
-required = 'ÆTPY',
+required = 'Ã†TPY',
 optional1 = 'ae',
 optional2 = 'vnszi',
 extras = 'kmu'
@@ -62,7 +62,7 @@ optional1 = 'AhY',
 optional2 = 'amz',
 )
 inbook = dict(
-required = 'ÆTcpPY',
+required = 'Ã†TcpPY',
 optional1 = 'a',
 optional2 = 'vnsuemz',
 extras = 'kiu'
@@ -135,9 +135,9 @@ def make_entry(choosetype='', options=False, extras=False, raw_input=input):
         fields = fields + field_dict['optional2']
     if extras:
         fields = fields + field_dict['extras']
-    if 'A' in fields or 'Æ' in fields:
+    if 'A' in fields or 'Ã†' in fields:
         entry['author'] = raw_input("author(s)? ").strip()
-    if 'E' in fields or 'Æ' in fields:
+    if 'E' in fields or 'Ã†' in fields:
         entry['editor'] = raw_input("editor(s)? ").strip()
     if 'Y' in fields:
         entry['year'] = raw_input("year? ").strip()

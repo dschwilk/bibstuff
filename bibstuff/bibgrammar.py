@@ -15,7 +15,7 @@ from Greg Ward's `btOOL <http://www.gerg.ca/software/btOOL/>`_ documentation.
 
 """
 __docformat__ = "restructuredtext en"
-__needs__ = '2.4'
+__needs__ = '2.7'
 __version__ = "1.7"
 __author__  =    ["Dylan W. Schwilk", "Alan G. Isaac"]
 

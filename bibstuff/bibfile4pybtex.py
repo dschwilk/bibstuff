@@ -1,19 +1,18 @@
 """
-:mod:`bibstuff.bibfile`: High level BibTeX file interface
----------------------------------------------------------
+#Duplicate the functionality of bibfile.py,
+#when using pybtex's bibliography parser.
 
-Provides two classes, BibFile and BibEntry for accessing the parts of a bibtex
-database. BibFile inherits from ``simpleparse.dispatchprocessor``. To fill a
-BibFile instance, bfi, call bibgrammar.Parse(src, bfi).
+Provide two classes, BibFile and BibEntry for accessing the parts of a bibtex
+database.
 
-:copyright:  Dylan Schwilk and Alan G Isaac, see AUTHORS
+:copyright:  Alan G Isaac, see AUTHORS
 :license: MIT (see LICENSE)
-:requires: Python 3.6+
+:requires: Python 3.8_
 """
 __docformat__ = "restructuredtext en"
-__authors__  = ["Dylan W. Schwilk", "Alan G. Isaac"]
-__version__ = '1.14'
-__needs__ = '3.6'
+__authors__  = ["Alan G. Isaac"]
+__version__ = '0.1'
+__needs__ = '3.8'
 
 # options:
 # __strict__ = False allows empty citekeys
@@ -21,17 +20,11 @@ __strict__ = False # should we be strict with bibtex format?
 
 
 ####################### IMPORTS #####################################
-# import from standard library
+# imports from standard library:
 import re, logging
 bibfile_logger = logging.getLogger('bibstuff_logger')
+from typing import Optional, Sequence
 
-# import dependencies
-from simpleparse import dispatchprocessor as spdp
-from simpleparse.dispatchprocessor import dispatch, DispatchProcessor, getString, lines
-
-#bibstuff imports
-# from . import bibgrammar
-#####################################################################
 
 ###############  GLOBAL VARIABLES  ##################################
 months_en = ('January','February','March','April','May','June',
@@ -43,17 +36,29 @@ MONTH_DICT = dict( zip(monthmacros_en, months_en) )
 
 
 class BibEntry(dict):
-    """Provides a single bibliographic entry.
-    Provides a dictionary interface to the fields:
-    field keys are case-insensitive and fields are stored
+    """Provides access to a single bibliographic entry,
+    with a dictionary interface to the fields.
+    Field keys are case-insensitive and fields are stored
     in the order added.
     
-    :note: use 'citekey' instead of 'key' since BibTeX allows a 'key' field
-    :note: use 'entry_type' instead of 'type' since BibTeX allows a 'type' field
+    :note: uses 'citekey' instead of 'key' since BibTeX allows a 'key' field
+    :note: uses 'entry_type' instead of 'type' since BibTeX allows a 'type' field
     """
-    def __init__(self, *args, **kwargs):
-        dict.__init__(self, *args, **kwargs)
-        self._fields = []
+    def __init__(self,
+        citekey: str,
+        entry
+        ): #see BibFile (below)
+        dict.__init__(self,
+            citekey=citekey,
+            entry_type=entry.type)
+        self._fields = list(x[0] for x in entry.fields)
+        self.update(((k.lower(), v) for (k,v) in entry.fields.items()))
+        persons = entry.persons
+        #recover the raw names (TODO: remove this ridiculous workaround)
+        for k,ps in persons.items():
+            self[k.lower()] = " and ".join(str(p) for p in ps)
+        self.entry_type = entry.type
+        self.citekey = citekey
 
     def __repr__(self):
         """return string representation of entry
@@ -114,13 +119,12 @@ class BibEntry(dict):
             "Seeking 'key' as an entry *field*. (Recall 'citekey' holds the entry id.)")
         try:
             result = dict.__getitem__(self, field)
-        #:TODO: rethink this decision (but it is used for formatting)
-        #:note: 20080331 changed KeyError to return '' instead of None
         except KeyError:
             crossref = self.get('crossref', '')
             if isinstance(crossref, self.__class__):
                 result = crossref[field]
             else:
+                #:note: instead of None, KeyError returns '', which is used for formatting
                 result = ''
         #:note: 20080331 add handling of month macros
         if field == 'month' and result in monthmacros_en:
@@ -138,17 +142,23 @@ class BibEntry(dict):
         except ValueError:
             pass
 
-    def set_entry_type(self, val):
-        self["entry_type"] = val.lower()  #:note: entry_type stored as lowercase
+    @property
     def get_entry_type(self):
         return self["entry_type"]
+    '''
+    def set_entry_type(self, val):
+        self["entry_type"] = val.lower()  #:note: entry_type stored as lowercase
     entry_type = property(get_entry_type, set_entry_type, None, "property: 'entry_type'")
+    '''
 
-    def set_citekey(self, val):
-        self["citekey"] = val
+    @property
     def get_citekey(self):
         return self["citekey"]
+    '''
+    def set_citekey(self, val):
+        self["citekey"] = val
     citekey = property(get_citekey,set_citekey,None,"property: 'citekey'")
+    '''
 
     def get_fields(self):
         return self._fields
@@ -201,7 +211,7 @@ class BibEntry(dict):
         :note: 2006-08-08 no longer sets a `_names` attribute
         :TODO: add default name_template useful for .bib files?
         """
-        bibfile_logger.debug(f"BibEntry.format_names: arg is: {names_formatter}.")
+        bibfile_logger.debug(f"BibEntry.format_names: arg is: {names_formatter}")
         names = self.get_names()  #get a BibName instance (or possibly, a string)
         #keep string if stuck with it
         if isinstance(names,str):
@@ -209,21 +219,25 @@ class BibEntry(dict):
         else: #assume a BibName instance
             #ask BibName instance to format itself (and it asks a NamesFormatter to do it)
             result = names.format(names_formatter)
-        bibfile_logger.debug(f"BibEntry.format_names result = {result}.")
+        bibfile_logger.debug(f"BibEntry.format_names result = {result}")
         return result
 
     def get_names(self, entry_formatter=None, try_fields=None):
         """return (BibName-object if possible else string)
 
-        :note: 2006-08-09 matching change to `make_names`, no longer sets `self._names`
+        :note: does NOT set `self._names`
         """
         if entry_formatter is None:
             if not try_fields:
                 try_fields = ['author','editor','organization']
         return self.make_names(entry_formatter, try_fields=try_fields)
 
-    def make_names(self, entry_formatter=None, try_fields=None):
-        """return (BibName-object if possible else string)
+    def make_names(
+        self,
+        entry_formatter=None,
+        try_fields=None
+        ):
+        """Return (BibName-object if possible else string)
         (from "raw" names).
         
         :change: 2006-08-02 altered to return BibName instance and not set _names
@@ -242,8 +256,8 @@ class BibEntry(dict):
                 if raw_names:
                     break
         else:
-            raw_names, field = entry_formatter.pick_raw_names(self,try_fields)
-        return  bibname.BibName(raw_names,from_field=field)  #names are in a BibName object
+            raw_names, field = entry_formatter.pick_raw_names(self, try_fields)
+        return  bibname.BibName(raw_names, from_field=field)  #names are in a BibName object
 
     def format_with(self, entry_formatter):
         bibfile_logger.debug("BibEntry.format_with: arg is:"+str(entry_formatter))
@@ -282,10 +296,7 @@ class BibEntry(dict):
     # )
 
 
-    def make_citekey(self,
-        used_citekeys = [],
-        style = citekey_label_style1
-        ) -> str:
+    def make_citekey(self, used_citekeys = [], style = citekey_label_style1):
         """Create and return a new citekey based on the entry's data. This is for
         creating predictable and useful citekey (labels) for BibEntry objects.
         This is not integrated with the citation styles in bibstuff.bibstyles;
@@ -375,50 +386,55 @@ class BibEntry(dict):
 
 
 
-#used by BibFile
-def get_entry_by_citekey(entries, citekey):
-    """Return entry or None."""
-    for entry in entries:
-        if entry.citekey == citekey:
-            return entry
 
 # ----------------------------------------------------------
 # Bibfile
 # -------
-# Data storage for bibtex file
+# Provides storage for bibtex files.
 # ----------------------------------------------------------
-class BibFile( DispatchProcessor ):
+class BibFile(object):
     """Stores parsed bibtex file.  Access entries by key.
 
     :note: a BibFile object should simply *store* .bib file parts
            (a list of entries and a macro map) and provide access
            to these parts
+    :called by: shared.find_entries bibstyles/shared.py
+    :used by: ../scripts/bib4txt.py
     """
-    def __init__(self) :
+    def __init__(self,
+        pybtexBibFile  #map (citekey to pybtex Entry)
+        ):
+        self.pybtexBibFile = pybtexBibFile
         self.entries = []
         self._macroMap = {}
 
-    def get_entrylist(self, citekeys, discard=True):
-        """Return list, the BibEntry instances that were found
-        (and None for entries not found, unless discarded).
+    def get_entrylist(self,
+        citekeys,
+        discard=True #False used by styles?
+        ) -> list:
+        """Return list of found BibEntry instances
+        (and None for entries not found, unless discard is True).
         """
         if not citekeys:
-            bibfile_logger.warning("get_entrylist: No keys provided; returning empty cited-entry list.")
+            bibfile_logger.warning("""get_entrylist:
+                No keys provided; returning empty cited-entry list.""")
             return []
-        temp = [ (key, get_entry_by_citekey(self.entries, key)) for key in citekeys ]
-        bad_keys = [pair[0] for pair in temp if not pair[1]]
+        temp = list( (citekey, self.pybtexBibFile.entries.get(citekey))
+                     for citekey in citekeys)
+        bad_keys = list(pair[0] for pair in temp if not pair[1])
         if bad_keys and discard:
             bibfile_logger.warning("Database entries not found for the following keys:\n"+"\n".join(bad_keys))
         if discard:
-            result = [pair[1] for pair in temp if pair[1]]
+            result = list(BibEntry(*pair) for pair in temp if pair[1])
         else: #keep None when occurs in entry list
-            result =  [pair[1] for pair in temp]
+            result = list(BibEntry(*pair) if pair[1] else None for pair in temp)
+            #result =  [pair[1] for pair in temp]
         #attach cross references
         for entry in result:
-            if entry:
+            if (entry is not None):
                 crossref = entry.get('crossref', None)
                 if isinstance(crossref, str):
-                    crossref = self.get_entry_by_citekey(self.entries, crossref)
+                    crossref = self.pybtexBibFile.entries.get(crossref)
                     if crossref:
                         entry['crossref'] = crossref
         return result
@@ -427,6 +443,7 @@ class BibFile( DispatchProcessor ):
     for parsing, must provide a function for each production name.
     """
 
+    '''
     def string(self, tuple4, buffer ):
         """Return a string, stripping leading and trailing markers"""
         (tag,start,stop,subtags) = tuple4
@@ -526,6 +543,7 @@ class BibFile( DispatchProcessor ):
             Details: %s""" % (lineno, the_type, getString(subtags[1], buffer)))
         else :
             bibfile_logger.info("Comment entry on line %d:" % lineno + " " + getString(subtags[1], buffer))
+    '''
 
     def search_entries(self, string_or_compiled, field='', ignore_case=True):
         """Return list of matching entries.
